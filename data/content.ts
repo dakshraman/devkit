@@ -14,7 +14,7 @@ export const DOCS: DocPage[] = [
         id: "what-is-devkit",
         title: "What is DevKit?",
         content:
-          "DevKit is an all-in-one developer productivity toolkit that runs entirely in your browser. It bundles 20+ focused tools — formatters, encoders, generators, analyzers and testers — into one place so you can stop tab-hopping between scattered utilities.\n\nEvery tool is frontend-only. Your input never leaves your device, which means no accounts, no uploads, and no worrying about where your data goes.",
+          "DevKit is an all-in-one developer productivity toolkit that runs entirely in your browser. It bundles 35+ focused tools — formatters, encoders, generators, analyzers and testers — into one place so you can stop tab-hopping between scattered utilities.\n\nEvery tool is frontend-only. Your input never leaves your device, which means no accounts, no uploads, and no worrying about where your data goes.",
       },
       {
         id: "navigating",
@@ -169,6 +169,17 @@ export const DOCS: DocPage[] = [
 ];
 
 export const CHANGELOG: ChangelogEntry[] = [
+  {
+    version: "1.3.0",
+    date: "2026-08-04",
+    title: "16 new tools ship",
+    highlights: [
+      "New HTML/CSS & SQL formatters, cron builder, file checksum and SVG optimizer.",
+      "CSV↔JSON converter, JSON→TypeScript and .env parser for data pipelines.",
+      "JWT generator, bcrypt hasher, URL query builder, text stats and more.",
+      "36 tools total — all still 100% local and ad-free.",
+    ],
+  },
   {
     version: "1.2.0",
     date: "2026-07-20",

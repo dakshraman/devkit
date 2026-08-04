@@ -21,6 +21,7 @@
     "@radix-ui/react-tooltip": "^1.2.16",
     "@tailwindcss/typography": "^0.5.20",
     "axios": "^1.19.0",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "diff": "^9.0.0",
@@ -36,6 +37,7 @@
     "react-hook-form": "^7.84.0",
     "react-hot-toast": "^2.6.0",
     "recharts": "^3.10.1",
+    "sql-formatter": "^15.8.2",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },

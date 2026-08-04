@@ -13,23 +13,22 @@ import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-typescript";
 import { Icon } from "@iconify/react";
 import { useEffect, useMemo, useState } from "react";
-import type { ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CopyButton, DownloadButton } from "@/components/ui/copy-button";
-import { GlassCard, CardDescription, CardHeader, CardTitle } from "@/components/ui/glass-card";
 import { Input, Textarea } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ToolIcon } from "@/components/ui/tool-icon";
 import { useCopy } from "@/hooks/useCopy";
+import { CopyButton, DownloadButton } from "@/components/ui/copy-button";
+import { EditorSkeleton, InfoTile, Panel, SectionLabel, Shell } from "@/features/tools/tool-layout";
+import { ExtraToolView } from "@/features/tools/extra-tools";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSettings } from "@/context/settings-context";
-import { cn, bytesToBase64, downloadFile, formatDuration, formatNumber, nowMs, nowSeconds } from "@/lib/utils";
+import { bytesToBase64, downloadFile, formatDuration, formatNumber, nowMs, nowSeconds } from "@/lib/utils";
 import {
   base64Decode,
   base64Encode,
@@ -60,60 +59,24 @@ marked.setOptions({
 
 const API_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
 
-function Shell({ tool, children, description }: { tool: Tool; children: ReactNode; description?: string }) {
-  return (
-    <div className="space-y-6">
-      <GlassCard className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_color-mix(in_srgb,var(--primary)_16%,transparent),transparent_40%)]" />
-        <div className="relative flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <ToolIcon icon={tool.icon} accent={tool.accent} className="size-10 rounded-2xl" />
-              <div>
-                <h1 className="text-2xl font-semibold tracking-tight">{tool.name}</h1>
-                <p className="text-sm text-muted-foreground">{description ?? tool.description}</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {tool.popular && <Badge variant="info">Popular</Badge>}
-              {tool.featured && <Badge variant="success">Featured</Badge>}
-              <Badge variant="outline">{tool.category}</Badge>
-            </div>
-          </div>
-          <div className="text-xs text-muted-foreground">
-            Admin-managed content. User input stays local and temporary.
-          </div>
-        </div>
-      </GlassCard>
-      {children}
-    </div>
-  );
-}
-
-function Panel({ title, description, children, className }: { title: string; description?: string; children: ReactNode; className?: string }) {
-  return (
-    <GlassCard className={cn("space-y-4", className)}>
-      <CardHeader className="mb-0">
-        <CardTitle>{title}</CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
-      </CardHeader>
-      {children}
-    </GlassCard>
-  );
-}
-
-function SectionLabel({ icon, label }: { icon: string; label: string }) {
-  return (
-    <div className="flex items-center gap-2 text-sm font-medium">
-      <Icon icon={icon} className="size-4 text-muted-foreground" />
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function EditorSkeleton() {
-  return <Skeleton className="min-h-[320px] w-full rounded-xl" />;
-}
+const EXTRA_SLUGS = [
+  "html-formatter",
+  "sql-formatter",
+  "cron-builder",
+  "file-checksum",
+  "csv-json",
+  "json-to-typescript",
+  "jwt-generator",
+  "bcrypt-generator",
+  "text-stats",
+  "url-builder",
+  "unicode-inspector",
+  "unit-converter",
+  "svg-optimizer",
+  "env-parser",
+  "http-status",
+  "regex-cheatsheet",
+];
 
 function usePrismHtml(code: string, language: string) {
   return useMemo(() => {
@@ -145,6 +108,9 @@ export function ToolView({ slug }: { slug: string }) {
         </Panel>
       </Shell>
     );
+  }
+  if (EXTRA_SLUGS.includes(tool.slug)) {
+    return <ExtraToolView slug={tool.slug} tool={tool} />;
   }
   switch (tool.slug) {
     case "json-formatter":
@@ -1131,15 +1097,6 @@ function SnippetCard({ snippet }: { snippet: (typeof SNIPPETS)[number] }) {
           <Button variant="outline" size="sm" onClick={() => downloadFile(snippet.code, `${snippet.id}.${snippet.language === "typescript" ? "ts" : "js"}`)}>Download</Button>
         </div>
       </div>
-    </div>
-  );
-}
-
-function InfoTile({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border bg-background p-3">
-      <div className="text-xs uppercase text-muted-foreground">{label}</div>
-      <div className="mt-1 break-all text-sm font-medium">{value}</div>
     </div>
   );
 }
