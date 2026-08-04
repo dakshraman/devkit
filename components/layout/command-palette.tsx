@@ -92,15 +92,6 @@ export function CommandPalette() {
           close();
         },
       },
-      {
-        id: "docs",
-        label: "Documentation",
-        icon: <Icon icon="lucide:book-open" className="size-4" />,
-        action: () => {
-          router.push("/docs");
-          close();
-        },
-      },
     ];
 
     if (q) {

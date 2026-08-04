@@ -69,7 +69,6 @@ function DashboardContent() {
             </div>
             <div className="flex flex-wrap gap-3">
               <Button onClick={() => router.push("/tools")}>Browse all tools</Button>
-              <Button variant="outline" onClick={() => router.push("/docs")}>Read docs</Button>
             </div>
           </div>
         </GlassCard>
@@ -156,14 +155,11 @@ function DashboardContent() {
       )}
 
       {!settings.compactMode && (
-        <GlassCard className="flex items-center justify-between gap-4">
-          <div>
-            <h2 className="text-lg font-semibold">Everything is local by default</h2>
-            <p className="text-sm text-muted-foreground">
-              Only theme, favorites, recent tools, copy history and preferences persist in LocalStorage.
-            </p>
-          </div>
-          <Button variant="outline" onClick={() => router.push("/help")}>Help & FAQ</Button>
+        <GlassCard>
+          <h2 className="text-lg font-semibold">Everything is local by default</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Only theme, favorites, recent tools, copy history and preferences persist in LocalStorage.
+          </p>
         </GlassCard>
       )}
 

@@ -44,31 +44,6 @@ export interface Snippet {
   code: string;
 }
 
-export interface DocSection {
-  id: string;
-  title: string;
-  content: string;
-}
-
-export interface DocPage {
-  slug: string;
-  title: string;
-  description: string;
-  sections: DocSection[];
-}
-
-export interface ChangelogEntry {
-  version: string;
-  date: string;
-  title: string;
-  highlights: string[];
-}
-
-export interface FaqItem {
-  q: string;
-  a: string;
-}
-
 /* ---------- Runtime / preferences ---------- */
 
 export interface Settings {

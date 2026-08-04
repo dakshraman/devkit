@@ -188,39 +188,6 @@ function SidebarNav({ onClose, collapsed }: { onClose: () => void; collapsed: bo
           })}
         </div>
       </section>
-
-      <div className="space-y-0.5 border-t border-border pt-3">
-        <SidebarNavButton
-          href="/docs"
-          active={pathname.startsWith("/docs")}
-          onNavigate={onClose}
-          collapsed={collapsed}
-          title="Documentation"
-        >
-          <Icon icon="lucide:book-open" className="size-4 shrink-0" />
-          <span className={cn("truncate", collapsed && "lg:hidden")}>Documentation</span>
-        </SidebarNavButton>
-        <SidebarNavButton
-          href="/changelog"
-          active={pathname === "/changelog"}
-          onNavigate={onClose}
-          collapsed={collapsed}
-          title="Changelog"
-        >
-          <Icon icon="lucide:newspaper" className="size-4 shrink-0" />
-          <span className={cn("truncate", collapsed && "lg:hidden")}>Changelog</span>
-        </SidebarNavButton>
-        <SidebarNavButton
-          href="/help"
-          active={pathname === "/help"}
-          onNavigate={onClose}
-          collapsed={collapsed}
-          title="Help & FAQ"
-        >
-          <Icon icon="lucide:life-buoy" className="size-4 shrink-0" />
-          <span className={cn("truncate", collapsed && "lg:hidden")}>Help & FAQ</span>
-        </SidebarNavButton>
-      </div>
     </div>
   );
 }
