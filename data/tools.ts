@@ -1,0 +1,271 @@
+import type { Tool, ToolCategory, ToolCategoryMeta } from "@/types";
+
+/* ------------------------------------------------------------------ */
+/* Categories — admin-managed                                          */
+/* ------------------------------------------------------------------ */
+
+export const CATEGORIES: ToolCategoryMeta[] = [
+  {
+    id: "developer",
+    label: "Developer",
+    description: "Core utilities for everyday development",
+  },
+  {
+    id: "data",
+    label: "Data Formats",
+    description: "Encode, decode and format structured data",
+  },
+  {
+    id: "crypto",
+    label: "Crypto & Security",
+    description: "Hashing, JWT and secure value generation",
+  },
+  {
+    id: "text",
+    label: "Text Tools",
+    description: "Transform and manipulate text",
+  },
+  {
+    id: "network",
+    label: "Network",
+    description: "Inspect APIs and remote resources",
+  },
+  {
+    id: "web",
+    label: "Web Utilities",
+    description: "URLs, QR codes and browser helpers",
+  },
+  {
+    id: "visual",
+    label: "Visual",
+    description: "Color, images and comparison tools",
+  },
+];
+
+export const CATEGORY_MAP: Record<ToolCategory, ToolCategoryMeta> =
+  CATEGORIES.reduce(
+    (acc, c) => ({ ...acc, [c.id]: c }),
+    {} as Record<ToolCategory, ToolCategoryMeta>
+  );
+
+/* ------------------------------------------------------------------ */
+/* Tools — admin-managed. Order defines display order.                 */
+/* ------------------------------------------------------------------ */
+
+export const TOOLS: Tool[] = [
+  {
+    slug: "json-formatter",
+    name: "JSON Formatter",
+    description: "Pretty print, minify, validate and download JSON documents.",
+    category: "data",
+    icon: "lucide:braces",
+    keywords: ["json", "format", "validate", "minify", "pretty", "parser"],
+    popular: true,
+    featured: true,
+    accent: "#f59e0b",
+  },
+  {
+    slug: "jwt-decoder",
+    name: "JWT Decoder",
+    description: "Decode JWT headers and payloads with expiration status.",
+    category: "crypto",
+    icon: "lucide:key-round",
+    keywords: ["jwt", "token", "decode", "header", "payload", "auth"],
+    popular: true,
+    featured: true,
+    accent: "#ec4899",
+  },
+  {
+    slug: "base64",
+    name: "Base64 Encode / Decode",
+    description: "Encode text to Base64 or decode Base64 back to text.",
+    category: "data",
+    icon: "lucide:binary",
+    keywords: ["base64", "encode", "decode", "binary", "data"],
+    popular: true,
+    accent: "#14b8a6",
+  },
+  {
+    slug: "uuid-generator",
+    name: "UUID Generator",
+    description: "Generate single or bulk UUID v4 identifiers instantly.",
+    category: "developer",
+    icon: "lucide:hash",
+    keywords: ["uuid", "guid", "id", "generator", "v4", "unique"],
+    popular: true,
+    featured: true,
+    accent: "#8b5cf6",
+  },
+  {
+    slug: "hash-generator",
+    name: "Hash Generator",
+    description: "Generate MD5, SHA-1 and SHA-256 hashes from any text.",
+    category: "crypto",
+    icon: "lucide:hash",
+    keywords: ["md5", "sha1", "sha256", "hash", "checksum", "digest"],
+    popular: true,
+    accent: "#f43f5e",
+  },
+  {
+    slug: "timestamp-converter",
+    name: "Timestamp Converter",
+    description: "Convert between Unix timestamps and human-readable dates.",
+    category: "developer",
+    icon: "lucide:clock-3",
+    keywords: ["timestamp", "unix", "epoch", "date", "time", "convert"],
+    popular: true,
+    accent: "#06b6d4",
+  },
+  {
+    slug: "regex-playground",
+    name: "Regex Playground",
+    description: "Compose and test regular expressions with live matching.",
+    category: "developer",
+    icon: "lucide:regex",
+    keywords: ["regex", "regular", "expression", "pattern", "match", "test"],
+    popular: true,
+    featured: true,
+    accent: "#10b981",
+  },
+  {
+    slug: "markdown-editor",
+    name: "Markdown Editor",
+    description: "Write and preview Markdown with live rendering.",
+    category: "developer",
+    icon: "lucide:file-code-2",
+    keywords: ["markdown", "md", "editor", "preview", "write"],
+    popular: true,
+    accent: "#3b82f6",
+  },
+  {
+    slug: "color-toolkit",
+    name: "Color Toolkit",
+    description: "Pick, convert and explore colors across hex, rgb and hsl.",
+    category: "visual",
+    icon: "lucide:palette",
+    keywords: ["color", "hex", "rgb", "hsl", "picker", "palette", "convert"],
+    popular: true,
+    accent: "#eab308",
+  },
+  {
+    slug: "api-tester",
+    name: "API Tester",
+    description: "Send GET, POST, PUT, PATCH and DELETE requests to public APIs.",
+    category: "network",
+    icon: "lucide:send",
+    keywords: ["api", "rest", "http", "request", "response", "test", "postman"],
+    popular: true,
+    featured: true,
+    accent: "#0ea5e9",
+  },
+  {
+    slug: "snippets",
+    name: "Code Snippet Viewer",
+    description: "Browse, search and copy from a curated snippet library.",
+    category: "developer",
+    icon: "lucide:folder-code",
+    keywords: ["snippet", "code", "library", "copy", "samples"],
+    popular: true,
+    accent: "#64748b",
+  },
+  {
+    slug: "url-encoder",
+    name: "URL Encoder / Decoder",
+    description: "Encode and decode URL components safely.",
+    category: "web",
+    icon: "lucide:link-2",
+    keywords: ["url", "encode", "decode", "encodeURIComponent", "web"],
+    accent: "#22c55e",
+  },
+  {
+    slug: "qr-generator",
+    name: "QR Code Generator",
+    description: "Generate high-quality QR codes from any text or URL.",
+    category: "web",
+    icon: "lucide:qr-code",
+    keywords: ["qr", "qrcode", "barcode", "scan", "generate"],
+    featured: true,
+    accent: "#0d9488",
+  },
+  {
+    slug: "password-generator",
+    name: "Password Generator",
+    description: "Generate strong, cryptographically secure passwords.",
+    category: "crypto",
+    icon: "lucide:key-square",
+    keywords: ["password", "passphrase", "secure", "random", "generate", "strong"],
+    popular: true,
+    accent: "#dc2626",
+  },
+  {
+    slug: "lorem-ipsum",
+    name: "Lorem Ipsum Generator",
+    description: "Generate placeholder text in multiple lengths and formats.",
+    category: "text",
+    icon: "lucide:type",
+    keywords: ["lorem", "ipsum", "placeholder", "text", "generate", "dummy"],
+    accent: "#a16207",
+  },
+  {
+    slug: "case-converter",
+    name: "Case Converter",
+    description: "Convert text between camelCase, snake_case, kebab-case and more.",
+    category: "text",
+    icon: "lucide:case-sensitive",
+    keywords: ["case", "camel", "snake", "kebab", "pascal", "upper", "lower", "title"],
+    popular: true,
+    accent: "#7c3aed",
+  },
+  {
+    slug: "diff-checker",
+    name: "Diff Checker",
+    description: "Compare two texts and highlight exact line-by-line differences.",
+    category: "text",
+    icon: "lucide:diff",
+    keywords: ["diff", "compare", "compare text", "merge", "changes"],
+    popular: true,
+    accent: "#db2777",
+  },
+  {
+    slug: "image-to-base64",
+    name: "Image to Base64",
+    description: "Convert images to Base64 data URIs right in your browser.",
+    category: "data",
+    icon: "lucide:image",
+    keywords: ["image", "base64", "data uri", "convert", "upload", "encode"],
+    accent: "#059669",
+  },
+  {
+    slug: "github-analyzer",
+    name: "GitHub Profile Analyzer",
+    description: "Analyze any GitHub profile — stats, languages and repositories.",
+    category: "network",
+    icon: "simple-icons:github",
+    keywords: ["github", "profile", "analyze", "repos", "languages", "stats"],
+    popular: true,
+    featured: true,
+    accent: "#334155",
+  },
+  {
+    slug: "npm-explorer",
+    name: "NPM Package Explorer",
+    description: "Explore npm packages — README, downloads, dependencies and versions.",
+    category: "network",
+    icon: "simple-icons:npm",
+    keywords: ["npm", "package", "registry", "readme", "dependencies", "downloads"],
+    popular: true,
+    accent: "#cb3837",
+  },
+];
+
+/* Quick access links shown on the dashboard (admin-managed). */
+export const QUICK_ACCESS: { slug: string; hint: string }[] = [
+  { slug: "json-formatter", hint: "⌘J" },
+  { slug: "uuid-generator", hint: "⌘U" },
+  { slug: "hash-generator", hint: "⌘H" },
+  { slug: "base64", hint: "⌘B" },
+  { slug: "password-generator", hint: "⌘P" },
+  { slug: "regex-playground", hint: "⌘R" },
+];
+
+export const TOOL_COUNT = TOOLS.length;

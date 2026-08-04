@@ -1,26 +1,310 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-border: var(--sidebar-border);
+  --animate-shimmer: shimmer 1.5s infinite linear;
+  --animate-fade-up: fade-up 0.4s ease-out both;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #f7f7f8;
+  --foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #18181b;
+  --muted: #f1f1f3;
+  --muted-foreground: #6b7280;
+  --accent: #ececf1;
+  --accent-foreground: #18181b;
+  --border: #e4e4e7;
+  --ring: #6366f1;
+  --primary: #6366f1;
+  --primary-foreground: #ffffff;
+  --sidebar: #fbfbfc;
+  --sidebar-border: #e9e9ee;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #ededef;
+  --card: #101013;
+  --card-foreground: #ededef;
+  --muted: #1a1a1f;
+  --muted-foreground: #8b8b94;
+  --accent: #1c1c22;
+  --accent-foreground: #f4f4f5;
+  --border: #232329;
+  --ring: #818cf8;
+  --primary: #818cf8;
+  --primary-foreground: #0a0a0f;
+  --sidebar: #0d0d10;
+  --sidebar-border: #1c1c22;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+/* ---------- Scrollbars ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muted-foreground) 35%, transparent) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted-foreground) 35%, transparent);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- Glassmorphism ---------- */
+.glass {
+  background: color-mix(in srgb, var(--card) 62%, transparent);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+.glass-card {
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--card) 92%, transparent),
+    color-mix(in srgb, var(--card) 55%, transparent)
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.04),
+    0 8px 24px -12px rgb(0 0 0 / 0.12);
+}
+
+.glass-card:hover {
+  border-color: color-mix(in srgb, var(--ring) 40%, var(--border));
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.04),
+    0 12px 32px -12px color-mix(in srgb, var(--ring) 30%, transparent);
+}
+
+/* ---------- Keyframes ---------- */
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* ---------- Skeleton ---------- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--muted) 70%, transparent);
+  border-radius: 8px;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--card) 65%, transparent),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+/* ---------- Grid background ---------- */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--border) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--border) 45%, transparent) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+}
+
+/* ---------- Prism overrides ---------- */
+code[class*="language-"],
+pre[class*="language-"] {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.82rem;
+  line-height: 1.65;
+  direction: ltr;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  tab-size: 2;
+}
+
+:not(pre) > code[class*="language-"] {
+  padding: 0.15em 0.35em;
+  border-radius: 6px;
+  background: var(--muted);
+}
+
+.dark pre[class*="language-"] {
+  background: #0c0c10 !important;
+}
+pre[class*="language-"] {
+  background: color-mix(in srgb, var(--muted) 60%, transparent) !important;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin: 0;
+}
+
+code[class*="language-"] .token.comment,
+pre[class*="language-"] .token.comment,
+code[class*="language-"] .token.prolog,
+pre[class*="language-"] .token.prolog,
+code[class*="language-"] .token.doctype,
+pre[class*="language-"] .token.doctype,
+code[class*="language-"] .token.cdata,
+pre[class*="language-"] .token.cdata {
+  color: #6b7280;
+}
+
+code[class*="language-"] .token.punctuation,
+pre[class*="language-"] .token.punctuation {
+  color: color-mix(in srgb, var(--foreground) 80%, transparent);
+}
+
+code[class*="language-"] .token.property,
+pre[class*="language-"] .token.property,
+code[class*="language-"] .token.tag,
+pre[class*="language-"] .token.tag,
+code[class*="language-"] .token.constant,
+pre[class*="language-"] .token.constant,
+code[class*="language-"] .token.symbol,
+pre[class*="language-"] .token.symbol {
+  color: #0f766e;
+}
+
+code[class*="language-"] .token.boolean,
+pre[class*="language-"] .token.boolean,
+code[class*="language-"] .token.number,
+pre[class*="language-"] .token.number {
+  color: #2563eb;
+}
+
+code[class*="language-"] .token.selector,
+pre[class*="language-"] .token.selector,
+code[class*="language-"] .token.attr-name,
+pre[class*="language-"] .token.attr-name,
+code[class*="language-"] .token.string,
+pre[class*="language-"] .token.string {
+  color: #16a34a;
+}
+
+code[class*="language-"] .token.operator,
+pre[class*="language-"] .token.operator,
+code[class*="language-"] .token.entity,
+pre[class*="language-"] .token.entity,
+code[class*="language-"] .token.url,
+pre[class*="language-"] .token.url {
+  color: #db2777;
+}
+
+code[class*="language-"] .token.keyword,
+pre[class*="language-"] .token.keyword {
+  color: #7c3aed;
+}
+
+/* ---------- Monaco editor theme ---------- */
+.monaco-editor,
+.monaco-editor .margin,
+.monaco-editor-background {
+  background-color: transparent !important;
+}
+
+/* ---------- Diff highlight ---------- */
+.diff-removed {
+  background: color-mix(in srgb, #ef4444 14%, transparent);
+}
+.diff-added {
+  background: color-mix(in srgb, #22c55e 14%, transparent);
+}
+
+/* ---------- Focus rings ---------- */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Command palette scroll fade ---------- */
+.cmd-scroll {
+  mask-image: linear-gradient(to bottom, black 92%, transparent);
+}
+
+/* ---------- Toast theming ---------- */
+[data-sonner-toaster] {
+  --toast-background: var(--card);
+  --toast-foreground: var(--foreground);
+  --normal-bg: var(--card);
+  --normal-border: var(--border);
+  --normal-text: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
 }
