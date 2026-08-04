@@ -15,7 +15,7 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ToolIcon } from "@/components/ui/tool-icon";
-import { cn, relativeTime, truncate } from "@/lib/utils";
+import { cn, truncate } from "@/lib/utils";
 
 export function DashboardPage() {
   return (
@@ -28,7 +28,7 @@ export function DashboardPage() {
 function DashboardContent() {
   const query = useDashQuery().trim().toLowerCase();
   const router = useRouter();
-  const { favorites, recentTools, copyHistory, isFavorite, toggleFavorite } = useHistory();
+  const { favorites, recentTools, isFavorite, toggleFavorite } = useHistory();
   const { settings, updateSettings } = useSettings();
 
   const featured = useMemo(
@@ -43,7 +43,6 @@ function DashboardContent() {
   const recent = recentTools
     .map((item) => TOOLS.find((tool) => tool.slug === item.toolSlug))
     .filter(Boolean) as typeof TOOLS;
-  const recentCopies = copyHistory.slice(0, 6);
   const filteredTools = query
     ? TOOLS.filter((tool) =>
         [tool.name, tool.description, tool.category, ...tool.keywords]
@@ -65,7 +64,7 @@ function DashboardContent() {
                 DevKit keeps your daily developer workflows in one fast place.
               </h1>
               <p className="max-w-xl text-base text-muted-foreground">
-                Search tools, pin favorites, revisit recent work, inspect copies and launch any utility with keyboard shortcuts.
+                Search tools, pin favorites, revisit recent work and launch any utility with keyboard shortcuts.
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
@@ -79,7 +78,6 @@ function DashboardContent() {
           <StatCard label="Tools" value={String(TOOLS.length)} hint="Admin-managed utilities" icon="lucide:sparkles" />
           <StatCard label="Favorites" value={String(favorites.length)} hint="Stored in LocalStorage" icon="lucide:heart" />
           <StatCard label="Recent uses" value={String(recentTools.length)} hint="Recently used tools" icon="lucide:clock-3" />
-          <StatCard label="Copies" value={String(copyHistory.length)} hint="Copy history" icon="lucide:copy" />
         </div>
       </section>
 
@@ -139,41 +137,21 @@ function DashboardContent() {
             </Section>
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-            <Section title="Recently copied" description="Your latest clipboard entries.">
-              {recentCopies.length ? (
-                <div className="space-y-3">
-                  {recentCopies.map((item) => (
-                    <div key={`${item.toolSlug}-${item.at}`} className="rounded-2xl border border-border bg-background p-4">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="text-sm font-medium">{item.toolName}</div>
-                        <span className="text-xs text-muted-foreground">{relativeTime(item.at)}</span>
-                      </div>
-                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{item.preview}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <EmptyState title="Copy history is empty" description="Clipboard copies are tracked locally on this device." />
-              )}
-            </Section>
-
-            <Section title="Tool categories" description="Browse by admin-managed group.">
-              <div className="grid gap-3 sm:grid-cols-2">
-                {CATEGORIES.map((category) => (
-                  <Link
-                    key={category.id}
-                    href={`/tools?category=${category.id}`}
-                    className="rounded-2xl border border-border bg-background p-4 transition-colors hover:bg-accent/60"
-                  >
-                    <div className="text-sm font-medium">{category.label}</div>
-                    <div className="mt-1 text-xs text-muted-foreground">{category.description}</div>
-                    <div className="mt-3 text-xs text-muted-foreground">{TOOLS.filter((tool) => tool.category === category.id).length} tools</div>
-                  </Link>
-                ))}
-              </div>
-            </Section>
-          </div>
+          <Section title="Tool categories" description="Browse by admin-managed group.">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {CATEGORIES.map((category) => (
+                <Link
+                  key={category.id}
+                  href={`/tools?category=${category.id}`}
+                  className="rounded-2xl border border-border bg-background p-4 transition-colors hover:bg-accent/60"
+                >
+                  <div className="text-sm font-medium">{category.label}</div>
+                  <div className="mt-1 text-xs text-muted-foreground">{category.description}</div>
+                  <div className="mt-3 text-xs text-muted-foreground">{TOOLS.filter((tool) => tool.category === category.id).length} tools</div>
+                </Link>
+              ))}
+            </div>
+          </Section>
         </>
       )}
 
