@@ -76,6 +76,7 @@ export interface Settings {
   reduceMotion: boolean;
   compactMode: boolean;
   historyLimit: number;
+  sidebarCollapsed: boolean;
 }
 
 export type ToastType = "copy" | "success" | "error" | "info";

@@ -30,7 +30,10 @@ function matches(e: KeyboardEvent, combo: string): boolean {
 
 export function useHotkeys(combo: string, handler: Handler) {
   const handlerRef = useRef(handler);
-  handlerRef.current = handler;
+
+  useEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
 
   useEffect(() => {
     const normalized = normalizeCombo(combo);

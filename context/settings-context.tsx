@@ -17,6 +17,7 @@ export const DEFAULT_SETTINGS: Settings = {
   reduceMotion: false,
   compactMode: false,
   historyLimit: 50,
+  sidebarCollapsed: false,
 };
 
 interface SettingsContextValue {

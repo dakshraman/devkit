@@ -46,6 +46,7 @@ export const storage = {
     reduceMotion: false,
     compactMode: false,
     historyLimit: 50,
+    sidebarCollapsed: false,
   }),
   setSettings: (s: Settings) => write(KEYS.settings, s),
 

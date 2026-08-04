@@ -7,11 +7,13 @@ import { cn } from "@/lib/utils";
 interface SidebarNavButtonProps extends ComponentProps<typeof Link> {
   active?: boolean;
   onNavigate?: () => void;
+  collapsed?: boolean;
 }
 
 export function SidebarNavButton({
   active,
   onNavigate,
+  collapsed,
   className,
   children,
   ...props
@@ -26,6 +28,7 @@ export function SidebarNavButton({
       className={cn(
         "group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
         active && "bg-accent text-foreground",
+        collapsed && "lg:justify-center lg:px-0",
         className
       )}
     >

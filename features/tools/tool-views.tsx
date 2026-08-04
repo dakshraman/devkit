@@ -29,7 +29,7 @@ import { ToolIcon } from "@/components/ui/tool-icon";
 import { useCopy } from "@/hooks/useCopy";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSettings } from "@/context/settings-context";
-import { cn, bytesToBase64, downloadFile, formatDuration, formatNumber } from "@/lib/utils";
+import { cn, bytesToBase64, downloadFile, formatDuration, formatNumber, nowMs, nowSeconds } from "@/lib/utils";
 import {
   base64Decode,
   base64Encode,
@@ -407,7 +407,7 @@ function HashTool({ tool }: { tool: Tool }) {
 }
 
 function TimestampTool({ tool }: { tool: Tool }) {
-  const [value, setValue] = useState(String(Math.floor(Date.now() / 1000)));
+  const [value, setValue] = useState(String(nowSeconds()));
   const [mode, setMode] = useState<"unix" | "date">("unix");
   const date = useMemo(() => {
     if (mode === "unix") {
@@ -492,7 +492,7 @@ function MarkdownTool({ tool }: { tool: Tool }) {
           />
         </Panel>
         <Panel title="Preview" description="Rendered HTML preview.">
-          <article className="prose prose-invert max-w-none prose-headings:tracking-tight" dangerouslySetInnerHTML={{ __html: html }} />
+          <article className="prose max-w-none dark:prose-invert prose-headings:tracking-tight" dangerouslySetInnerHTML={{ __html: html }} />
         </Panel>
       </div>
     </Shell>
@@ -548,7 +548,7 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
-    const start = performance.now();
+    const start = nowMs();
     try {
       const url = new URL(data.url);
       queries.filter((q) => q.key).forEach((q) => url.searchParams.set(q.key, q.value));
@@ -569,11 +569,11 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
       setStatus(res.status);
       const text = await res.text();
       setResponse(text);
-      setElapsed(performance.now() - start);
+      setElapsed(nowMs() - start);
     } catch (error) {
       setResponse(error instanceof Error ? error.message : "Request failed");
       setStatus(null);
-      setElapsed(performance.now() - start);
+      setElapsed(nowMs() - start);
     } finally {
       setLoading(false);
     }
@@ -694,7 +694,7 @@ function QrTool({ tool }: { tool: Tool }) {
         <Textarea value={text} onChange={(e) => setText(e.target.value)} rows={4} />
         <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="rounded-2xl border border-border bg-background p-4">
-            {dataUrl ? <img src={dataUrl} alt="QR code" className="mx-auto rounded-xl" /> : null}
+            {dataUrl ? <Image src={dataUrl} alt="QR code" width={340} height={340} unoptimized className="mx-auto h-auto w-auto rounded-xl" /> : null}
           </div>
           <div className="space-y-3">
             <CopyButton value={text} toolSlug={tool.slug} toolName={tool.name} />
@@ -853,9 +853,15 @@ function GitHubTool({ tool }: { tool: Tool }) {
     following?: number;
     public_repos?: number;
   };
+  type GitHubRepo = {
+    id: number;
+    name: string;
+    description?: string | null;
+    language?: string | null;
+  };
   const [profile, setProfile] = useState<GitHubProfile | null>(null);
-  const [repos, setRepos] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [repos, setRepos] = useState<GitHubRepo[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const loadProfile = async (username: string) => {
     setLoading(true);
@@ -879,7 +885,30 @@ function GitHubTool({ tool }: { tool: Tool }) {
     await loadProfile(username);
   });
   useEffect(() => {
-    void loadProfile("vercel");
+    let active = true;
+    axios
+      .get<GitHubProfile>("https://api.github.com/users/vercel")
+      .then((userRes) =>
+        Promise.all([
+          userRes,
+          axios.get<GitHubRepo[]>("https://api.github.com/users/vercel/repos?per_page=100&sort=stars"),
+        ])
+      )
+      .then(([userRes, repoRes]) => {
+        if (!active) return;
+        setProfile(userRes.data);
+        setRepos(repoRes.data.slice(0, 8));
+      })
+      .catch((err) => {
+        if (!active) return;
+        setError(err instanceof Error ? err.message : "Failed to load GitHub profile");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
   return (
     <Shell tool={tool}>
@@ -926,8 +955,15 @@ function GitHubTool({ tool }: { tool: Tool }) {
 function NpmTool({ tool }: { tool: Tool }) {
   const schema = z.object({ name: z.string().min(1) });
   const { register, handleSubmit } = useForm<{ name: string }>({ resolver: zodResolver(schema), defaultValues: { name: "react" } });
-  const [pkg, setPkg] = useState<any | null>(null);
-  const [loading, setLoading] = useState(false);
+  type NpmPackage = {
+    "dist-tags"?: { latest?: string };
+    maintainers?: { name?: string }[];
+    dependencies?: Record<string, string>;
+    readme?: string;
+    versions?: Record<string, unknown>;
+  };
+  const [pkg, setPkg] = useState<NpmPackage | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const loadPackage = async (name: string) => {
     setLoading(true);
@@ -946,7 +982,21 @@ function NpmTool({ tool }: { tool: Tool }) {
     await loadPackage(name);
   });
   useEffect(() => {
-    void loadPackage("react");
+    let active = true;
+    axios
+      .get<NpmPackage>("https://registry.npmjs.org/react")
+      .then(({ data }) => {
+        if (active) setPkg(data);
+      })
+      .catch((err) => {
+        if (active) setError(err instanceof Error ? err.message : "Failed to load npm package");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
   const versions = pkg ? Object.keys(pkg.versions ?? {}).slice(-10).reverse() : [];
   return (

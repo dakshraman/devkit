@@ -37,6 +37,20 @@ export function CommandPalette() {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
+  const [prevQuery, setPrevQuery] = useState(query);
+  const [prevOpen, setPrevOpen] = useState(isOpen);
+
+  if (query !== prevQuery) {
+    setPrevQuery(query);
+    setIndex(0);
+  }
+
+  if (isOpen !== prevOpen) {
+    setPrevOpen(isOpen);
+    setIndex(0);
+    if (isOpen) setQuery("");
+  }
+
   useHotkeys("ctrl+k", toggle);
 
   const items = useMemo<PaletteItem[]>(() => {
@@ -127,12 +141,7 @@ export function CommandPalette() {
   }, [query, router, close, recentTools, favorites, theme, toggleTheme]);
 
   useEffect(() => {
-    setIndex(0);
-  }, [query, isOpen]);
-
-  useEffect(() => {
     if (isOpen) {
-      setQuery("");
       setTimeout(() => inputRef.current?.focus(), 30);
     }
   }, [isOpen]);
