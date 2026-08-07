@@ -13,6 +13,7 @@ import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-typescript";
 import { Icon } from "@iconify/react";
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -439,15 +440,29 @@ function RegexTool({ tool }: { tool: Tool }) {
 
 function MarkdownTool({ tool }: { tool: Tool }) {
   const [markdown, setMarkdown] = useState("# DevKit\n\nWrite **Markdown** here.");
+  const [previewOpen, setPreviewOpen] = useState(false);
   const { theme } = useSettings();
   const html = useMemo(() => marked.parse(markdown) as string, [markdown]);
   useEffect(() => {
     Prism.highlightAll();
   }, [html]);
+  useEffect(() => {
+    if (!previewOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPreviewOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [previewOpen]);
   return (
     <Shell tool={tool}>
       <div className="grid gap-6 lg:grid-cols-2">
-        <Panel title="Editor" description="Monaco-backed markdown editing with live preview.">
+        <Panel title="Editor" description="Monaco-backed markdown editing with live preview." className="min-w-0">
           <MonacoEditor
             height="420px"
             defaultLanguage="markdown"
@@ -457,10 +472,40 @@ function MarkdownTool({ tool }: { tool: Tool }) {
             options={{ minimap: { enabled: false }, wordWrap: "on", fontSize: 14 }}
           />
         </Panel>
-        <Panel title="Preview" description="Rendered HTML preview.">
-          <article className="prose max-w-none dark:prose-invert prose-headings:tracking-tight" dangerouslySetInnerHTML={{ __html: html }} />
+        <Panel title="Preview" description="Rendered HTML preview." className="min-w-0">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted-foreground">Live render</p>
+            <Button variant="outline" size="sm" onClick={() => setPreviewOpen(true)}>
+              <Icon icon="lucide:maximize-2" className="mr-1.5 size-3.5" />
+              View fullscreen
+            </Button>
+          </div>
+          <article
+            className="prose max-w-none break-words dark:prose-invert prose-headings:tracking-tight prose-pre:overflow-x-auto prose-img:max-w-full prose-img:rounded-xl prose-table:block prose-table:max-w-full prose-table:overflow-x-auto [&_pre]:p-4"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
         </Panel>
       </div>
+      {previewOpen && createPortal(
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8" role="dialog" aria-modal="true" aria-label="Markdown preview">
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setPreviewOpen(false)} />
+          <div className="relative flex h-full max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3">
+              <div className="text-sm font-semibold">Preview</div>
+              <Button variant="ghost" size="sm" onClick={() => setPreviewOpen(false)} aria-label="Close preview">
+                <Icon icon="lucide:x" className="size-4" />
+              </Button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-auto p-6">
+              <article
+                className="prose max-w-none break-words dark:prose-invert prose-headings:tracking-tight prose-pre:overflow-x-auto prose-img:max-w-full prose-img:rounded-xl prose-table:block prose-table:max-w-full prose-table:overflow-x-auto [&_pre]:p-4"
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </Shell>
   );
 }
