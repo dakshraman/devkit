@@ -6,7 +6,7 @@ import { TOOLS } from "@/data/tools";
 export const metadata: Metadata = buildMetadata({
   title: "All Tools",
   description:
-    "Browse all 36 DevKit tools — formatters, generators, converters, analyzers and references. Every tool runs 100% in your browser with no account or upload.",
+    "Browse all 39 DevKit tools — formatters, generators, converters, analyzers and references. Every tool runs 100% in your browser with no account or upload.",
   path: "/tools",
   keywords: ["all tools", "developer utilities", "free dev tools", "browser tools"],
 });

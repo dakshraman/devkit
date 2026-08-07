@@ -415,6 +415,37 @@ export const TOOLS: Tool[] = [
     popular: true,
     accent: "#10b981",
   },
+  {
+    slug: "image-converter",
+    name: "Image Converter",
+    description: "Convert images between JPEG, PNG, WebP and GIF, with resize and quality controls.",
+    category: "visual",
+    icon: "lucide:image-plus",
+    keywords: ["image", "convert", "jpeg", "png", "webp", "gif", "resize", "format"],
+    popular: true,
+    featured: true,
+    accent: "#f97316",
+  },
+  {
+    slug: "image-compressor",
+    name: "Image Compressor",
+    description: "Shrink image file size with live quality, format and scale controls.",
+    category: "visual",
+    icon: "lucide:file-archive",
+    keywords: ["image", "compress", "optimize", "webp", "quality", "reduce", "size"],
+    popular: true,
+    accent: "#10b981",
+  },
+  {
+    slug: "bg-remover",
+    name: "Background Remover",
+    description: "Remove image backgrounds locally with edge flood-fill or color picking.",
+    category: "visual",
+    icon: "lucide:wand-2",
+    keywords: ["background", "remove", "transparent", "png", "cutout", "photo", "editor"],
+    featured: true,
+    accent: "#8b5cf6",
+  },
 ];
 
 /* Quick access links shown on the dashboard (admin-managed). */

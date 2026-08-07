@@ -40,7 +40,7 @@ export default function OpengraphImage() {
           <div style={{ fontSize: 76, fontWeight: 800, letterSpacing: -2 }}>DevKit</div>
         </div>
         <div style={{ marginTop: 30, fontSize: 34, color: "#c7d2fe" }}>
-          All-in-one developer toolkit — 35+ tools, 100% local
+          All-in-one developer toolkit — 38+ tools, 100% local
         </div>
         <div style={{ marginTop: 42, fontSize: 24, color: "#a5b4fc" }}>devkit.dakshraman.in</div>
       </div>

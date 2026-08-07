@@ -77,6 +77,9 @@ const EXTRA_SLUGS = [
   "env-parser",
   "http-status",
   "regex-cheatsheet",
+  "image-converter",
+  "image-compressor",
+  "bg-remover",
 ];
 
 function usePrismHtml(code: string, language: string) {
