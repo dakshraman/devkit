@@ -8,11 +8,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ToolIcon } from "@/components/ui/tool-icon";
 import { cn } from "@/lib/utils";
 import type { Tool } from "@/types";
+import { Reveal } from "@/components/ui/motion";
 
 export function Shell({ tool, children, description }: { tool: Tool; children: ReactNode; description?: string }) {
   return (
     <div className="space-y-6">
-      <GlassCard className="relative overflow-hidden">
+      <Reveal y={14}>
+        <GlassCard className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_color-mix(in_srgb,var(--primary)_16%,transparent),transparent_40%)]" />
         <div className="relative flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="space-y-3">
@@ -34,6 +36,7 @@ export function Shell({ tool, children, description }: { tool: Tool; children: R
           </div>
         </div>
       </GlassCard>
+      </Reveal>
       {children}
     </div>
   );

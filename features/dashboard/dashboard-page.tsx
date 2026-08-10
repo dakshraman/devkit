@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { ToolIcon } from "@/components/ui/tool-icon";
 import { cn, truncate } from "@/lib/utils";
+import { Reveal, StaggerGroup, StaggerItem, HoverCard } from "@/components/ui/motion";
 
 export function DashboardPage() {
   return (
@@ -54,31 +55,39 @@ function DashboardContent() {
 
   return (
     <div className="space-y-8">
-      <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-        <GlassCard className="relative overflow-hidden p-8">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_color-mix(in_srgb,var(--primary)_15%,transparent),transparent_35%),linear-gradient(120deg,color-mix(in_srgb,var(--primary)_8%,transparent),transparent_40%)]" />
-          <div className="relative max-w-2xl space-y-5">
-            <Badge variant="secondary" className="w-fit">Front-end only. Local-first. No backend.</Badge>
-            <div className="space-y-3">
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                DevKit keeps your daily developer workflows in one fast place.
-              </h1>
-              <p className="max-w-xl text-base text-muted-foreground">
-                Search tools, pin favorites, revisit recent work and launch any utility with keyboard shortcuts.
-              </p>
+      <Reveal>
+        <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
+          <GlassCard className="relative overflow-hidden p-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_color-mix(in_srgb,var(--primary)_15%,transparent),transparent_35%),linear-gradient(120deg,color-mix(in_srgb,var(--primary)_8%,transparent),transparent_40%)]" />
+            <div className="relative max-w-2xl space-y-5">
+              <Badge variant="secondary" className="w-fit">Front-end only. Local-first. No backend.</Badge>
+              <div className="space-y-3">
+                <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+                  DevKit keeps your daily developer workflows in one fast place.
+                </h1>
+                <p className="max-w-xl text-base text-muted-foreground">
+                  Search tools, pin favorites, revisit recent work and launch any utility with keyboard shortcuts.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Button onClick={() => router.push("/tools")}>Browse all tools</Button>
+              </div>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <Button onClick={() => router.push("/tools")}>Browse all tools</Button>
-            </div>
-          </div>
-        </GlassCard>
+          </GlassCard>
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-          <StatCard label="Tools" value={String(TOOLS.length)} hint="Admin-managed utilities" icon="lucide:sparkles" />
-          <StatCard label="Favorites" value={String(favorites.length)} hint="Stored in LocalStorage" icon="lucide:heart" />
-          <StatCard label="Recent uses" value={String(recentTools.length)} hint="Recently used tools" icon="lucide:clock-3" />
-        </div>
-      </section>
+          <StaggerGroup className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+            <StaggerItem>
+              <StatCard label="Tools" value={String(TOOLS.length)} hint="Admin-managed utilities" icon="lucide:sparkles" />
+            </StaggerItem>
+            <StaggerItem>
+              <StatCard label="Favorites" value={String(favorites.length)} hint="Stored in LocalStorage" icon="lucide:heart" />
+            </StaggerItem>
+            <StaggerItem>
+              <StatCard label="Recent uses" value={String(recentTools.length)} hint="Recently used tools" icon="lucide:clock-3" />
+            </StaggerItem>
+          </StaggerGroup>
+        </section>
+      </Reveal>
 
       {query ? (
         <Section title={`Search results for “${query}”`} description="Global tool search from the dashboard.">
@@ -96,26 +105,27 @@ function DashboardContent() {
             </Section>
 
             <Section title="Quick access" description="Jump into high-frequency tools.">
-              <div className="grid gap-2">
+              <StaggerGroup className="grid gap-2">
                 {QUICK_ACCESS.map((entry) => {
                   const tool = TOOLS.find((item) => item.slug === entry.slug);
                   if (!tool) return null;
                   return (
-                    <button
-                      key={entry.slug}
-                      onClick={() => router.push(`/tools/${tool.slug}`)}
-                      className="flex items-center gap-3 rounded-xl border border-border bg-background px-3 py-2.5 text-left transition-colors hover:bg-accent/70"
-                    >
-                      <ToolIcon icon={tool.icon} accent={tool.accent} />
-                      <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm font-medium">{tool.name}</div>
-                        <div className="truncate text-xs text-muted-foreground">{tool.description}</div>
-                      </div>
-                      <kbd className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{entry.hint}</kbd>
-                    </button>
+                    <StaggerItem key={entry.slug}>
+                      <button
+                        onClick={() => router.push(`/tools/${tool.slug}`)}
+                        className="flex items-center gap-3 rounded-xl border border-border bg-background px-3 py-2.5 text-left transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent/70"
+                      >
+                        <ToolIcon icon={tool.icon} accent={tool.accent} />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-sm font-medium">{tool.name}</div>
+                          <div className="truncate text-xs text-muted-foreground">{tool.description}</div>
+                        </div>
+                        <kbd className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">{entry.hint}</kbd>
+                      </button>
+                    </StaggerItem>
                   );
                 })}
-              </div>
+              </StaggerGroup>
             </Section>
           </div>
 
@@ -137,33 +147,37 @@ function DashboardContent() {
           </div>
 
           <Section title="Tool categories" description="Browse by admin-managed group.">
-            <div className="grid gap-3 sm:grid-cols-2">
+            <StaggerGroup className="grid gap-3 sm:grid-cols-2">
               {CATEGORIES.map((category) => (
-                <Link
-                  key={category.id}
-                  href={`/tools?category=${category.id}`}
-                  className="rounded-2xl border border-border bg-background p-4 transition-colors hover:bg-accent/60"
-                >
-                  <div className="text-sm font-medium">{category.label}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">{category.description}</div>
-                  <div className="mt-3 text-xs text-muted-foreground">{TOOLS.filter((tool) => tool.category === category.id).length} tools</div>
-                </Link>
+                <StaggerItem key={category.id}>
+                  <Link
+                    href={`/tools?category=${category.id}`}
+                    className="block rounded-2xl border border-border bg-background p-4 transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent/60 hover:shadow-md"
+                  >
+                    <div className="text-sm font-medium">{category.label}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">{category.description}</div>
+                    <div className="mt-3 text-xs text-muted-foreground">{TOOLS.filter((tool) => tool.category === category.id).length} tools</div>
+                  </Link>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerGroup>
           </Section>
         </>
       )}
 
       {!settings.compactMode && (
-        <GlassCard>
-          <h2 className="text-lg font-semibold">Everything is local by default</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Only theme, favorites, recent tools, copy history and preferences persist in LocalStorage.
-          </p>
-        </GlassCard>
+        <Reveal>
+          <GlassCard>
+            <h2 className="text-lg font-semibold">Everything is local by default</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Only theme, favorites, recent tools, copy history and preferences persist in LocalStorage.
+            </p>
+          </GlassCard>
+        </Reveal>
       )}
 
-      <GlassCard className="space-y-4 p-6">
+      <Reveal>
+        <GlassCard className="space-y-4 p-6">
         <div>
           <h2 className="text-lg font-semibold">Preferences</h2>
           <p className="text-sm text-muted-foreground">Persisted locally in your browser only.</p>
@@ -212,6 +226,7 @@ function DashboardContent() {
           />
         </div>
       </GlassCard>
+      </Reveal>
     </div>
   );
 }
@@ -251,17 +266,18 @@ function ToolGrid({
 }) {
   if (!tools.length) return <EmptyState title="No tools found" description="Try another search or category." />;
   return (
-    <div className={cn("grid gap-4", compact ? "sm:grid-cols-2" : "xl:grid-cols-3")}>
+    <StaggerGroup className={cn("grid gap-4", compact ? "sm:grid-cols-2" : "xl:grid-cols-3")}>
       {tools.map((tool) => (
-        <ToolCard
-          key={tool.slug}
-          tool={tool}
-          isFavorite={isFavorite(tool.slug)}
-          onFavoriteToggle={() => onFavoriteToggle(tool.slug)}
-          compact={compact}
-        />
+        <StaggerItem key={tool.slug}>
+          <ToolCard
+            tool={tool}
+            isFavorite={isFavorite(tool.slug)}
+            onFavoriteToggle={() => onFavoriteToggle(tool.slug)}
+            compact={compact}
+          />
+        </StaggerItem>
       ))}
-    </div>
+    </StaggerGroup>
   );
 }
 
@@ -278,34 +294,36 @@ function ToolCard({
 }) {
   const router = useRouter();
   return (
-    <GlassCard className={cn("group relative flex flex-col gap-4", compact && "p-4")}>
-      <button
-        onClick={() => router.push(`/tools/${tool.slug}`)}
-        className="absolute inset-0 rounded-2xl"
-        aria-label={`Open ${tool.name}`}
-      />
-      <div className="flex items-start justify-between gap-3">
-        <ToolIcon icon={tool.icon} accent={tool.accent} className="size-10 rounded-2xl" />
+    <HoverCard>
+      <GlassCard className={cn("group relative flex h-full flex-col gap-4", compact && "p-4")}>
         <button
-          className="relative z-10 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          onClick={(e) => {
-            e.stopPropagation();
-            onFavoriteToggle();
-          }}
-          aria-label={isFavorite ? `Unfavorite ${tool.name}` : `Favorite ${tool.name}`}
-        >
-          <Icon icon="lucide:star" className={cn("size-4", isFavorite && "text-amber-400")} />
-        </button>
-      </div>
-      <div className="space-y-1">
-        <h3 className="text-base font-semibold tracking-tight">{tool.name}</h3>
-        <p className="line-clamp-2 text-sm text-muted-foreground">{tool.description}</p>
-      </div>
-      <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-        <Badge variant="outline">{tool.category}</Badge>
-        <span className="truncate">{truncate(tool.keywords.join(", "), 28)}</span>
-      </div>
-    </GlassCard>
+          onClick={() => router.push(`/tools/${tool.slug}`)}
+          className="absolute inset-0 rounded-2xl"
+          aria-label={`Open ${tool.name}`}
+        />
+        <div className="flex items-start justify-between gap-3">
+          <ToolIcon icon={tool.icon} accent={tool.accent} className="size-10 rounded-2xl transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3" />
+          <button
+            className="relative z-10 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:scale-90"
+            onClick={(e) => {
+              e.stopPropagation();
+              onFavoriteToggle();
+            }}
+            aria-label={isFavorite ? `Unfavorite ${tool.name}` : `Favorite ${tool.name}`}
+          >
+            <Icon icon="lucide:star" className={cn("size-4", isFavorite && "text-amber-400")} />
+          </button>
+        </div>
+        <div className="space-y-1">
+          <h3 className="text-base font-semibold tracking-tight">{tool.name}</h3>
+          <p className="line-clamp-2 text-sm text-muted-foreground">{tool.description}</p>
+        </div>
+        <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+          <Badge variant="outline">{tool.category}</Badge>
+          <span className="truncate">{truncate(tool.keywords.join(", "), 28)}</span>
+        </div>
+      </GlassCard>
+    </HoverCard>
   );
 }
 

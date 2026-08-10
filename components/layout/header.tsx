@@ -10,13 +10,12 @@ import { useSettings } from "@/context/settings-context";
 import { useHotkeys } from "@/hooks/useHotkeys";
 import { cn } from "@/lib/utils";
 import { ToolIcon } from "@/components/ui/tool-icon";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function Header({
-  onMenuClick,
   onSearchChange,
   onNavigateToTool,
 }: {
-  onMenuClick: () => void;
   onSearchChange?: (query: string) => void;
   onNavigateToTool?: (slug: string) => void;
 }) {
@@ -55,13 +54,7 @@ export function Header({
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/70 px-4 backdrop-blur-xl sm:px-6">
-      <button
-        onClick={onMenuClick}
-        className="rounded-lg p-2 text-muted-foreground hover:bg-accent lg:hidden"
-        aria-label="Open menu"
-      >
-        <Icon icon="lucide:menu" className="size-5" />
-      </button>
+      <SidebarTrigger className="size-8 md:hidden" aria-label="Open menu" />
 
       <div className="hidden min-w-0 items-center gap-2 md:flex">
         {currentTool && (

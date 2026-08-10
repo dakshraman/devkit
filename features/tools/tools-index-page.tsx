@@ -12,6 +12,7 @@ import { ToolIcon } from "@/components/ui/tool-icon";
 import { useHistory } from "@/context/history-context";
 import { CATEGORIES, TOOLS } from "@/data/tools";
 import { cn, truncate } from "@/lib/utils";
+import { Reveal, StaggerGroup, StaggerItem, HoverCard } from "@/components/ui/motion";
 
 export function ToolsIndexPage() {
   return (
@@ -39,59 +40,69 @@ function ToolsIndexContent() {
 
   return (
     <div className="space-y-6">
-      <GlassCard className="p-8">
-        <Badge variant="secondary">All tools</Badge>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight">Browse the full DevKit catalog</h1>
-        <p className="mt-2 max-w-2xl text-muted-foreground">
-          Filter by category, search tool descriptions and open any utility instantly.
-        </p>
-      </GlassCard>
+      <Reveal>
+        <GlassCard className="p-8">
+          <Badge variant="secondary">All tools</Badge>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight">Browse the full DevKit catalog</h1>
+          <p className="mt-2 max-w-2xl text-muted-foreground">
+            Filter by category, search tool descriptions and open any utility instantly.
+          </p>
+        </GlassCard>
+      </Reveal>
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_220px]">
-        <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search tools..." />
-        <Select value={categoryParam} onValueChange={(value) => router.push(value === "all" ? "/tools" : `/tools?category=${value}`)}>
-          <SelectTrigger><SelectValue placeholder="All categories" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All categories</SelectItem>
-            {CATEGORIES.map((category) => <SelectItem key={category.id} value={category.id}>{category.label}</SelectItem>)}
-          </SelectContent>
-        </Select>
-      </div>
+      <Reveal delay={0.05}>
+        <div className="grid gap-4 lg:grid-cols-[1fr_220px]">
+          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search tools..." />
+          <Select value={categoryParam} onValueChange={(value) => router.push(value === "all" ? "/tools" : `/tools?category=${value}`)}>
+            <SelectTrigger><SelectValue placeholder="All categories" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All categories</SelectItem>
+              {CATEGORIES.map((category) => <SelectItem key={category.id} value={category.id}>{category.label}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+      </Reveal>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <StaggerGroup className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {tools.map((tool) => (
-          <Link key={tool.slug} href={`/tools/${tool.slug}`}>
-            <GlassCard className="group h-full space-y-4">
-              <div className="flex items-start justify-between gap-3">
-                <ToolIcon icon={tool.icon} accent={tool.accent} className="size-10 rounded-2xl" />
-                <button
-                  className="relative z-10 rounded-lg p-2 text-muted-foreground hover:bg-accent hover:text-foreground"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleFavorite(tool.slug);
-                  }}
-                >
-                  <span className={cn("text-sm", isFavorite(tool.slug) ? "text-amber-400" : "")}>★</span>
-                </button>
-              </div>
-              <div>
-                <h2 className="font-semibold">{tool.name}</h2>
-                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{tool.description}</p>
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <Badge variant="outline">{tool.category}</Badge>
-                <span className="truncate text-xs text-muted-foreground">{truncate(tool.keywords.join(", "), 30)}</span>
-              </div>
-            </GlassCard>
-          </Link>
+          <StaggerItem key={tool.slug}>
+            <HoverCard className="h-full">
+              <Link href={`/tools/${tool.slug}`} className="block h-full">
+                <GlassCard className="group h-full space-y-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <ToolIcon icon={tool.icon} accent={tool.accent} className="size-10 rounded-2xl transition-transform duration-300 group-hover:scale-105 group-hover:-rotate-3" />
+                    <button
+                      className="relative z-10 rounded-lg p-2 text-muted-foreground transition-all active:scale-90 hover:bg-accent hover:text-foreground"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleFavorite(tool.slug);
+                      }}
+                    >
+                      <span className={cn("text-sm", isFavorite(tool.slug) ? "text-amber-400" : "")}>★</span>
+                    </button>
+                  </div>
+                  <div>
+                    <h2 className="font-semibold">{tool.name}</h2>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{tool.description}</p>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <Badge variant="outline">{tool.category}</Badge>
+                    <span className="truncate text-xs text-muted-foreground">{truncate(tool.keywords.join(", "), 30)}</span>
+                  </div>
+                </GlassCard>
+              </Link>
+            </HoverCard>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGroup>
 
       {favorites.length > 0 && (
-        <GlassCard className="p-6">
-          <div className="text-sm text-muted-foreground">{favorites.length} favorite tools saved locally.</div>
-        </GlassCard>
+        <Reveal>
+          <GlassCard className="p-6">
+            <div className="text-sm text-muted-foreground">{favorites.length} favorite tools saved locally.</div>
+          </GlassCard>
+        </Reveal>
       )}
     </div>
   );
