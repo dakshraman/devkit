@@ -446,6 +446,15 @@ export const TOOLS: Tool[] = [
     featured: true,
     accent: "#8b5cf6",
   },
+  {
+    slug: "temp-mail",
+    name: "Temp Mail",
+    description: "Create a temporary disposable email address and read incoming messages — no signup.",
+    category: "network",
+    icon: "lucide:mail",
+    keywords: ["email", "mail", "temporary", "disposable", "inbox", "receive", "privacy", "spam", "fake"],
+    accent: "#0ea5e9",
+  },
 ];
 
 /* Quick access links shown on the dashboard (admin-managed). */

@@ -80,6 +80,7 @@ const EXTRA_SLUGS = [
   "image-converter",
   "image-compressor",
   "bg-remover",
+  "temp-mail",
 ];
 
 function usePrismHtml(code: string, language: string) {
