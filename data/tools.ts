@@ -150,10 +150,10 @@ export const TOOLS: Tool[] = [
   {
     slug: "api-tester",
     name: "API Tester",
-    description: "Send GET, POST, PUT, PATCH and DELETE requests to public APIs.",
+    description: "Send requests to public APIs, import Postman collections and export them back.",
     category: "network",
     icon: "lucide:send",
-    keywords: ["api", "rest", "http", "request", "response", "test", "postman"],
+    keywords: ["api", "rest", "http", "request", "response", "test", "postman", "collection", "import", "export", "auth", "bearer"],
     popular: true,
     featured: true,
     accent: "#0ea5e9",
