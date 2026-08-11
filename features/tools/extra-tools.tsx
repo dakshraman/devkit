@@ -20,7 +20,7 @@ import {
   blobToDataUrl,
   canvasToBlob,
   downloadDataUrl,
-  fitDimensions,
+  downloadImageBlob,
   loadImageFromFile,
   renderToCanvas,
 } from "@/lib/image-utils";
@@ -1800,205 +1800,142 @@ function ImageCompressTool({ tool }: { tool: Tool }) {
 /* Background remover                                                  */
 /* ================================================================== */
 
-function averageBorder(data: Uint8ClampedArray, width: number, height: number): [number, number, number] {
-  let r = 0, g = 0, b = 0, n = 0;
-  const add = (i: number) => {
-    r += data[i]; g += data[i + 1]; b += data[i + 2]; n += 1;
-  };
-  for (let x = 0; x < width; x++) {
-    add(x * 4);
-    add(((height - 1) * width + x) * 4);
-  }
-  for (let y = 0; y < height; y++) {
-    add(y * width * 4);
-    add((y * width + width - 1) * 4);
-  }
-  return [Math.round(r / n), Math.round(g / n), Math.round(b / n)];
-}
-
-function floodRemoveBackground(
-  data: Uint8ClampedArray,
-  width: number,
-  height: number,
-  bg: [number, number, number],
-  tolerance: number
-) {
-  const visited = new Uint8Array(width * height);
-  const queue: number[] = [];
-  for (let x = 0; x < width; x++) {
-    queue.push(x, (height - 1) * width + x);
-  }
-  for (let y = 0; y < height; y++) {
-    queue.push(y * width, y * width + width - 1);
-  }
-  while (queue.length) {
-    const p = queue.pop() as number;
-    if (visited[p]) continue;
-    visited[p] = 1;
-    const i = p * 4;
-    if (
-      Math.abs(data[i] - bg[0]) > tolerance ||
-      Math.abs(data[i + 1] - bg[1]) > tolerance ||
-      Math.abs(data[i + 2] - bg[2]) > tolerance
-    ) {
-      continue;
-    }
-    data[i + 3] = 0;
-    const x = p % width;
-    if (x > 0) queue.push(p - 1);
-    if (x < width - 1) queue.push(p + 1);
-    if (p >= width) queue.push(p - width);
-    if (p < width * height - width) queue.push(p + width);
-  }
-}
-
-function colorRemove(
-  data: Uint8ClampedArray,
-  width: number,
-  height: number,
-  color: [number, number, number],
-  tolerance: number
-) {
-  for (let p = 0; p < width * height; p++) {
-    const i = p * 4;
-    if (
-      Math.abs(data[i] - color[0]) <= tolerance &&
-      Math.abs(data[i + 1] - color[1]) <= tolerance &&
-      Math.abs(data[i + 2] - color[2]) <= tolerance
-    ) {
-      data[i + 3] = 0;
-    }
-  }
+interface BgRemoverProgress {
+  key: string;
+  current: number;
+  total: number;
 }
 
 function BgRemoverTool({ tool }: { tool: Tool }) {
-  const [meta, setMeta] = useState<ImageMeta | null>(null);
-  const [work, setWork] = useState<HTMLCanvasElement | null>(null);
-  const [base, setBase] = useState<Uint8ClampedArray | null>(null);
-  const [mode, setMode] = useState<"edges" | "color">("edges");
-  const [tolerance, setTolerance] = useState(30);
-  const [picked, setPicked] = useState<[number, number, number] | null>(null);
+  const [source, setSource] = useState<{ name: string; size: number; url: string } | null>(null);
+
+  const [progress, setProgress] = useState<BgRemoverProgress | null>(null);
+  const [result, setResult] = useState<{ url: string; blob: Blob; size: number } | null>(null);
   const [error, setError] = useState("");
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const debouncedTolerance = useDebounce(tolerance, 200);
+  const objectUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    };
+  }, []);
 
   const onFile = async (file?: File) => {
     if (!file) return;
     setError("");
+    setResult(null);
+    setProgress(null);
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    const url = URL.createObjectURL(file);
+    objectUrlRef.current = url;
+    setSource({ name: file.name, size: file.size, url });
+    await runRemoval(url);
+  };
+
+  const runRemoval = async (url: string) => {
+    setProgress({ key: "loading", current: 0, total: 100 });
     try {
-      const loaded = await loadImageFromFile(file);
-      const { width, height } = fitDimensions(loaded.width, loaded.height, 1600);
-      const canvas = renderToCanvas(loaded.img, width, height);
-      const ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("Canvas is not supported in this browser.");
-      const imageData = ctx.getImageData(0, 0, width, height);
-      setMeta({ name: loaded.name, size: loaded.size, width: loaded.width, height: loaded.height, preview: loaded.dataUrl });
-      setWork(canvas);
-      setBase(new Uint8ClampedArray(imageData.data));
-      setPicked(null);
+      const { removeBackground } = await import("@imgly/background-removal");
+      const blob = await removeBackground(url, {
+        output: { format: "image/png" },
+        progress: (key, current, total) => {
+          if (key.startsWith("fetch:")) {
+            setProgress({ key, current, total });
+          } else if (key.startsWith("compute:")) {
+            setProgress({ key, current: current + 1, total });
+          }
+        },
+      });
+      const outUrl = URL.createObjectURL(blob);
+      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = outUrl;
+      setResult({ url: outUrl, blob, size: blob.size });
+      setProgress(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load image");
+      setProgress(null);
+      setError(err instanceof Error ? err.message : "Failed to remove background.");
     }
   };
 
-  const onPick = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (mode !== "color" || !canvasRef.current || !base) return;
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.floor(((e.clientX - rect.left) / rect.width) * canvas.width);
-    const y = Math.floor(((e.clientY - rect.top) / rect.height) * canvas.height);
-    const i = (y * canvas.width + x) * 4;
-    if (i >= base.length || i < 0) return;
-    setPicked([base[i], base[i + 1], base[i + 2]]);
+  const reset = () => {
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    objectUrlRef.current = null;
+    setSource(null);
+    setResult(null);
+    setProgress(null);
+    setError("");
   };
 
-  useEffect(() => {
-    if (!work || !canvasRef.current || !base) return;
-    canvasRef.current.width = work.width;
-    canvasRef.current.height = work.height;
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) return;
-    ctx.putImageData(new ImageData(new Uint8ClampedArray(base), work.width, work.height), 0, 0);
-  }, [work, base]);
-
-  const resultUrl = useMemo(() => {
-    if (!work || !base) return "";
-    const data = new Uint8ClampedArray(base);
-    const width = work.width;
-    const height = work.height;
-    const toleranceValue = Math.round(debouncedTolerance * 2.55);
-    if (mode === "edges") {
-      floodRemoveBackground(data, width, height, averageBorder(data, width, height), toleranceValue);
-    } else if (picked) {
-      colorRemove(data, width, height, picked, toleranceValue);
-    } else {
-      return "";
-    }
-    const out = document.createElement("canvas");
-    out.width = width;
-    out.height = height;
-    const ctx = out.getContext("2d");
-    if (!ctx) return "";
-    ctx.putImageData(new ImageData(data, width, height), 0, 0);
-    return out.toDataURL("image/png");
-  }, [work, base, mode, picked, debouncedTolerance]);
+  const progressPct = progress
+    ? progress.total > 0
+      ? Math.min(100, Math.round((progress.current / progress.total) * 100))
+      : 0
+    : 0;
+  const isFetching = progress?.key.startsWith("fetch:") ?? false;
+  const stageLabel = !progress
+    ? ""
+    : isFetching
+      ? "Downloading AI model…"
+      : "Removing background…";
 
   return (
     <Shell tool={tool}>
-      <Panel title="Background remover" description="Flood-fill or color-match removal with a tolerance slider. Fully local.">
-        <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2 text-sm text-muted-foreground">
-          <Icon icon="lucide:wand-2" className="size-4" />
-          {meta ? "Change image" : "Upload image"}
-          <input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
-        </label>
+      <Panel title="Background remover" description="AI-powered removal that runs entirely in your browser. No upload to any server.">
+        {!source && (
+          <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:border-ring/50 hover:text-foreground">
+            <Icon icon="lucide:wand-2" className="size-4" />
+            Upload image
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
+          </label>
+        )}
         {error && <p className="text-sm text-red-500">{error}</p>}
-        {meta && <div className="grid gap-3 sm:grid-cols-3"><InfoTile label="File" value={meta.name} /><InfoTile label="Original size" value={prettyBytes(meta.size)} /><InfoTile label="Dimensions" value={`${meta.width} × ${meta.height}px`} /></div>}
-        {work && (
-          <>
-            <Tabs value={mode} onValueChange={(v) => setMode(v as "edges" | "color")}>
-              <TabsList>
-                <TabsTrigger value="edges">Edge removal</TabsTrigger>
-                <TabsTrigger value="color">Pick color</TabsTrigger>
-              </TabsList>
-            </Tabs>
-            <div>
-              <SectionLabel icon="lucide:sliders-horizontal" label={`Tolerance: ${tolerance}`} />
-              <input type="range" min={0} max={100} value={tolerance} onChange={(e) => setTolerance(Number(e.target.value))} className="mt-1 w-full accent-[var(--primary)]" />
+        {source && !result && !error && (
+          <div className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <InfoTile label="File" value={source.name} />
+              <InfoTile label="Original size" value={prettyBytes(source.size)} />
             </div>
-            <div className="grid gap-6 lg:grid-cols-2">
-              <div className="space-y-2">
-                <SectionLabel icon="lucide:mouse-pointer-click" label={mode === "color" ? "Click the background color on the image" : "Border color is detected automatically"} />
-                <div className="flex items-center justify-center overflow-auto rounded-2xl border border-border bg-card p-3" style={{ backgroundImage: CHECKERBOARD, backgroundSize: 24 }}>
-                  <canvas ref={canvasRef} onClick={onPick} className="max-h-[320px] w-auto cursor-crosshair" aria-label="Source image" />
-                </div>
-                {mode === "color" && picked && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="inline-block size-4 rounded-full border border-border" style={{ background: `rgb(${picked[0]}, ${picked[1]}, ${picked[2]})` }} />
-                    <span className="text-muted-foreground">Selected: rgb({picked.join(", ")})</span>
-                  </div>
-                )}
+            <div className="flex items-center justify-center overflow-auto rounded-2xl border border-border bg-card p-3" style={{ backgroundImage: CHECKERBOARD, backgroundSize: 24 }}>
+              <Image src={source.url} alt="Source image" width={0} height={0} unoptimized className="max-h-[320px] w-auto" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="flex items-center gap-2 text-muted-foreground">
+                  <Icon icon="lucide:loader-2" className="size-4 animate-spin" />
+                  {stageLabel}
+                </span>
+                <span className="tabular-nums text-muted-foreground">{progressPct}%</span>
               </div>
-              <div className="space-y-2">
-                <SectionLabel icon="lucide:image" label="Result" />
-                <div className="flex min-h-[320px] items-center justify-center overflow-hidden rounded-2xl border border-border bg-card p-3" style={{ backgroundImage: CHECKERBOARD, backgroundSize: 24 }}>
-                  {resultUrl ? (
-                    <Image src={resultUrl} alt="Background removed" width={work.width} height={work.height} unoptimized className="max-h-[320px] w-auto object-contain" />
-                  ) : (
-                    <p className="text-sm text-muted-foreground">Choosing the color mode and clicking the image will preview here.</p>
-                  )}
-                </div>
-                {resultUrl && (
-                  <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => downloadDataUrl(resultUrl, "devkit-transparent.png")}>Download PNG</Button>
-                    <CopyButton value={resultUrl} toolSlug={tool.slug} toolName={tool.name} label="Copied data URI" />
-                  </div>
-                )}
+              <div className="h-2 overflow-hidden rounded-full bg-muted">
+                <div
+                  className="h-full rounded-full bg-primary transition-[width] duration-200 ease-out"
+                  style={{ width: `${progressPct}%` }}
+                />
               </div>
+            </div>
+          </div>
+        )}
+        {result && (
+          <div className="space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <InfoTile label="File" value={source?.name ?? "image"} />
+              <InfoTile label="Output size" value={prettyBytes(result.size)} />
+            </div>
+            <div className="flex items-center justify-center overflow-auto rounded-2xl border border-border bg-card p-3" style={{ backgroundImage: CHECKERBOARD, backgroundSize: 24 }}>
+              <Image src={result.url} alt="Background removed" width={0} height={0} unoptimized className="max-h-[320px] w-auto" />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={() => downloadImageBlob(result.blob, (source?.name ?? "image").replace(/\.[^.]+$/, "") + "-bg-removed.png")}>
+                Download PNG
+              </Button>
+              <Button variant="outline" onClick={reset}>
+                Remove another image
+              </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Tip: raise tolerance for soft shadows, lower it to avoid eating fine detail. Best results on images with a mostly-uniform background.
+              The model only runs on your device; the input never leaves this tab.
             </p>
-          </>
+          </div>
         )}
       </Panel>
     </Shell>

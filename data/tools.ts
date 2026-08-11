@@ -439,10 +439,10 @@ export const TOOLS: Tool[] = [
   {
     slug: "bg-remover",
     name: "Background Remover",
-    description: "Remove image backgrounds locally with edge flood-fill or color picking.",
+    description: "Remove image backgrounds with AI — fully in your browser, no upload.",
     category: "visual",
     icon: "lucide:wand-2",
-    keywords: ["background", "remove", "transparent", "png", "cutout", "photo", "editor"],
+    keywords: ["background", "remove", "transparent", "png", "cutout", "photo", "editor", "ai", "erase"],
     featured: true,
     accent: "#8b5cf6",
   },
