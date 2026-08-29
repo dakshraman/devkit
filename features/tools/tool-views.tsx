@@ -12,7 +12,7 @@ import "prismjs/components/prism-json";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-typescript";
 import { Icon } from "@iconify/react";
-import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -49,7 +49,19 @@ import {
 } from "@/lib/tool-utils";
 import { SNIPPETS } from "@/data/snippets";
 import { TOOLS } from "@/data/tools";
+import {
+  buildPostmanCollection,
+  flattenPostmanCollection,
+  parsePostmanCollection,
+  prepareRequest,
+  METHOD_STYLES,
+  type AuthState,
+  type FlatRequest,
+  type KeyValueRow,
+  type PcCollection,
+} from "@/lib/postman";
 import type { Tool } from "@/types";
+import type { editor } from "monaco-editor";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), { ssr: false, loading: () => <EditorSkeleton /> });
 
@@ -63,283 +75,6 @@ const API_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
 /* ------------------------------------------------------------------ */
 /* Postman collection types + helpers (API Tester)                    */
 /* ------------------------------------------------------------------ */
-
-interface KeyValueRow {
-  key: string;
-  value: string;
-}
-
-interface AuthState {
-  type: "none" | "bearer" | "basic" | "apikey";
-  token?: string;
-  username?: string;
-  password?: string;
-  key?: string;
-  value?: string;
-  in?: "header" | "query";
-}
-
-interface FlatRequest {
-  id: string;
-  name: string;
-  method: string;
-  url: string;
-  headers: KeyValueRow[];
-  query: KeyValueRow[];
-  body: string;
-  bodyMode: "raw" | "urlencoded";
-  auth: AuthState;
-}
-
-interface PcCollection {
-  info?: { name?: string; _postman_id?: string; schema?: string };
-  item?: PcItem[];
-  variable?: { key?: string; value?: string }[];
-}
-
-interface PcItem {
-  name?: string;
-  request?: PcRequest;
-  item?: PcItem[];
-}
-
-interface PcRequest {
-  method?: string;
-  url?: string | PcUrl;
-  header?: PcHeader[];
-  body?: PcBody;
-  auth?: PcAuth;
-}
-
-interface PcUrl {
-  raw?: string;
-  protocol?: string;
-  host?: string[];
-  path?: string[];
-  query?: { key?: string; value?: string; disabled?: boolean }[];
-  variable?: { key?: string; value?: string }[];
-}
-
-interface PcHeader {
-  key?: string;
-  value?: string;
-  disabled?: boolean;
-  type?: string;
-}
-
-interface PcBody {
-  mode?: string;
-  raw?: string;
-  urlencoded?: PcHeader[];
-  formdata?: PcHeader[];
-}
-
-interface PcAuth {
-  type?: string;
-  bearer?: Record<string, string>[];
-  basic?: Record<string, string>[];
-  apikey?: { key?: string; value?: string; in?: string }[];
-}
-
-const METHOD_STYLES: Record<string, string> = {
-  GET: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
-  POST: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-  PUT: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
-  PATCH: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
-  DELETE: "bg-red-500/10 text-red-600 dark:text-red-400",
-  HEAD: "bg-zinc-500/10 text-zinc-600 dark:text-zinc-400",
-  OPTIONS: "bg-teal-500/10 text-teal-600 dark:text-teal-400",
-};
-
-function substituteVariables(value: string, vars: Record<string, string>): string {
-  return value.replace(/\{\{([^{}]+)\}\}/g, (match, key: string) => vars[key] ?? match);
-}
-
-function postmanUrlToString(url: PcUrl | string | undefined): string {
-  if (!url) return "";
-  if (typeof url === "string") return url;
-  if (url.raw) return url.raw;
-  const protocol = url.protocol ?? "https";
-  const host = Array.isArray(url.host) ? url.host.join(".") : "";
-  const path = Array.isArray(url.path) ? `/${url.path.join("/")}` : "";
-  const query = (url.query ?? [])
-    .filter((q) => !q.disabled)
-    .map((q) => `${q.key}=${q.value ?? ""}`)
-    .join("&");
-  return `${protocol}://${host}${path}${query ? `?${query}` : ""}`;
-}
-
-function parsePostmanAuth(auth?: PcAuth): AuthState {
-  if (!auth || auth.type === "noauth") return { type: "none" };
-  if (auth.type === "bearer") {
-    const token = auth.bearer?.[0]?.token ?? "";
-    return token ? { type: "bearer", token } : { type: "none" };
-  }
-  if (auth.type === "basic") {
-    const username = auth.basic?.[0]?.username ?? "";
-    const password = auth.basic?.[0]?.password ?? "";
-    return username || password ? { type: "basic", username, password } : { type: "none" };
-  }
-  if (auth.type === "apikey") {
-    const cfg = auth.apikey?.[0];
-    if (!cfg?.key) return { type: "none" };
-    return { type: "apikey", key: cfg.key, value: cfg.value ?? "", in: cfg.in === "query" ? "query" : "header" };
-  }
-  return { type: "none" };
-}
-
-function parsePostmanRequest(req: PcRequest, name: string, collectionVars: Record<string, string> = {}): FlatRequest {
-  const vars: Record<string, string> = { ...collectionVars };
-  const urlObj = typeof req.url === "string" ? null : req.url;
-  (urlObj?.variable ?? []).forEach((v) => {
-    if (v.key) vars[v.key] = v.value ?? "";
-  });
-  const url = substituteVariables(postmanUrlToString(req.url), vars);
-  const headers = (req.header ?? [])
-    .filter((h) => !h.disabled && h.key)
-    .map((h) => ({ key: substituteVariables(h.key ?? "", vars), value: substituteVariables(h.value ?? "", vars) }));
-  const query = (urlObj?.query ?? [])
-    .filter((q) => !q.disabled && q.key)
-    .map((q) => ({ key: substituteVariables(q.key ?? "", vars), value: substituteVariables(q.value ?? "", vars) }));
-  let body = "";
-  let bodyMode: FlatRequest["bodyMode"] = "raw";
-  const b = req.body;
-  if (b) {
-    if (b.mode === "urlencoded") {
-      bodyMode = "urlencoded";
-      body = (b.urlencoded ?? [])
-        .filter((p) => !p.disabled && p.key)
-        .map((p) => `${encodeURIComponent(p.key ?? "")}=${encodeURIComponent(p.value ?? "")}`)
-        .join("&");
-    } else if (b.mode === "formdata") {
-      bodyMode = "urlencoded";
-      body = (b.formdata ?? [])
-        .filter((p) => !p.disabled && p.key && p.type !== "file")
-        .map((p) => `${encodeURIComponent(p.key ?? "")}=${encodeURIComponent(p.value ?? "")}`)
-        .join("&");
-    } else {
-      body = substituteVariables(b.raw ?? "", vars);
-    }
-  }
-  return {
-    id: randomUuid(),
-    name: name || "Untitled request",
-    method: (req.method ?? "GET").toUpperCase(),
-    url,
-    headers,
-    query,
-    body,
-    bodyMode,
-    auth: parsePostmanAuth(req.auth),
-  };
-}
-
-function flattenPostmanCollection(col: PcCollection, vars: Record<string, string>): FlatRequest[] {
-  const out: FlatRequest[] = [];
-  const walk = (items: PcItem[], prefix: string) => {
-    for (const item of items) {
-      const name = item.name ? (prefix ? `${prefix} / ${item.name}` : item.name) : prefix;
-      if (item.request) out.push(parsePostmanRequest(item.request, name, vars));
-      if (item.item) walk(item.item, name);
-    }
-  };
-  if (Array.isArray(col.item)) walk(col.item, "");
-  return out;
-}
-
-function parsePostmanCollection(text: string): PcCollection | null {
-  try {
-    const data = JSON.parse(text) as PcCollection;
-    if (data && typeof data === "object" && data.info && Array.isArray(data.item)) return data;
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-function exportAuth(auth: AuthState): PcAuth | undefined {
-  if (auth.type === "bearer" && auth.token) {
-    return { type: "bearer", bearer: [{ key: "token", value: auth.token, type: "string" }] };
-  }
-  if (auth.type === "basic") {
-    return {
-      type: "basic",
-      basic: [
-        { key: "username", value: auth.username ?? "", type: "string" },
-        { key: "password", value: auth.password ?? "", type: "string" },
-      ],
-    };
-  }
-  if (auth.type === "apikey" && auth.key) {
-    return { type: "apikey", apikey: [{ key: auth.key, value: auth.value ?? "", in: auth.in ?? "header" }] };
-  }
-  return undefined;
-}
-
-function buildPostmanCollection(name: string, requests: FlatRequest[]): PcCollection {
-  return {
-    info: {
-      _postman_id: randomUuid(),
-      name,
-      schema: "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    },
-    item: requests.map((f) => {
-      const urlHost = f.url.replace(/^https?:\/\//, "").split("/")[0];
-      const urlPath = f.url.replace(/^https?:\/\/[^/]+/, "").split("?")[0].split("/").filter(Boolean);
-      return {
-        name: f.name || "New request",
-        request: {
-          method: f.method,
-          header: f.headers.map((h) => ({ key: h.key, value: h.value })),
-          url: {
-            raw: f.url,
-            host: urlHost.split("."),
-            path: urlPath,
-            query: f.query.map((q) => ({ key: q.key, value: q.value })),
-          },
-          body: f.body ? { mode: f.bodyMode, raw: f.body } : undefined,
-          auth: exportAuth(f.auth),
-        },
-      };
-    }),
-  };
-}
-
-function prepareRequest(f: FlatRequest): { init: RequestInit; url: string } {
-  const target = new URL(f.url);
-  f.query.filter((q) => q.key).forEach((q) => target.searchParams.set(q.key, q.value));
-  const outHeaders: Record<string, string> = {};
-  f.headers.filter((h) => h.key).forEach((h) => {
-    outHeaders[h.key] = h.value;
-  });
-  if (f.auth.type === "bearer" && f.auth.token) outHeaders["Authorization"] = `Bearer ${f.auth.token}`;
-  if (f.auth.type === "basic") {
-    try {
-      outHeaders["Authorization"] = `Basic ${btoa(`${f.auth.username ?? ""}:${f.auth.password ?? ""}`)}`;
-    } catch {
-      // non-latin1 credentials — skip
-    }
-  }
-  if (f.auth.type === "apikey") {
-    if (f.auth.in === "query") target.searchParams.set(f.auth.key ?? "", f.auth.value ?? "");
-    else if (f.auth.key) outHeaders[f.auth.key] = f.auth.value ?? "";
-  }
-  const init: RequestInit = { method: f.method, headers: outHeaders };
-  if (f.method !== "GET" && f.method !== "HEAD" && f.body) {
-    if (f.bodyMode === "urlencoded") {
-      init.body = f.body;
-      if (!Object.keys(outHeaders).some((k) => k.toLowerCase() === "content-type")) {
-        outHeaders["Content-Type"] = "application/x-www-form-urlencoded";
-      }
-    } else {
-      init.body = f.body;
-      if (!Object.keys(outHeaders).some((k) => k.toLowerCase() === "content-type")) {
-        outHeaders["Content-Type"] = "application/json";
-      }
-    }
-  }
-  return { init, url: target.toString() };
-}
 
 const EXTRA_SLUGS = [
   "html-formatter",
@@ -362,6 +97,10 @@ const EXTRA_SLUGS = [
   "image-compressor",
   "bg-remover",
   "temp-mail",
+  "json-viewer",
+  "color-contrast",
+  "ip-dns",
+  "ascii-art",
 ];
 
 function usePrismHtml(code: string, language: string) {
@@ -724,13 +463,84 @@ function RegexTool({ tool }: { tool: Tool }) {
 }
 
 function MarkdownTool({ tool }: { tool: Tool }) {
-  const [markdown, setMarkdown] = useState("# DevKit\n\nWrite **Markdown** here.");
+  const DEFAULT_MARKDOWN = `# DevKit Markdown Editor
+
+Welcome to the **Markdown Editor** — a powerful tool for writing and previewing Markdown documents.
+
+## Features
+
+- **Live Preview** — See your rendered Markdown in real-time
+- **Toolbar** — Quick access to common formatting options
+- **Export Options** — Download as .md or copy HTML
+- **Word Statistics** — Track your document's word count and reading time
+
+## Formatting Examples
+
+### Text Styling
+
+You can write in **bold**, *italic*, or ~~strikethrough~~.
+
+### Links
+
+[Visit DevKit](https://devkit.local)
+
+### Code
+
+Inline \`code\` or code blocks:
+
+\`\`\`javascript
+function greet(name) {
+  return \`Hello, \${name}!\`;
+}
+\`\`\`
+
+### Lists
+
+1. Ordered list item
+2. Another item
+3. Final item
+
+- Unordered item
+- Another bullet
+- Last one
+
+### Blockquotes
+
+> "The best way to predict the future is to invent it." — Alan Kay
+
+### Tables
+
+| Feature | Status |
+|---------|--------|
+| Editor | ✅ |
+| Preview | ✅ |
+| Export | ✅ |
+
+---
+
+*Start editing to see the live preview!*`;
+
+  const [markdown, setMarkdown] = useState(DEFAULT_MARKDOWN);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"split" | "stacked">("split");
   const { theme } = useSettings();
   const html = useMemo(() => marked.parse(markdown) as string, [markdown]);
+  
+  const stats = useMemo(() => {
+    const text = markdown.trim();
+    const words = text ? text.split(/\s+/).filter(Boolean).length : 0;
+    const characters = markdown.length;
+    const lines = markdown.split("\n").length;
+    const readingTime = Math.max(1, Math.ceil(words / 200));
+    return { words, characters, lines, readingTime };
+  }, [markdown]);
+
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+
   useEffect(() => {
     Prism.highlightAll();
   }, [html]);
+
   useEffect(() => {
     if (!previewOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -744,42 +554,229 @@ function MarkdownTool({ tool }: { tool: Tool }) {
       window.removeEventListener("keydown", onKey);
     };
   }, [previewOpen]);
+
+  const handleEditorMount = (editor: editor.IStandaloneCodeEditor) => {
+    editorRef.current = editor;
+  };
+
+  const insertMarkdown = (before: string, after: string = "") => {
+    const editor = editorRef.current;
+    if (!editor) return;
+    
+    const model = editor.getModel();
+    const selection = editor.getSelection();
+    const position = editor.getPosition();
+    
+    if (!model || !selection || !position) return;
+    
+    const selectedText = model.getValueInRange(selection);
+    const text = selectedText || "text";
+    const newText = `${before}${text}${after}`;
+    
+    editor.executeEdits("markdown-toolbar", [{
+      range: {
+        startLineNumber: position.lineNumber,
+        startColumn: position.column,
+        endLineNumber: position.lineNumber,
+        endColumn: position.column,
+      },
+      text: newText,
+    }]);
+    
+    editor.focus();
+  };
+
+  const handleToolbarAction = (action: string) => {
+    switch (action) {
+      case "bold": insertMarkdown("**", "**"); break;
+      case "italic": insertMarkdown("*", "*"); break;
+      case "strikethrough": insertMarkdown("~~", "~~"); break;
+      case "code": insertMarkdown("`", "`"); break;
+      case "codeblock": insertMarkdown("\n```\n", "\n```\n"); break;
+      case "link": insertMarkdown("[", "](url)"); break;
+      case "image": insertMarkdown("![alt](", ")"); break;
+      case "h1": insertMarkdown("# "); break;
+      case "h2": insertMarkdown("## "); break;
+      case "h3": insertMarkdown("### "); break;
+      case "ul": insertMarkdown("- "); break;
+      case "ol": insertMarkdown("1. "); break;
+      case "quote": insertMarkdown("> "); break;
+      case "hr": insertMarkdown("\n---\n"); break;
+      case "table": insertMarkdown("\n| Header | Header |\n|--------|--------|\n| Cell   | Cell   |\n"); break;
+    }
+  };
+
+  const copyHtml = async () => {
+    await navigator.clipboard.writeText(html);
+  };
+
+  const downloadMarkdown = () => {
+    downloadFile(markdown, "document.md", "text/markdown");
+  };
+
+  const downloadHtml = () => {
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Document</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.6; }
+    pre { background: #f5f5f5; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    code { background: #f0f0f0; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1rem; color: #666; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
+    th { background: #f5f5f5; }
+  </style>
+</head>
+<body>
+${html}
+</body>
+</html>`;
+    downloadFile(fullHtml, "document.html", "text/html");
+  };
+
   return (
     <Shell tool={tool}>
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Panel title="Editor" description="Monaco-backed markdown editing with live preview." className="min-w-0">
-          <MonacoEditor
-            height="420px"
-            defaultLanguage="markdown"
-            theme={theme === "dark" ? "vs-dark" : "light"}
-            value={markdown}
-            onChange={(value) => setMarkdown(value ?? "")}
-            options={{ minimap: { enabled: false }, wordWrap: "on", fontSize: 14 }}
-          />
-        </Panel>
-        <Panel title="Preview" description="Rendered HTML preview." className="min-w-0">
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-muted-foreground">Live render</p>
-            <Button variant="outline" size="sm" onClick={() => setPreviewOpen(true)}>
-              <Icon icon="lucide:maximize-2" className="mr-1.5 size-3.5" />
-              View fullscreen
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-1">
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("h1")} title="Heading 1">
+              <Icon icon="lucide:heading-1" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("h2")} title="Heading 2">
+              <Icon icon="lucide:heading-2" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("h3")} title="Heading 3">
+              <Icon icon="lucide:heading-3" className="size-3.5" />
+            </Button>
+            <div className="w-px bg-border mx-1" />
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("bold")} title="Bold">
+              <Icon icon="lucide:bold" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("italic")} title="Italic">
+              <Icon icon="lucide:italic" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("strikethrough")} title="Strikethrough">
+              <Icon icon="lucide:strikethrough" className="size-3.5" />
+            </Button>
+            <div className="w-px bg-border mx-1" />
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("ul")} title="Bullet List">
+              <Icon icon="lucide:list" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("ol")} title="Numbered List">
+              <Icon icon="lucide:list-ordered" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("quote")} title="Blockquote">
+              <Icon icon="lucide:quote" className="size-3.5" />
+            </Button>
+            <div className="w-px bg-border mx-1" />
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("code")} title="Inline Code">
+              <Icon icon="lucide:code" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("codeblock")} title="Code Block">
+              <Icon icon="lucide:file-code-2" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("link")} title="Link">
+              <Icon icon="lucide:link" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("image")} title="Image">
+              <Icon icon="lucide:image" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("table")} title="Table">
+              <Icon icon="lucide:table-2" className="size-3.5" />
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => handleToolbarAction("hr")} title="Horizontal Rule">
+              <Icon icon="lucide:minus" className="size-3.5" />
             </Button>
           </div>
-          <article
-            className="prose max-w-none break-words dark:prose-invert prose-headings:tracking-tight prose-pre:overflow-x-auto prose-img:max-w-full prose-img:rounded-xl prose-table:block prose-table:max-w-full prose-table:overflow-x-auto [&_pre]:p-4"
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-        </Panel>
+          
+          <div className="flex flex-wrap gap-1">
+            <Button
+              variant={viewMode === "split" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("split")}
+            >
+              <Icon icon="lucide:columns-2" className="size-3.5 mr-1" />
+              Split
+            </Button>
+            <Button
+              variant={viewMode === "stacked" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("stacked")}
+            >
+              <Icon icon="lucide:rows-2" className="size-3.5 mr-1" />
+              Stacked
+            </Button>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <span>{stats.words} words</span>
+          <span>·</span>
+          <span>{stats.characters} characters</span>
+          <span>·</span>
+          <span>{stats.lines} lines</span>
+          <span>·</span>
+          <span>~{stats.readingTime} min read</span>
+        </div>
+
+        <div className={viewMode === "split" ? "grid gap-6 lg:grid-cols-2" : "space-y-6"}>
+          <Panel title="Editor" description="Monaco-backed markdown editing with toolbar." className="min-w-0">
+            <MonacoEditor
+              height="420px"
+              defaultLanguage="markdown"
+              theme={theme === "dark" ? "vs-dark" : "light"}
+              value={markdown}
+              onChange={(value) => setMarkdown(value ?? "")}
+              onMount={handleEditorMount}
+              options={{ minimap: { enabled: false }, wordWrap: "on", fontSize: 14 }}
+            />
+            <div className="flex flex-wrap gap-2">
+              <CopyButton value={markdown} toolSlug={tool.slug} toolName={tool.name} label="Copy Markdown" />
+              <Button variant="outline" size="sm" onClick={downloadMarkdown}>
+                <Icon icon="lucide:download" className="size-3.5 mr-1" />
+                Download .md
+              </Button>
+              <Button variant="outline" size="sm" onClick={copyHtml}>
+                <Icon icon="lucide:copy" className="size-3.5 mr-1" />
+                Copy HTML
+              </Button>
+              <Button variant="outline" size="sm" onClick={downloadHtml}>
+                <Icon icon="lucide:file-code" className="size-3.5 mr-1" />
+                Download HTML
+              </Button>
+            </div>
+          </Panel>
+          <Panel title="Preview" description="Rendered HTML preview with fullscreen option." className="min-w-0">
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">Live render</p>
+              <Button variant="outline" size="sm" onClick={() => setPreviewOpen(true)}>
+                <Icon icon="lucide:maximize-2" className="mr-1.5 size-3.5" />
+                Fullscreen
+              </Button>
+            </div>
+            <article
+              className="prose max-w-none break-words dark:prose-invert prose-headings:tracking-tight prose-pre:overflow-x-auto prose-img:max-w-full prose-img:rounded-xl prose-table:block prose-table:max-w-full prose-table:overflow-x-auto [&_pre]:p-4"
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          </Panel>
+        </div>
       </div>
       {previewOpen && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8" role="dialog" aria-modal="true" aria-label="Markdown preview">
           <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setPreviewOpen(false)} />
           <div className="relative flex h-full max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl">
             <div className="flex items-center justify-between border-b border-border px-5 py-3">
-              <div className="text-sm font-semibold">Preview</div>
-              <Button variant="ghost" size="sm" onClick={() => setPreviewOpen(false)} aria-label="Close preview">
-                <Icon icon="lucide:x" className="size-4" />
-              </Button>
+              <div className="text-sm font-semibold">Fullscreen Preview</div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">{stats.words} words · ~{stats.readingTime} min read</span>
+                <Button variant="ghost" size="sm" onClick={() => setPreviewOpen(false)} aria-label="Close preview">
+                  <Icon icon="lucide:x" className="size-4" />
+                </Button>
+              </div>
             </div>
             <div className="min-h-0 flex-1 overflow-auto p-6">
               <article
