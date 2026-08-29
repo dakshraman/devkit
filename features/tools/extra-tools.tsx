@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import figlet from "figlet";
 import { md5 } from "js-md5";
 import { format as formatSql, type SqlLanguage } from "sql-formatter";
 import bcrypt from "bcryptjs";
@@ -15,7 +16,7 @@ import { CopyButton, DownloadButton } from "@/components/ui/copy-button";
 import { InfoTile, Panel, SectionLabel, Shell } from "@/features/tools/tool-layout";
 import { useDebounce } from "@/hooks/useDebounce";
 import { nowSeconds, formatBytes, cn } from "@/lib/utils";
-import { encodeBase64Url, safeJsonParse } from "@/lib/tool-utils";
+import { encodeBase64Url, jsonSummary, safeJsonParse } from "@/lib/tool-utils";
 import {
   blobToDataUrl,
   canvasToBlob,
@@ -2291,6 +2292,419 @@ function TempMailTool({ tool }: { tool: Tool }) {
 }
 
 /* ================================================================== */
+/* JSON Viewer                                                        */
+/* ================================================================== */
+
+const JSON_SAMPLE = `{
+  "name": "DevKit",
+  "tools": 54,
+  "active": true,
+  "meta": {
+    "author": "Daksh",
+    "tags": ["web", "utility", "free"]
+  }
+}`;
+
+function JsonValue({ value, path, expanded, onToggle }: {
+  value: unknown;
+  path: string;
+  expanded: Set<string>;
+  onToggle: (path: string) => void;
+}) {
+  const isObject = value !== null && typeof value === "object";
+  if (!isObject) {
+    const display = value === null ? "null" : typeof value === "string" ? `"${value}"` : String(value);
+    const color = value === null
+      ? "text-red-500"
+      : typeof value === "string"
+        ? "text-emerald-600 dark:text-emerald-400"
+        : typeof value === "number"
+          ? "text-indigo-600 dark:text-indigo-400"
+          : "text-amber-600 dark:text-amber-400";
+    return <span className={color}>{display}</span>;
+  }
+  const isArray = Array.isArray(value);
+  const entries = isArray
+    ? (value as unknown[]).map((v, i) => [String(i), v] as const)
+    : Object.entries(value as Record<string, unknown>);
+  const isOpen = expanded.has(path);
+  const count = entries.length;
+  return (
+    <span className="block">
+      <button
+        type="button"
+        onClick={() => onToggle(path)}
+        className="mr-1 inline-flex items-center gap-1 rounded px-1 text-muted-foreground hover:bg-accent"
+        aria-label={isOpen ? "Collapse" : "Expand"}
+      >
+        <Icon icon={isOpen ? "lucide:chevron-down" : "lucide:chevron-right"} className="size-3.5" />
+      </button>
+      <span className="text-zinc-500 dark:text-zinc-400">{isArray ? "[" : "{"}</span>
+      {isOpen && (
+        <span className="block border-l border-zinc-200 pl-4 dark:border-zinc-800">
+          {entries.map(([key, v]) => (
+            <span key={key} className="block py-0.5">
+              <span className="select-none text-zinc-500 dark:text-zinc-400">&quot;{key}&quot;</span>
+              <span className="text-zinc-400 dark:text-zinc-600">: </span>
+              <JsonValue value={v} path={`${path}.${key}`} expanded={expanded} onToggle={onToggle} />
+              {key !== String(count - 1) && <span className="text-zinc-400 dark:text-zinc-600">,</span>}
+            </span>
+          ))}
+        </span>
+      )}
+      <span className="text-zinc-500 dark:text-zinc-400">{isArray ? "]" : "}"}</span>
+    </span>
+  );
+}
+
+function JsonViewerTool({ tool }: { tool: Tool }) {
+  const [input, setInput] = useState(JSON_SAMPLE);
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+  const [expanded, setExpanded] = useState<Set<string>>(new Set(["$"]));
+  const parsed = useMemo(() => safeJsonParse(input), [input]);
+  const stats = useMemo(() => (parsed.ok ? jsonSummary(parsed.value) : null), [parsed]);
+
+  const toggle = (path: string) => {
+    if (expanded.has(path)) {
+      setExpanded((prev) => {
+        const next = new Set(prev);
+        next.delete(path);
+        return next;
+      });
+    } else {
+      setExpanded((prev) => new Set(prev).add(path));
+    }
+  };
+
+  return (
+    <Shell tool={tool}>
+      <div className="grid gap-6 xl:grid-cols-2">
+        <Panel title="JSON input" description="Paste or edit JSON — validation happens live.">
+          <Textarea value={input} onChange={(e) => setInput(e.target.value)} rows={14} className="font-mono text-xs" spellCheck={false} />
+          <div className="flex flex-wrap items-center gap-2">
+            {parsed.ok ? (
+              <>
+                <Button variant="outline" size="sm" onClick={() => setInput(JSON.stringify(parsed.value, null, 2))}>Format</Button>
+                <Button variant="outline" size="sm" onClick={() => setCollapsed((prev) => (prev.size ? new Set() : new Set(["$"])))}>
+                  {collapsed.size ? "Expand all" : "Collapse all"}
+                </Button>
+                <CopyButton value={input} toolSlug={tool.slug} toolName={tool.name} />
+              </>
+            ) : (
+              <p className="text-sm text-red-500">Invalid JSON — {parsed.error}</p>
+            )}
+          </div>
+        </Panel>
+        <Panel title="Tree view" description="Click brackets to expand or collapse nodes.">
+          {parsed.ok ? (
+            <>
+              {stats && (
+                <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-5">
+                  {([["objects", stats.objects], ["arrays", stats.arrays], ["strings", stats.strings], ["numbers", stats.numbers], ["nulls", stats.nulls]] as const).map(([label, value]) => (
+                    <InfoTile key={label} label={label} value={String(value)} />
+                  ))}
+                </div>
+              )}
+              <pre className="max-h-[520px] overflow-auto rounded-xl border border-border bg-background p-4 font-mono text-xs leading-6">
+                <JsonValue value={parsed.value} path="$" expanded={expanded} onToggle={toggle} />
+              </pre>
+            </>
+          ) : (
+            <div className="rounded-xl border border-dashed border-zinc-300 p-10 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+              Enter valid JSON on the left to see the tree view.
+            </div>
+          )}
+        </Panel>
+      </div>
+    </Shell>
+  );
+}
+
+/* ================================================================== */
+/* Color Contrast Checker                                             */
+/* ================================================================== */
+
+function contrastRatio(foreground: string, background: string): number {
+  const luminance = (hex: string) => {
+    const raw = hex.replace("#", "");
+    const full = raw.length === 3 ? raw.split("").map((c) => c + c).join("") : raw;
+    const channels = [0, 2, 4].map((i) => {
+      const c = parseInt(full.slice(i, i + 2), 16) / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+  };
+  const light = Math.max(luminance(foreground), luminance(background));
+  const dark = Math.min(luminance(foreground), luminance(background));
+  return (light + 0.05) / (dark + 0.05);
+}
+
+function ColorContrastTool({ tool }: { tool: Tool }) {
+  const [foreground, setForeground] = useState("#111827");
+  const [background, setBackground] = useState("#ffffff");
+  const ratio = contrastRatio(foreground, background);
+  const checks = [
+    { label: "AA normal text", pass: ratio >= 4.5 },
+    { label: "AAA normal text", pass: ratio >= 7 },
+    { label: "AA large text", pass: ratio >= 3 },
+    { label: "AAA large text", pass: ratio >= 4.5 },
+  ];
+  const preview = ratio >= 4.5 ? foreground : background;
+
+  return (
+    <Shell tool={tool}>
+      <Panel title="WCAG contrast" description="Compare two colors against WCAG 2.x accessibility levels.">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ColorField label="Foreground" value={foreground} onChange={setForeground} />
+          <ColorField label="Background" value={background} onChange={setBackground} />
+        </div>
+        <div className="flex items-center gap-3 rounded-xl border border-dashed border-zinc-300 p-5 dark:border-zinc-700">
+          <div className="text-4xl font-extrabold tracking-tight" style={{ color: foreground, background: background }}>
+            Aa
+          </div>
+          <div>
+            <div className="text-sm font-semibold">{ratio.toFixed(2)}:1 contrast ratio</div>
+            <div className="text-xs text-muted-foreground">{"Text sample displayed in the preview below."}</div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {checks.map((check) => (
+            <div key={check.label} className="rounded-xl border border-border bg-background p-3">
+              <div className="flex items-center gap-1.5 text-xs font-medium">
+                <Icon icon={check.pass ? "lucide:check-circle-2" : "lucide:x-circle"} className={cn("size-4", check.pass ? "text-emerald-500" : "text-red-500")} />
+                {check.pass ? "Pass" : "Fail"}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">{check.label}</div>
+            </div>
+          ))}
+        </div>
+        <div className="rounded-xl border border-border p-4" style={{ background: background }}>
+          <p className="text-lg font-semibold" style={{ color: preview }}>
+            The quick brown fox jumps over the lazy dog.
+          </p>
+          <p className="text-sm" style={{ color: foreground }}>
+            Regular text preview in your exact colors.
+          </p>
+        </div>
+      </Panel>
+    </Shell>
+  );
+}
+
+function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <div className="space-y-2">
+      <SectionLabel icon="lucide:paint-bucket" label={label} />
+      <div className="flex items-center gap-2">
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="size-10 shrink-0 cursor-pointer rounded-lg border border-input bg-transparent p-1"
+          aria-label={label}
+        />
+        <Input value={value} onChange={(e) => onChange(e.target.value)} className="font-mono" aria-label={`${label} hex`} />
+      </div>
+    </div>
+  );
+}
+
+/* ================================================================== */
+/* IP & DNS Lookup                                                    */
+/* ================================================================== */
+
+const DNS_TYPES: Record<string, number> = { A: 1, AAAA: 28, MX: 15, TXT: 16, NS: 2, CNAME: 5, SOA: 6 };
+
+function IpDnsTool({ tool }: { tool: Tool }) {
+  const [tab, setTab] = useState<"ip" | "dns">("ip");
+  const [ipInfo, setIpInfo] = useState<Record<string, string> | null>(null);
+  const [ipError, setIpError] = useState("");
+  const [host, setHost] = useState("example.com");
+  const [dnsType, setDnsType] = useState<string>("A");
+  const [records, setRecords] = useState<{ name: string; type: string; ttl: number; data: string }[] | null>(null);
+  const [dnsError, setDnsError] = useState("");
+  const [dnsLoading, setDnsLoading] = useState(false);
+
+  useEffect(() => {
+    if (tab !== "ip") return;
+    let active = true;
+    (async () => {
+      try {
+        const res = await fetch("https://ipwho.is/");
+        const data = (await res.json()) as Record<string, unknown>;
+        if (!active) return;
+        if (data.success === false) throw new Error("Lookup failed");
+        const connection = data.connection as Record<string, unknown> | undefined;
+        const timezone = data.timezone as Record<string, unknown> | undefined;
+        setIpInfo({
+          ip: String(data.ip ?? "—"),
+          type: String(data.type ?? "—"),
+          country: String(data.country ?? "—"),
+          region: String(data.region ?? "—"),
+          city: String(data.city ?? "—"),
+          isp: String(connection?.isp ?? "—"),
+          timezone: String(timezone?.id ?? "—"),
+        });
+        setIpError("");
+      } catch (err) {
+        if (active) {
+          setIpError(err instanceof Error ? err.message : "Could not detect your IP.");
+          setIpInfo(null);
+        }
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [tab]);
+
+  const lookup = async () => {
+    if (!host.trim() || dnsLoading) return;
+    setDnsLoading(true);
+    setDnsError("");
+    setRecords(null);
+    try {
+      const res = await fetch(
+        `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(host.trim())}&type=${DNS_TYPES[dnsType]}`,
+        { headers: { accept: "application/dns-json" } }
+      );
+      const data = (await res.json()) as { Status: number; Answer?: { name: string; type: number; TTL: number; data: string }[]; Comment?: string };
+      if (data.Status !== 0) throw new Error(data.Comment ?? "DNS lookup failed.");
+      setRecords((data.Answer ?? []).map((a) => ({ name: a.name, type: dnsType, ttl: a.TTL, data: a.data })));
+    } catch (err) {
+      setDnsError(err instanceof Error ? err.message : "Lookup failed. Enter a valid hostname.");
+    } finally {
+      setDnsLoading(false);
+    }
+  };
+
+  return (
+    <Shell tool={tool}>
+      <Panel title="IP & DNS lookup" description="Your public IP via ipwho.is, DNS records via Cloudflare DoH.">
+        <Tabs value={tab} onValueChange={(v) => setTab(v as "ip" | "dns")}>
+          <TabsList>
+            <TabsTrigger value="ip">My IP</TabsTrigger>
+            <TabsTrigger value="dns">DNS lookup</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {tab === "ip" ? (
+          ipInfo ? (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {Object.entries(ipInfo).map(([key, value]) => (
+                <InfoTile key={key} label={key} value={value} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-zinc-300 p-10 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+              {ipError ? ipError : "Detecting your public IP…"}
+            </div>
+          )
+        ) : (
+          <div className="space-y-3">
+            <div className="flex flex-wrap gap-2">
+              <Input value={host} onChange={(e) => setHost(e.target.value)} placeholder="example.com" className="flex-1 min-w-56" onKeyDown={(e) => { if (e.key === "Enter") void lookup(); }} />
+              <div className="w-32">
+                <Select value={dnsType} onValueChange={setDnsType}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(DNS_TYPES).map((type) => <SelectItem key={type} value={type}>{type}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={() => void lookup()} disabled={dnsLoading}>
+                {dnsLoading ? "Resolving…" : "Look up"}
+              </Button>
+            </div>
+            {dnsError && <p className="text-sm text-red-500">{dnsError}</p>}
+            {records && (
+              records.length ? (
+                <ul className="divide-y divide-zinc-200 rounded-xl border border-border dark:divide-zinc-800">
+                  {records.map((record, index) => (
+                    <li key={index} className="flex flex-wrap items-center gap-3 px-3 py-2 text-sm">
+                      <span className="w-24 shrink-0 rounded-md bg-indigo-500/10 px-2 py-0.5 text-center font-mono text-[11px] font-semibold text-indigo-600 dark:text-indigo-400">{record.type}</span>
+                      <span className="text-xs text-muted-foreground">{record.name}</span>
+                      <span className="min-w-0 flex-1 break-all font-mono">{record.data}</span>
+                      <span className="text-xs text-muted-foreground">{record.ttl}s TTL</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-muted-foreground">No records found for {host.trim()}.</p>
+              )
+            )}
+          </div>
+        )}
+      </Panel>
+    </Shell>
+  );
+}
+
+/* ================================================================== */
+/* ASCII Art Generator                                                */
+/* ================================================================== */
+
+const FIGLET_FONTS = ["Standard", "Big", "Slant", "Block", "Bubble", "3-D", "Small", "ANSI Shadow", "Doh", "DOS Rebel"];
+
+function AsciiArtTool({ tool }: { tool: Tool }) {
+  const [text, setText] = useState("DEVKIT");
+  const [font, setFont] = useState("Standard");
+  const [art, setArt] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      if (!text.trim()) {
+        if (!active) return;
+        setArt("");
+        setError("");
+        return;
+      }
+      try {
+        const out = await figlet.text(text, { font });
+        if (!active) return;
+        setArt(out);
+        setError("");
+      } catch {
+        if (!active) return;
+        setArt("");
+        setError("Could not render with this font.");
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [text, font]);
+
+  return (
+    <Shell tool={tool}>
+      <Panel title="ASCII art" description="Render text as banner-style ASCII art with FIGlet fonts.">
+        <div className="flex flex-wrap gap-2">
+          <Input value={text} onChange={(e) => setText(e.target.value)} placeholder="Type something…" className="flex-1 min-w-56" />
+          <div className="w-44">
+            <Select value={font} onValueChange={setFont}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {FIGLET_FONTS.map((f) => <SelectItem key={f} value={f}>{f}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        {error && <p className="text-sm text-red-500">{error}</p>}
+        <pre className="max-h-[480px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-5">{art || "Rendered ASCII art appears here."}</pre>
+        {art && (
+          <div className="flex flex-wrap gap-2">
+            <CopyButton value={art} toolSlug={tool.slug} toolName={tool.name} />
+            <DownloadButton content={art} filename="ascii-art.txt" />
+          </div>
+        )}
+      </Panel>
+    </Shell>
+  );
+}
+
+/* ================================================================== */
 /* Registration                                                       */
 /* ================================================================== */
 
@@ -2336,6 +2750,14 @@ export function ExtraToolView({ slug, tool }: { slug: string; tool: Tool }) {
       return <BgRemoverTool tool={tool} />;
     case "temp-mail":
       return <TempMailTool tool={tool} />;
+    case "json-viewer":
+      return <JsonViewerTool tool={tool} />;
+    case "color-contrast":
+      return <ColorContrastTool tool={tool} />;
+    case "ip-dns":
+      return <IpDnsTool tool={tool} />;
+    case "ascii-art":
+      return <AsciiArtTool tool={tool} />;
     default:
       return null;
   }
