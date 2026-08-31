@@ -1,5 +1,5 @@
 import { md5 } from "js-md5";
-import { diffLines } from "diff";
+import { diffLines, diffWords, type Change } from "diff";
 import type { Tool } from "@/types";
 import { bytesToBase64, formatDate } from "@/lib/utils";
 
@@ -173,6 +173,18 @@ export function convertCase(input: string) {
 
 export function compareText(left: string, right: string) {
   return diffLines(left, right);
+}
+
+export function compareTextAdvanced(
+  left: string,
+  right: string,
+  options: { mode?: "line" | "word"; ignoreWhitespace?: boolean; ignoreCase?: boolean } = {}
+): Change[] {
+  const { mode = "line", ignoreWhitespace = false, ignoreCase = false } = options;
+  if (mode === "word") {
+    return diffWords(left, right, { ignoreCase });
+  }
+  return diffLines(left, right, { ignoreWhitespace });
 }
 
 export function jsonSummary(value: unknown): { objects: number; arrays: number; strings: number; numbers: number; booleans: number; nulls: number } {

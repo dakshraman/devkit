@@ -33,7 +33,7 @@ import { bytesToBase64, downloadFile, formatBytes, formatDuration, formatNumber,
 import {
   base64Decode,
   base64Encode,
-  compareText,
+  compareTextAdvanced,
   convertCase,
   createLorem,
   generatePasswords,
@@ -185,11 +185,45 @@ export function ToolView({ slug }: { slug: string }) {
 
 function JsonFormatterTool({ tool }: { tool: Tool }) {
   const [text, setText] = useState("");
-  const [indent, setIndent] = useState<2 | 4>(2);
+  const [indent, setIndent] = useState<"tab" | 2 | 4 | 8>(2);
+  const [sortKeys, setSortKeys] = useState(false);
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
   const parsed = safeJsonParse(text);
   const summary = parsed.ok ? jsonSummary(parsed.value) : null;
+  const debouncedText = useDebounce(text, 500);
+
+  function sortObjectKeys(obj: unknown): unknown {
+    if (Array.isArray(obj)) return obj.map(sortObjectKeys);
+    if (obj && typeof obj === "object" && obj.constructor === Object) {
+      return Object.fromEntries(
+        Object.entries(obj as Record<string, unknown>)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([k, v]) => [k, sortObjectKeys(v)])
+      );
+    }
+    return obj;
+  }
+
+  const autoFormattedOutput = useMemo(() => {
+    if (!debouncedText.trim()) return "";
+    const result = safeJsonParse(debouncedText);
+    if (!result.ok) return "";
+    try {
+      const indentParam = indent === "tab" ? "\t" : indent;
+      let value = result.value;
+      if (sortKeys) {
+        value = sortObjectKeys(value);
+      }
+      return JSON.stringify(value, null, indentParam);
+    } catch {
+      return "";
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedText, indent, sortKeys]);
+
+  const displayOutput = output || autoFormattedOutput;
+  const highlightedOutput = usePrismHtml(displayOutput, "json");
 
   const format = (minify = false, updateInput = false) => {
     const result = safeJsonParse(text);
@@ -200,9 +234,14 @@ function JsonFormatterTool({ tool }: { tool: Tool }) {
     }
     try {
       setError("");
+      const indentParam = indent === "tab" ? "\t" : indent;
+      let value = result.value;
+      if (sortKeys) {
+        value = sortObjectKeys(value);
+      }
       const formatted = minify
-        ? JSON.stringify(result.value)
-        : JSON.stringify(result.value, null, indent);
+        ? JSON.stringify(value)
+        : JSON.stringify(value, null, indentParam);
       setOutput(formatted);
       if (updateInput) {
         setText(formatted);
@@ -212,6 +251,9 @@ function JsonFormatterTool({ tool }: { tool: Tool }) {
     }
   };
 
+  const charCount = text.length;
+  const byteCount = new Blob([text]).size;
+
   return (
     <Shell tool={tool}>
       <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
@@ -219,11 +261,13 @@ function JsonFormatterTool({ tool }: { tool: Tool }) {
           <div className="flex flex-wrap gap-2">
             <Button variant="outline" size="sm" onClick={() => format(false, true)}>Pretty Print</Button>
             <Button variant="outline" size="sm" onClick={() => format(true)}>Minify</Button>
-            <Select value={String(indent)} onValueChange={(v) => setIndent(Number(v) as 2 | 4)}>
+            <Select value={String(indent)} onValueChange={(v) => setIndent(v === "tab" ? "tab" : Number(v) as 2 | 4 | 8)}>
               <SelectTrigger className="w-[110px]"><SelectValue placeholder="Indent" /></SelectTrigger>
               <SelectContent>
+                <SelectItem value="tab">Tab</SelectItem>
                 <SelectItem value="2">2 spaces</SelectItem>
                 <SelectItem value="4">4 spaces</SelectItem>
+                <SelectItem value="8">8 spaces</SelectItem>
               </SelectContent>
             </Select>
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2 text-sm text-muted-foreground">
@@ -240,18 +284,29 @@ function JsonFormatterTool({ tool }: { tool: Tool }) {
                 }}
               />
             </label>
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2 text-sm text-muted-foreground">
+              <input
+                type="checkbox"
+                checked={sortKeys}
+                onChange={(e) => setSortKeys(e.target.checked)}
+                className="cursor-pointer"
+              />
+              Sort keys
+            </label>
           </div>
           <Textarea value={text} onChange={(e) => setText(e.target.value)} rows={18} placeholder='{"name":"DevKit"}' className="font-mono text-[13px]" />
+          <p className="text-xs text-muted-foreground">{charCount.toLocaleString()} characters &middot; {formatBytes(byteCount)}</p>
           {error && <p className="text-sm text-red-500">{error}</p>}
           <div className="flex flex-wrap gap-2">
             <Button size="sm" onClick={() => format(false)}>Validate</Button>
-            <CopyButton value={output || text} toolSlug={tool.slug} toolName={tool.name} />
-            <Button variant="outline" size="sm" onClick={() => downloadFile(output || text, "devkit.json", "application/json")}>Download</Button>
+            <CopyButton value={displayOutput || text} toolSlug={tool.slug} toolName={tool.name} />
+            <Button variant="outline" size="sm" onClick={() => downloadFile(displayOutput || text, "devkit.json", "application/json")}>Download</Button>
           </div>
         </Panel>
         <div className="space-y-6">
           <Panel title="Output" description="Formatted JSON appears here.">
-            <pre className="max-h-[340px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-6">{output || "Formatted output will appear here."}</pre>
+            <pre className="max-h-[340px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-6"><code dangerouslySetInnerHTML={{ __html: highlightedOutput || displayOutput || "Formatted output will appear here." }} /></pre>
+            <CopyButton value={displayOutput} toolSlug={tool.slug} toolName={tool.name} className="mt-2" />
           </Panel>
           <Panel title="Summary" description="Structure counts for the parsed JSON.">
             {summary ? (
@@ -426,34 +481,177 @@ function TimestampTool({ tool }: { tool: Tool }) {
   );
 }
 
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+const REGEX_PRESETS = [
+  { label: "Email", pattern: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}" },
+  { label: "URL", pattern: "https?://[^\\s/$.?#].[^\\s]*" },
+  { label: "IPv4", pattern: "\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b" },
+  { label: "Phone (US)", pattern: "\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}" },
+  { label: "Semver", pattern: "\\d+\\.\\d+\\.\\d+" },
+  { label: "Hex Color", pattern: "#(?:[0-9a-fA-F]{3}){1,2}\\b" },
+];
+
 function RegexTool({ tool }: { tool: Tool }) {
   const [pattern, setPattern] = useState("\\bDevKit\\b");
-  const [flags, setFlags] = useState("gi");
+  const [flagG, setFlagG] = useState(true);
+  const [flagI, setFlagI] = useState(true);
+  const [flagM, setFlagM] = useState(false);
+  const [flagS, setFlagS] = useState(false);
+  const [flagU, setFlagU] = useState(false);
+  const [flagY, setFlagY] = useState(false);
   const [text, setText] = useState("DevKit is fast. devkit is flexible.");
-  const regex = useMemo(() => {
+  const [replacement, setReplacement] = useState("");
+  const [showReplacement, setShowReplacement] = useState(false);
+
+  const flags = [flagG && "g", flagI && "i", flagM && "m", flagS && "s", flagU && "u", flagY && "y"].filter(Boolean).join("");
+
+  let error = "";
+  let regex: RegExp | null = null;
+  try {
+    regex = new RegExp(pattern, flags);
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Invalid regex";
+  }
+
+  const result = useMemo(() => (regex ? [...text.matchAll(regex)] : []), [regex, text]);
+
+  const highlightedText = useMemo(() => {
+    if (!regex || result.length === 0) return escapeHtml(text);
+    let html = "";
+    let lastIndex = 0;
+    for (const match of result) {
+      const start = match.index!;
+      const end = start + match[0].length;
+      html += escapeHtml(text.slice(lastIndex, start));
+      html += `<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">${escapeHtml(match[0])}</mark>`;
+      lastIndex = end;
+    }
+    html += escapeHtml(text.slice(lastIndex));
+    return html;
+  }, [text, result, regex]);
+
+  const replacedText = useMemo(() => {
+    if (!regex || !showReplacement) return null;
     try {
-      return new RegExp(pattern, flags.includes("g") ? flags : `${flags}g`);
+      return text.replace(regex, replacement);
     } catch {
       return null;
     }
-  }, [pattern, flags]);
-  const error = regex ? "" : "Invalid regex";
-  const result = useMemo(() => (regex ? [...text.matchAll(regex)] : []), [regex, text]);
+  }, [text, regex, replacement, showReplacement]);
+
+  const toggleFlags = [
+    { label: "g", value: flagG, set: setFlagG, desc: "Global" },
+    { label: "i", value: flagI, set: setFlagI, desc: "Case insensitive" },
+    { label: "m", value: flagM, set: setFlagM, desc: "Multiline" },
+    { label: "s", value: flagS, set: setFlagS, desc: "Dot all" },
+    { label: "u", value: flagU, set: setFlagU, desc: "Unicode" },
+    { label: "y", value: flagY, set: setFlagY, desc: "Sticky" },
+  ];
+
   return (
     <Shell tool={tool}>
       <Panel title="Playground" description="Test patterns and flags with live match results.">
-        <div className="grid gap-4 md:grid-cols-2">
-          <Input value={pattern} onChange={(e) => setPattern(e.target.value)} placeholder="Pattern" />
-          <Input value={flags} onChange={(e) => setFlags(e.target.value)} placeholder="Flags: gi" />
+        <Input value={pattern} onChange={(e) => setPattern(e.target.value)} placeholder="Pattern" />
+
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">Flags</p>
+          <div className="flex flex-wrap gap-2">
+            {toggleFlags.map((f) => (
+              <button
+                key={f.label}
+                onClick={() => f.set(!f.value)}
+                title={f.desc}
+                className={`inline-flex h-8 min-w-8 items-center justify-center rounded-lg border px-2.5 text-xs font-medium transition-colors ${
+                  f.value
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
+
+        <div className="flex flex-wrap gap-2">
+          {REGEX_PRESETS.map((preset) => (
+            <Button
+              key={preset.label}
+              variant="outline"
+              size="sm"
+              onClick={() => setPattern(preset.pattern)}
+            >
+              {preset.label}
+            </Button>
+          ))}
+        </div>
+
         <Textarea value={text} onChange={(e) => setText(e.target.value)} rows={9} />
-        {error ? <p className="text-sm text-red-500">{error}</p> : <p className="text-sm text-muted-foreground">{result.length} matches</p>}
+
+        {error ? (
+          <p className="text-sm text-red-500">{error}</p>
+        ) : (
+          <p className="text-sm text-muted-foreground">{result.length} matches</p>
+        )}
+
+        {!error && result.length > 0 && (
+          <div className="rounded-xl border border-border bg-background p-4 text-sm leading-relaxed">
+            <p className="mb-2 text-xs font-medium text-muted-foreground">Highlighted matches</p>
+            <div
+              className="whitespace-pre-wrap break-words font-mono text-xs"
+              dangerouslySetInnerHTML={{ __html: highlightedText }}
+            />
+          </div>
+        )}
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowReplacement(!showReplacement)}
+        >
+          <Icon icon={showReplacement ? "lucide:eye-off" : "lucide:eye"} className="size-3.5 mr-1.5" />
+          {showReplacement ? "Hide replacement" : "Show replacement"}
+        </Button>
+
+        {showReplacement && (
+          <div className="space-y-2">
+            <Input
+              value={replacement}
+              onChange={(e) => setReplacement(e.target.value)}
+              placeholder="Replacement string (use $1, $2 for groups)"
+            />
+            {replacedText !== null && (
+              <div className="rounded-xl border border-border bg-background p-4 text-sm">
+                <p className="mb-2 text-xs font-medium text-muted-foreground">Replaced result</p>
+                <pre className="whitespace-pre-wrap break-words font-mono text-xs">{replacedText}</pre>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="space-y-2">
           {result.map((match, index) => (
             <div key={`${match.index}-${index}`} className="rounded-xl border border-border bg-background p-3 text-sm">
               <div className="font-medium">Match {index + 1}: {match[0]}</div>
               <div className="text-xs text-muted-foreground">Index {match.index}</div>
-              {match.slice(1).some(Boolean) && <div className="mt-2 text-xs text-muted-foreground">Groups: {match.slice(1).filter(Boolean).join(", ")}</div>}
+              {match.slice(1).some(Boolean) && (
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Groups: {match.slice(1).filter(Boolean).join(", ")}
+                </div>
+              )}
+              {match.groups && Object.entries(match.groups).length > 0 && (
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Named groups:{" "}
+                  {Object.entries(match.groups).map(([name, value]) => (
+                    <span key={name} className="ml-2">
+                      <span className="font-medium text-foreground">{name}:</span> {value}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -850,6 +1048,15 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
   const [runResults, setRunResults] = useState<{ name: string; status: number | null; time: number }[] | null>(null);
   const [running, setRunning] = useState(false);
 
+  const [history, setHistory] = useState<{ url: string; method: string; status: number | null; time: number; date: string }[]>(() => {
+    try { return JSON.parse(localStorage.getItem("api-history") || "[]"); } catch { return []; }
+  });
+  const [showHistory, setShowHistory] = useState(false);
+  const [curlText, setCurlText] = useState("");
+  const [showCurlImport, setShowCurlImport] = useState(false);
+  const [variables, setVariables] = useState<{ key: string; value: string }[]>([{ key: "", value: "" }]);
+  const [responseSearch, setResponseSearch] = useState("");
+
   const currentRequest = (): FlatRequest => ({
     id: randomUuid(),
     name: "New request",
@@ -876,11 +1083,22 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
     setLoading(true);
     const start = nowMs();
     try {
-      const { init, url: finalUrl } = prepareRequest(currentRequest());
+      let interpolatedUrl = url;
+      let interpolatedHeaders = headers;
+      let interpolatedBody = body;
+      for (const v of variables.filter(v => v.key.trim())) {
+        const regex = new RegExp(`\\{\\{${v.key}\\}\\}`, "g");
+        interpolatedUrl = interpolatedUrl.replace(regex, v.value);
+        interpolatedBody = interpolatedBody.replace(regex, v.value);
+        interpolatedHeaders = headers.map(h => ({ ...h, value: h.value.replace(regex, v.value) }));
+      }
+      const req = { ...currentRequest(), url: interpolatedUrl, headers: interpolatedHeaders, body: interpolatedBody };
+      const { init, url: finalUrl } = prepareRequest(req);
       const res = await fetch(finalUrl, init);
       const text = await res.text();
       const resHeaders: KeyValueRow[] = [];
       res.headers.forEach((value, key) => resHeaders.push({ key, value }));
+      const elapsed = nowMs() - start;
       setResponse({
         status: res.status,
         statusText: res.statusText,
@@ -888,7 +1106,12 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
         headers: resHeaders,
         size: new Blob([text]).size,
         contentType: res.headers.get("content-type") ?? "",
-        elapsed: nowMs() - start,
+        elapsed,
+      });
+      setHistory(prev => {
+        const next = [{ url: interpolatedUrl, method, status: res.status, time: elapsed, date: new Date().toISOString() }, ...prev].slice(0, 50);
+        try { localStorage.setItem("api-history", JSON.stringify(next)); } catch {}
+        return next;
       });
       setError("");
     } catch (err) {
@@ -898,6 +1121,51 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        onSend();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, method, headers, queries, body, bodyMode, auth]);
+
+  function parseCurl(curl: string) {
+    const methodMatch = curl.match(/-X\s+(\w+)/);
+    const method = methodMatch ? methodMatch[1].toUpperCase() : "GET";
+    const urlMatch = curl.match(/(?:^|\s)(https?:\/\/[^\s'"]+)/) || curl.match(/-U\s+(\S+)/);
+    const url = urlMatch ? (urlMatch[1] || urlMatch[0]).replace(/^--url\s+/, "").replace(/^--request\s+\S+\s+/, "").trim() : "";
+    const headerRegex = /-H\s+'([^']*)'/g;
+    const headers: KeyValueRow[] = [];
+    let m;
+    while ((m = headerRegex.exec(curl)) !== null) {
+      const idx = m[1].indexOf(":");
+      if (idx !== -1) headers.push({ key: m[1].slice(0, idx).trim(), value: m[1].slice(idx + 1).trim() });
+    }
+    const bodyMatch = curl.match(/(?:-d|--data)\s+'([^']*)'/);
+    const body = bodyMatch ? bodyMatch[1] : "";
+    return { method, url, headers, body };
+  }
+
+  function formatXml(xml: string): string {
+    let formatted = "";
+    let indent = 0;
+    const lines = xml.replace(/>\s*</g, ">\n<").split("\n");
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      if (trimmed.startsWith("</")) indent = Math.max(0, indent - 1);
+      formatted += "  ".repeat(indent) + trimmed + "\n";
+      if (trimmed.startsWith("<") && !trimmed.startsWith("</") && !trimmed.endsWith("/>") && !/<\//.test(trimmed)) {
+        indent++;
+      }
+    }
+    return formatted.trim();
+  }
 
   const importCollection = (text: string) => {
     const parsed = parsePostmanCollection(text);
@@ -1028,6 +1296,65 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
                 </div>
 
                 <div className="space-y-2">
+                  <button
+                    type="button"
+                    className="flex w-full items-center gap-2 text-left text-sm font-medium text-muted-foreground hover:text-foreground"
+                    onClick={() => setShowCurlImport((p) => !p)}
+                  >
+                    <Icon icon={showCurlImport ? "lucide:chevron-down" : "lucide:chevron-right"} className="size-3" />
+                    Import cURL
+                  </button>
+                  {showCurlImport && (
+                    <div className="space-y-2">
+                      <Textarea
+                        value={curlText}
+                        onChange={(e) => setCurlText(e.target.value)}
+                        rows={4}
+                        placeholder="Paste a cURL command here..."
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          const parsed = parseCurl(curlText);
+                          if (parsed.url) setUrl(parsed.url);
+                          if (parsed.method) setMethod(parsed.method);
+                          if (parsed.headers.length) setHeaders(parsed.headers);
+                          if (parsed.body) { setBody(parsed.body); setBodyMode("raw"); }
+                          setCurlText("");
+                          setShowCurlImport(false);
+                        }}
+                        disabled={!curlText.trim()}
+                      >
+                        Import
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <SectionLabel icon="lucide:braces" label={`Variables (${variables.filter((v) => v.key.trim()).length})`} />
+                  <div className="space-y-1">
+                    {variables.map((row, index) => (
+                      <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2">
+                        <Input
+                          value={row.key}
+                          onChange={(e) => setVariables((prev) => prev.map((item, i) => i === index ? { ...item, key: e.target.value } : item))}
+                          placeholder="Variable name"
+                        />
+                        <Input
+                          value={row.value}
+                          onChange={(e) => setVariables((prev) => prev.map((item, i) => i === index ? { ...item, value: e.target.value } : item))}
+                          placeholder="Value"
+                        />
+                        <Button type="button" variant="ghost" size="iconSm" onClick={() => setVariables((prev) => prev.filter((_, i) => i !== index))}>×</Button>
+                      </div>
+                    ))}
+                    <Button type="button" variant="outline" size="sm" onClick={() => setVariables((prev) => [...prev, { key: "", value: "" }])}>Add variable</Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
                   <SectionLabel icon="lucide:hash" label="Headers" />
                   {headers.map((row, index) => (
                     <div key={index} className="grid grid-cols-[1fr_1fr_auto] gap-2">
@@ -1078,12 +1405,59 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
                   )}
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <Button onClick={() => void onSend()} disabled={loading}>
                     {loading ? "Sending..." : "Send request"}
                   </Button>
+                  <span className="text-xs text-muted-foreground">Ctrl+Enter</span>
                   <Button variant="outline" onClick={exportCurrentRequest}>Export request</Button>
+                  <Button variant="outline" size="sm" onClick={() => setShowHistory((p) => !p)}>
+                    <Icon icon="lucide:history" className="mr-1 size-3" />
+                    History ({history.length})
+                  </Button>
                 </div>
+                {showHistory && history.length > 0 && (
+                  <div className="mt-2 max-h-48 overflow-auto rounded-xl border border-border">
+                    <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                      {history.map((h, i) => (
+                        <li key={i} className="flex items-center gap-3 px-3 py-1.5 text-xs">
+                          <span className={`shrink-0 rounded-md px-2 py-0.5 font-mono text-[11px] font-semibold ${h.status !== null && h.status < 400 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-red-500/10 text-red-600 dark:text-red-400"}`}>
+                            {h.status ?? "ERR"}
+                          </span>
+                          <span className="shrink-0 font-mono text-[11px] text-muted-foreground">{h.method}</span>
+                          <span className="min-w-0 flex-1 truncate">{h.url}</span>
+                          <span className="shrink-0 text-muted-foreground">{formatDuration(h.time)}</span>
+                          <Button
+                            variant="ghost"
+                            size="iconSm"
+                            className="shrink-0"
+                            onClick={() => {
+                              setUrl(h.url);
+                              setMethod(h.method);
+                              setShowHistory(false);
+                            }}
+                          >
+                            <Icon icon="lucide:arrow-up-left" className="size-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="iconSm"
+                            className="shrink-0"
+                            onClick={() => {
+                              setHistory((prev) => {
+                                const next = prev.filter((_, idx) => idx !== i);
+                                try { localStorage.setItem("api-history", JSON.stringify(next)); } catch {}
+                                return next;
+                              });
+                            }}
+                          >
+                            <Icon icon="lucide:x" className="size-3" />
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 {error && <p className="text-sm text-red-500">{error}</p>}
               </div>
             </Panel>
@@ -1121,9 +1495,30 @@ function ApiTesterTool({ tool }: { tool: Tool }) {
                     </div>
                   </Tabs>
                   {respTab === "body" ? (
-                    <pre className="max-h-[560px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-6">
-                      {pretty ? (prettyJson(response.body) ?? response.body) : response.body}
-                    </pre>
+                    <>
+                      <Input
+                        value={responseSearch}
+                        onChange={(e) => setResponseSearch(e.target.value)}
+                        placeholder="Search response body..."
+                        className="h-8 text-xs"
+                      />
+                      <pre className="max-h-[560px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-6">
+                        {(() => {
+                          const body = responseSearch
+                            ? response.body.split('\n').filter(line => line.toLowerCase().includes(responseSearch.toLowerCase())).join('\n')
+                            : response.body;
+                          if (pretty) {
+                            const json = prettyJson(body);
+                            if (json) return json;
+                            if (response.contentType.includes("xml") || body.trim().startsWith("<")) {
+                              try { return formatXml(body); } catch { return body; }
+                            }
+                            return body;
+                          }
+                          return body;
+                        })()}
+                      </pre>
+                    </>
                   ) : (
                     <ul className="divide-y divide-zinc-200 rounded-xl border border-border text-xs dark:divide-zinc-800">
                       {response.headers.map((h) => (
@@ -1380,7 +1775,113 @@ function CaseTool({ tool }: { tool: Tool }) {
 function DiffTool({ tool }: { tool: Tool }) {
   const [left, setLeft] = useState("function sum(a, b) {\n  return a + b;\n}");
   const [right, setRight] = useState("function sum(a, b) {\n  return a - b;\n}");
-  const diff = compareText(left, right);
+  const [viewMode, setViewMode] = useState<"unified" | "side-by-side">("unified");
+  const [mode, setMode] = useState<"line" | "word">("line");
+  const [ignoreWhitespace, setIgnoreWhitespace] = useState(false);
+  const [ignoreCase, setIgnoreCase] = useState(false);
+
+  const diff = useMemo(
+    () => compareTextAdvanced(left, right, { mode, ignoreWhitespace, ignoreCase }),
+    [left, right, mode, ignoreWhitespace, ignoreCase]
+  );
+
+  const stats = useMemo(() => {
+    let added = 0, removed = 0, unchanged = 0;
+    diff.forEach(part => {
+      const lines = part.value.split('\n').length - 1;
+      if (part.added) added += lines;
+      else if (part.removed) removed += lines;
+      else unchanged += lines;
+    });
+    return { added, removed, unchanged };
+  }, [diff]);
+
+  const diffText = useMemo(() => {
+    if (viewMode === 'unified') {
+      return diff.map(part => {
+        const prefix = part.added ? '+ ' : part.removed ? '- ' : '  ';
+        return part.value.split('\n').filter((_, i, arr) => i < arr.length - 1 || arr[arr.length - 1] !== '').map(line => prefix + line).join('\n');
+      }).join('\n');
+    }
+    const leftLines: { lineNum: number; text: string; type: 'added' | 'removed' | 'unchanged' }[] = [];
+    const rightLines: { lineNum: number; text: string; type: 'added' | 'removed' | 'unchanged' }[] = [];
+    let leftNum = 1, rightNum = 1;
+    diff.forEach(part => {
+      const lines = part.value.split('\n');
+      const textLines = lines.slice(0, -1);
+      if (part.removed) {
+        textLines.forEach(line => { leftLines.push({ lineNum: leftNum++, text: line, type: 'removed' }); });
+      } else if (part.added) {
+        textLines.forEach(line => { rightLines.push({ lineNum: rightNum++, text: line, type: 'added' }); });
+      } else {
+        textLines.forEach(line => {
+          leftLines.push({ lineNum: leftNum++, text: line, type: 'unchanged' });
+          rightLines.push({ lineNum: rightNum++, text: line, type: 'unchanged' });
+        });
+      }
+    });
+    return leftLines.map((l) => `${String(l.lineNum).padStart(4)} ${l.type === 'removed' ? '-' : ' '}${l.text}`).join('\n') + '\n\n' + rightLines.map(r => `${String(r.lineNum).padStart(4)} ${r.type === 'added' ? '+' : ' '}${r.text}`).join('\n');
+  }, [diff, viewMode]);
+
+  const renderSideBySide = () => {
+    const leftLines: { lineNum: number; text: string; type: string }[] = [];
+    const rightLines: { lineNum: number; text: string; type: string }[] = [];
+    let leftNum = 1, rightNum = 1;
+    diff.forEach(part => {
+      const lines = part.value.split('\n');
+      const textLines = lines.slice(0, -1);
+      if (part.removed) {
+        textLines.forEach(line => { leftLines.push({ lineNum: leftNum++, text: line, type: 'removed' }); });
+      } else if (part.added) {
+        textLines.forEach(line => { rightLines.push({ lineNum: rightNum++, text: line, type: 'added' }); });
+      } else {
+        textLines.forEach(line => {
+          leftLines.push({ lineNum: leftNum++, text: line, type: 'unchanged' });
+          rightLines.push({ lineNum: rightNum++, text: line, type: 'unchanged' });
+        });
+      }
+    });
+    const maxRows = Math.max(leftLines.length, rightLines.length);
+    return (
+      <div className="grid grid-cols-2 gap-4">
+        <pre className="max-h-[440px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-6">
+          {Array.from({ length: maxRows }, (_, i) => {
+            const left = leftLines[i];
+            if (!left) return <div key={i} className="h-6" />;
+            return (
+              <div key={i}>
+                <span className="inline-block w-8 text-right pr-2 text-muted-foreground select-none">{left.lineNum}</span>
+                <span className={left.type === 'removed' ? 'diff-removed' : ''}>{left.text}</span>
+              </div>
+            );
+          })}
+        </pre>
+        <pre className="max-h-[440px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-6">
+          {Array.from({ length: maxRows }, (_, i) => {
+            const right = rightLines[i];
+            if (!right) return <div key={i} className="h-6" />;
+            return (
+              <div key={i}>
+                <span className="inline-block w-8 text-right pr-2 text-muted-foreground select-none">{right.lineNum}</span>
+                <span className={right.type === 'added' ? 'diff-added' : ''}>{right.text}</span>
+              </div>
+            );
+          })}
+        </pre>
+      </div>
+    );
+  };
+
+  const renderUnified = () => (
+    <pre className="max-h-[440px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-6">
+      {diff.map((part, index) => (
+        <span key={index} className={part.added ? "diff-added" : part.removed ? "diff-removed" : ""}>
+          {part.value}
+        </span>
+      ))}
+    </pre>
+  );
+
   return (
     <Shell tool={tool}>
       <div className="grid gap-6 lg:grid-cols-2">
@@ -1391,14 +1892,33 @@ function DiffTool({ tool }: { tool: Tool }) {
           <Textarea value={right} onChange={(e) => setRight(e.target.value)} rows={16} />
         </Panel>
       </div>
-      <Panel title="Unified diff">
-        <pre className="max-h-[440px] overflow-auto rounded-xl border border-border bg-background p-4 text-xs leading-6">
-          {diff.map((part, index) => (
-            <span key={index} className={part.added ? "diff-added" : part.removed ? "diff-removed" : ""}>
-              {part.value}
-            </span>
-          ))}
-        </pre>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-1">
+          <Button variant={viewMode === 'unified' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('unified')}>Unified</Button>
+          <Button variant={viewMode === 'side-by-side' ? 'default' : 'outline'} size="sm" onClick={() => setViewMode('side-by-side')}>Side by side</Button>
+          <div className="w-px bg-border mx-1 h-5" />
+          <Button variant={mode === 'line' ? 'default' : 'outline'} size="sm" onClick={() => setMode('line')}>Line</Button>
+          <Button variant={mode === 'word' ? 'default' : 'outline'} size="sm" onClick={() => setMode('word')}>Word</Button>
+        </div>
+        <div className="flex items-center gap-3 text-sm">
+          <label className="flex items-center gap-1.5">
+            <input type="checkbox" checked={ignoreWhitespace} onChange={(e) => setIgnoreWhitespace(e.target.checked)} className="cursor-pointer" />
+            Ignore whitespace
+          </label>
+          <label className="flex items-center gap-1.5">
+            <input type="checkbox" checked={ignoreCase} onChange={(e) => setIgnoreCase(e.target.checked)} className="cursor-pointer" />
+            Ignore case
+          </label>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 text-sm">
+        <span className="text-emerald-500">+{stats.added}</span>
+        <span className="text-red-500">-{stats.removed}</span>
+        <span className="text-muted-foreground">~{stats.unchanged}</span>
+        <CopyButton value={diffText} toolSlug={tool.slug} toolName={tool.name} />
+      </div>
+      <Panel title={viewMode === 'unified' ? 'Unified diff' : 'Side-by-side diff'}>
+        {viewMode === 'unified' ? renderUnified() : renderSideBySide()}
       </Panel>
     </Shell>
   );
