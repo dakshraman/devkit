@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
 import { Providers } from "@/app/providers";
+import { PwaRegister } from "@/components/pwa-register";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 const inter = Inter({
@@ -91,6 +92,7 @@ export default function RootLayout({
           }}
         />
         <Providers>{children}</Providers>
+        <PwaRegister />
       </body>
     </html>
   );

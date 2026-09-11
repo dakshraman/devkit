@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Icon } from "@iconify/react";
 import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +11,7 @@ import { cn } from "@/lib/utils";
 import type { Tool } from "@/types";
 import { Reveal } from "@/components/ui/motion";
 
-export function Shell({ tool, children, description }: { tool: Tool; children: ReactNode; description?: string }) {
+export const Shell = memo(function Shell({ tool, children, description }: { tool: Tool; children: ReactNode; description?: string }) {
   return (
     <div className="space-y-6">
       <Reveal y={14}>
@@ -40,9 +41,9 @@ export function Shell({ tool, children, description }: { tool: Tool; children: R
       {children}
     </div>
   );
-}
+});
 
-export function Panel({ title, description, children, className }: { title: string; description?: string; children: ReactNode; className?: string }) {
+export const Panel = memo(function Panel({ title, description, children, className }: { title: string; description?: string; children: ReactNode; className?: string }) {
   return (
     <GlassCard className={cn("space-y-4", className)}>
       <CardHeader className="mb-0">
@@ -52,26 +53,26 @@ export function Panel({ title, description, children, className }: { title: stri
       {children}
     </GlassCard>
   );
-}
+});
 
-export function SectionLabel({ icon, label }: { icon: string; label: string }) {
+export const SectionLabel = memo(function SectionLabel({ icon, label }: { icon: string; label: string }) {
   return (
     <div className="flex items-center gap-2 text-sm font-medium">
       <Icon icon={icon} className="size-4 text-muted-foreground" />
       <span>{label}</span>
     </div>
   );
-}
+});
 
 export function EditorSkeleton() {
   return <Skeleton className="min-h-[320px] w-full rounded-xl" />;
 }
 
-export function InfoTile({ label, value }: { label: string; value: string }) {
+export const InfoTile = memo(function InfoTile({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border bg-background p-3">
       <div className="text-xs uppercase text-muted-foreground">{label}</div>
       <div className="mt-1 break-all text-sm font-medium">{value}</div>
     </div>
   );
-}
+});

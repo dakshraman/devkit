@@ -25,6 +25,7 @@ export interface Tool {
   keywords: string[];
   popular?: boolean;
   featured?: boolean;
+  isNew?: boolean;
   accent: string;
   docs?: string;
 }

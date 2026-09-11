@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function nowMs(): number {
-  return performance.now();
+  return Date.now();
 }
 
 export function nowSeconds(): number {
@@ -17,7 +17,9 @@ export function formatBytes(bytes: number): string {
   if (bytes === 0) return "0 B";
   const units = ["B", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
-  return `${(bytes / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+  const val = bytes / 1024 ** i;
+  const formatted = val % 1 === 0 ? val.toString() : val.toFixed(1);
+  return `${formatted} ${units[i]}`;
 }
 
 export function formatNumber(n: number): string {
@@ -35,9 +37,15 @@ export function truncate(text: string, max = 80): string {
   return `${text.slice(0, max).trimEnd()}…`;
 }
 
-export function formatDuration(ms: number): string {
-  if (ms < 1_000) return `${Math.round(ms)} ms`;
-  return `${(ms / 1000).toFixed(2)} s`;
+export function formatDuration(seconds: number): string {
+  const s = Math.round(seconds);
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  const rs = s % 60;
+  if (m < 60) return `${m}m ${rs}s`;
+  const h = Math.floor(m / 60);
+  const rm = m % 60;
+  return `${h}h ${rm}m ${rs}s`;
 }
 
 export function formatDate(input: number | string | Date): string {
