@@ -47,21 +47,19 @@ export default function BgRemoverTool({ tool }: { tool: Tool }) {
   const runRemoval = async (url: string) => {
     setProgress({ key: "loading", current: 0, total: 100 });
     try {
-      const { removeBackground } = await import("@imgly/background-removal");
-      const blob = await removeBackground(url, {
-        output: { format: "image/png" },
-        progress: (key, current, total) => {
-          if (key.startsWith("fetch:")) {
-            setProgress({ key, current, total });
-          } else if (key.startsWith("compute:")) {
-            setProgress({ key, current: current + 1, total });
-          }
+      const { cut } = await import("@crispcut/background-removal");
+      const out = await cut(url, {
+        model: "fast",
+        gpu: true,
+        format: "image/png",
+        onProgress: (pct: number) => {
+          setProgress({ key: "compute", current: Math.round(pct * 100), total: 100 });
         },
       });
-      const outUrl = URL.createObjectURL(blob);
+      const outUrl = out.url;
       if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
       objectUrlRef.current = outUrl;
-      setResult({ url: outUrl, blob, size: blob.size });
+      setResult({ url: outUrl, blob: out.blob, size: out.blob.size });
       setProgress(null);
     } catch (err) {
       setProgress(null);
@@ -83,11 +81,10 @@ export default function BgRemoverTool({ tool }: { tool: Tool }) {
       ? Math.min(100, Math.round((progress.current / progress.total) * 100))
       : 0
     : 0;
-  const isFetching = progress?.key.startsWith("fetch:") ?? false;
   const stageLabel = !progress
     ? ""
-    : isFetching
-      ? "Downloading AI model…"
+    : progress.key === "loading"
+      ? "Loading AI model…"
       : "Removing background…";
 
   return (
