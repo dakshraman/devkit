@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import figlet from "figlet";
 import { Input } from "@/components/ui/input";
+
+if (typeof window !== "undefined") {
+  figlet.defaults({ fontPath: "/fonts" });
+}
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CopyButton, DownloadButton } from "@/components/ui/copy-button";
 import { Panel, Shell } from "@/features/tools/tool-layout";

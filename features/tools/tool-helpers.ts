@@ -448,9 +448,12 @@ export function formatMailDate(iso: string): string {
 }
 
 export async function mailApi<T>(path: string, opts?: { method?: string; token?: string; body?: Record<string, unknown> }): Promise<T> {
-  const res = await fetch(MAILTM_API + path, {
+  const proxyUrl = `/api/mail${path}`;
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (opts?.token) headers["x-mail-token"] = opts.token;
+  const res = await fetch(proxyUrl, {
     method: opts?.method ?? "GET",
-    headers: { "Content-Type": "application/json", ...(opts?.token ? { Authorization: `Bearer ${opts.token}` } : {}) },
+    headers,
     body: opts?.body ? JSON.stringify(opts.body) : undefined,
   });
   if (!res.ok) throw new Error(`mail.tm error (${res.status})`);
@@ -459,7 +462,8 @@ export async function mailApi<T>(path: string, opts?: { method?: string; token?:
 }
 
 export async function downloadAttachment(acc: MailAccount, att: { downloadUrl: string; filename: string }): Promise<void> {
-  const res = await fetch(MAILTM_API + att.downloadUrl, { headers: { Authorization: `Bearer ${acc.token}` } });
+  const proxyUrl = `/api/mail${att.downloadUrl}`;
+  const res = await fetch(proxyUrl, { headers: { "x-mail-token": acc.token } });
   if (!res.ok) return;
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
