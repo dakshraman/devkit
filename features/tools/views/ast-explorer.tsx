@@ -265,22 +265,22 @@ export default function AstExplorerTool({ tool }: { tool: Tool }) {
 
   const langConfig = useMemo(() => LANGUAGES.find((l) => l.value === lang) ?? LANGUAGES[0], [lang]);
 
-  const parseCode = useCallback(() => {
+  const parseCode = useCallback(async () => {
     setError(null);
     setSelectedPath(null);
     setSelectedNode(null);
 
     try {
-      const plugins: string[] = [...langConfig.plugins];
+      const plugins = [...langConfig.plugins] as ParserPlugin[];
       if (lang === "jsx" && !plugins.includes("jsx")) plugins.push("jsx");
 
-      const { parse } = require("@babel/parser");
-      const result = parse(code, {
+      const parser = await import("@babel/parser");
+      const result = parser.parse(code, {
         sourceType: langConfig.sourceType,
-        plugins,
+        plugins: plugins as never,
         errorRecovery: true,
       });
-      setAst(result.program);
+      setAst(result.program as unknown as Record<string, unknown>);
       setExpanded(new Set(["root"]));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to parse");

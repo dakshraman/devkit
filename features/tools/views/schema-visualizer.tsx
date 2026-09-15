@@ -156,19 +156,49 @@ const GROUP_BG: Record<string, string> = {
   binary: "bg-gray-500/10",
 };
 
+function extractBalancedBody(input: string): string {
+  let depth = 0;
+  let start = -1;
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === "(") {
+      if (depth === 0) start = i + 1;
+      depth++;
+    } else if (input[i] === ")") {
+      depth--;
+      if (depth === 0) return input.slice(start, i);
+    }
+  }
+  return "";
+}
+
+function splitColumns(body: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let current = "";
+  for (const ch of body) {
+    if (ch === "(") { depth++; current += ch; }
+    else if (ch === ")") { depth--; current += ch; }
+    else if (ch === "," && depth === 0) { parts.push(current.trim()); current = ""; }
+    else { current += ch; }
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
 function parseSqlSchema(input: string): { tables: ParsedTable[]; relationships: Relationship[] } {
   const tables: ParsedTable[] = [];
   const relationships: Relationship[] = [];
 
-  const tableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(\w+)\s*\(([\s\S]*?)\)\s*;/gi;
+  const tableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(\w+)\s*\(/gi;
   let tableMatch;
 
   while ((tableMatch = tableRegex.exec(input)) !== null) {
     const tableName = tableMatch[1].toLowerCase();
-    const body = tableMatch[2];
+    const bodyStart = tableMatch.index + tableMatch[0].length;
+    const body = extractBalancedBody(input.slice(bodyStart - 1));
     const columns: ParsedColumn[] = [];
 
-    const lines = body.split(",").map((l) => l.trim()).filter(Boolean);
+    const lines = splitColumns(body);
 
     for (const line of lines) {
       const fkMatch = line.match(

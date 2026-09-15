@@ -103,9 +103,9 @@ export default function LoadTesterTool({ tool }: { tool: Tool }) {
     const total = results.length;
     const success = results.filter((r) => r.status !== null && r.status! < 400).length;
     const failed = total - success;
-    const totalTime = latencies.reduce((sum, l) => sum + l, 0);
-    const avgLatency = total > 0 ? totalTime / total : 0;
-    const rps = avgLatency > 0 ? (total / (totalTime / 1000)) : 0;
+    const totalTime = performance.now() - startRef.current;
+    const avgLatency = total > 0 ? latencies.reduce((s, l) => s + l, 0) / total : 0;
+    const rps = totalTime > 0 ? (total / (totalTime / 1000)) : 0;
 
     const statusCodes: Record<string, number> = {};
     for (const r of results) {
@@ -114,7 +114,7 @@ export default function LoadTesterTool({ tool }: { tool: Tool }) {
     }
 
     return {
-      totalTime: performance.now() - startRef.current,
+      totalTime,
       avgLatency,
       minLatency: latencies[0] || 0,
       maxLatency: latencies[latencies.length - 1] || 0,
