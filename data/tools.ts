@@ -547,6 +547,16 @@ export const TOOLS: Tool[] = [
     accent: "#10b981",
     isNew: true,
   },
+  {
+    slug: "device-simulator",
+    name: "Device Simulator",
+    description: "Preview websites in real device frames — iPhone, Android, iPad, MacBook, Windows, watches and foldables.",
+    category: "visual",
+    icon: "lucide:smartphone",
+    keywords: ["device", "simulator", "responsive", "mobile", "iphone", "android", "ipad", "macbook", "watch", "fold"],
+    accent: "#a855f7",
+    isNew: true,
+  },
 ];
 
 /* Quick access links shown on the dashboard (admin-managed). */
