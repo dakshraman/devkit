@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Panel, Shell } from "@/features/tools/tool-layout";
 import type { Tool } from "@/types";
 
+/* ── Device definitions ─────────────────────────────────────────── */
+
 interface Device {
   name: string;
   category: string;
@@ -16,352 +18,355 @@ interface Device {
 }
 
 const DEVICES: Device[] = [
-  { name: "iPhone 16 Pro", category: "Phones", width: 393, height: 852, scale: 0.55, frame: "phone" },
-  { name: "iPhone 16 Pro Max", category: "Phones", width: 440, height: 932, scale: 0.5, frame: "phone" },
-  { name: "iPhone SE", category: "Phones", width: 375, height: 667, scale: 0.6, frame: "phone" },
-  { name: "Samsung Galaxy S24", category: "Phones", width: 360, height: 780, scale: 0.58, frame: "phone" },
-  { name: "Google Pixel 8", category: "Phones", width: 412, height: 915, scale: 0.52, frame: "phone" },
-  { name: "iPad Mini", category: "Tablets", width: 768, height: 1024, scale: 0.55, frame: "tablet" },
-  { name: "iPad Air", category: "Tablets", width: 820, height: 1180, scale: 0.5, frame: "tablet" },
-  { name: "iPad Pro 12.9\"", category: "Tablets", width: 1024, height: 1366, scale: 0.45, frame: "tablet" },
-  { name: "Galaxy Tab S9", category: "Tablets", width: 800, height: 1280, scale: 0.5, frame: "tablet" },
-  { name: "Z Fold (Inner)", category: "Foldables", width: 930, height: 2316, scale: 0.35, frame: "fold" },
-  { name: "Z Fold (Outer)", category: "Foldables", width: 360, height: 780, scale: 0.58, frame: "phone" },
-  { name: "Pixel Fold (Inner)", category: "Foldables", width: 1048, height: 2208, scale: 0.33, frame: "fold" },
-  { name: "Z Flip (Outer)", category: "Foldables", width: 360, height: 720, scale: 0.6, frame: "phone" },
-  { name: "Apple Watch Ultra 2", category: "Watches", width: 410, height: 502, scale: 0.55, frame: "watch" },
-  { name: "Apple Watch Series 10", category: "Watches", width: 368, height: 448, scale: 0.6, frame: "watch" },
-  { name: "Galaxy Watch 6", category: "Watches", width: 432, height: 432, scale: 0.55, frame: "watch" },
-  { name: "MacBook Air 13\"", category: "Laptops", width: 1280, height: 800, scale: 0.65, frame: "laptop" },
-  { name: "MacBook Pro 14\"", category: "Laptops", width: 1512, height: 982, scale: 0.55, frame: "laptop" },
-  { name: "MacBook Pro 16\"", category: "Laptops", width: 1728, height: 1117, scale: 0.5, frame: "laptop" },
-  { name: "Dell XPS 15", category: "Laptops", width: 1504, height: 1000, scale: 0.55, frame: "laptop" },
-  { name: "ThinkPad X1 Carbon", category: "Laptops", width: 1920, height: 1200, scale: 0.48, frame: "laptop" },
-  { name: "Windows 1080p", category: "Desktops", width: 1920, height: 1080, scale: 0.45, frame: "desktop" },
-  { name: "iMac 24\"", category: "Desktops", width: 2048, height: 1152, scale: 0.42, frame: "desktop" },
-  { name: "4K Monitor", category: "Desktops", width: 3840, height: 2160, scale: 0.3, frame: "desktop" },
+  { name: "iPhone 16 Pro", category: "Phones", width: 393, height: 852, scale: 0.42, frame: "phone" },
+  { name: "iPhone 16 Pro Max", category: "Phones", width: 440, height: 932, scale: 0.38, frame: "phone" },
+  { name: "iPhone SE", category: "Phones", width: 375, height: 667, scale: 0.48, frame: "phone" },
+  { name: "Galaxy S24", category: "Phones", width: 360, height: 780, scale: 0.46, frame: "phone" },
+  { name: "Pixel 8", category: "Phones", width: 412, height: 915, scale: 0.4, frame: "phone" },
+  { name: "iPad Mini", category: "Tablets", width: 768, height: 1024, scale: 0.42, frame: "tablet" },
+  { name: "iPad Air", category: "Tablets", width: 820, height: 1180, scale: 0.38, frame: "tablet" },
+  { name: "iPad Pro 12.9\"", category: "Tablets", width: 1024, height: 1366, scale: 0.34, frame: "tablet" },
+  { name: "Galaxy Tab S9", category: "Tablets", width: 800, height: 1280, scale: 0.36, frame: "tablet" },
+  { name: "Z Fold (Inner)", category: "Foldables", width: 930, height: 1200, scale: 0.34, frame: "fold" },
+  { name: "Z Fold (Outer)", category: "Foldables", width: 360, height: 780, scale: 0.46, frame: "phone" },
+  { name: "Pixel Fold", category: "Foldables", width: 1048, height: 1200, scale: 0.32, frame: "fold" },
+  { name: "Z Flip (Outer)", category: "Foldables", width: 360, height: 720, scale: 0.48, frame: "phone" },
+  { name: "Watch Ultra 2", category: "Watches", width: 410, height: 502, scale: 0.38, frame: "watch" },
+  { name: "Watch Series 10", category: "Watches", width: 368, height: 448, scale: 0.42, frame: "watch" },
+  { name: "Galaxy Watch 6", category: "Watches", width: 432, height: 432, scale: 0.38, frame: "watch" },
+  { name: "MacBook Air", category: "Laptops", width: 1280, height: 800, scale: 0.45, frame: "laptop" },
+  { name: "MacBook Pro 14\"", category: "Laptops", width: 1512, height: 982, scale: 0.38, frame: "laptop" },
+  { name: "MacBook Pro 16\"", category: "Laptops", width: 1728, height: 1117, scale: 0.34, frame: "laptop" },
+  { name: "ThinkPad X1", category: "Laptops", width: 1920, height: 1200, scale: 0.32, frame: "laptop" },
+  { name: "Windows 1080p", category: "Desktops", width: 1920, height: 1080, scale: 0.36, frame: "desktop" },
+  { name: "iMac 24\"", category: "Desktops", width: 2048, height: 1152, scale: 0.34, frame: "desktop" },
+  { name: "4K Monitor", category: "Desktops", width: 3840, height: 2160, scale: 0.2, frame: "desktop" },
 ];
 
-/* ── Frame Components ────────────────────────────────────────────── */
+/* ── Helper: scale a device to its display size ─────────────────── */
+
+function scaled(d: Device) {
+  return { w: Math.round(d.width * d.scale), h: Math.round(d.height * d.scale) };
+}
+
+/* ── Frame: Phone ───────────────────────────────────────────────── */
 
 function PhoneFrame({ children, w, h }: { children: React.ReactNode; w: number; h: number }) {
-  const bezel = 10;
-  const topBar = 32;
-  const bottomBar = 8;
-  const radius = 36;
-  const notchW = Math.min(w * 0.28, 80);
-  const notchH = Math.min(w * 0.06, 20);
-  const totalW = w + bezel * 2;
-  const totalH = h + topBar + bottomBar + bezel * 2;
+  const bezelX = Math.max(6, Math.round(w * 0.04));
+  const bezelTop = Math.max(20, Math.round(h * 0.035));
+  const bezelBot = Math.max(6, Math.round(h * 0.012));
+  const r = Math.max(20, Math.round(w * 0.12));
+  const totalW = w + bezelX * 2;
+  const totalH = h + bezelTop + bezelBot;
+  const notchW = Math.round(w * 0.26);
+  const notchH = Math.max(8, Math.round(w * 0.05));
+  const indicatorW = Math.round(w * 0.28);
 
   return (
-    <div style={{ width: totalW, height: totalH, position: "relative" }}>
-      {/* Outer body */}
+    <div style={{ width: totalW, height: totalH, position: "relative", flexShrink: 0 }}>
       <div style={{
-        position: "absolute", inset: 0,
-        borderRadius: radius,
-        background: "linear-gradient(145deg, #1a1a2e, #0f0f1a)",
-        boxShadow: "0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        position: "absolute", inset: 0, borderRadius: r,
+        background: "linear-gradient(160deg, #222 0%, #111 100%)",
+        boxShadow: "0 20px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
       }}>
-        {/* Side buttons */}
-        <div style={{ position: "absolute", right: -3, top: "22%", width: 3, height: "8%", borderRadius: 4, background: "#333" }} />
-        <div style={{ position: "absolute", right: -3, top: "34%", width: 3, height: "12%", borderRadius: 4, background: "#333" }} />
-        <div style={{ position: "absolute", left: -3, top: "28%", width: 3, height: "6%", borderRadius: 4, background: "#333" }} />
-
+        {/* Volume buttons left */}
+        <div style={{ position: "absolute", left: -2, top: "25%", width: 2, height: "6%", borderRadius: 2, background: "#444" }} />
+        <div style={{ position: "absolute", left: -2, top: "33%", width: 2, height: "8%", borderRadius: 2, background: "#444" }} />
+        {/* Power right */}
+        <div style={{ position: "absolute", right: -2, top: "28%", width: 2, height: "10%", borderRadius: 2, background: "#444" }} />
         {/* Dynamic Island */}
         <div style={{
-          position: "absolute", left: "50%", top: bezel + 6,
-          transform: "translateX(-50%)",
-          width: notchW, height: notchH,
-          borderRadius: notchH / 2,
-          background: "#000",
-          zIndex: 10,
+          position: "absolute", left: "50%", top: Math.round(bezelTop * 0.4),
+          transform: "translateX(-50%)", width: notchW, height: notchH,
+          borderRadius: notchH / 2, background: "#000", zIndex: 2,
         }} />
-
-        {/* Screen area */}
+        {/* Screen */}
         <div style={{
-          position: "absolute",
-          left: bezel, top: topBar,
-          width: w, height: h,
-          borderRadius: radius - 8,
-          overflow: "hidden",
-          background: "#fff",
-        }}>
-          {children}
-        </div>
-
+          position: "absolute", left: bezelX, top: bezelTop,
+          width: w, height: h, borderRadius: r - 6,
+          overflow: "hidden", background: "#fff",
+        }}>{children}</div>
         {/* Home indicator */}
         <div style={{
-          position: "absolute",
-          left: "50%", bottom: bezel + 2,
-          transform: "translateX(-50%)",
-          width: w * 0.3, height: 4,
-          borderRadius: 2,
-          background: "rgba(255,255,255,0.2)",
+          position: "absolute", left: "50%", bottom: Math.round(bezelBot * 0.5),
+          transform: "translateX(-50%)", width: indicatorW, height: 3,
+          borderRadius: 2, background: "rgba(255,255,255,0.15)",
         }} />
       </div>
     </div>
   );
 }
 
+/* ── Frame: Tablet ──────────────────────────────────────────────── */
+
 function TabletFrame({ children, w, h }: { children: React.ReactNode; w: number; h: number }) {
-  const bezel = 12;
-  const radius = 20;
+  const bezel = Math.max(8, Math.round(Math.min(w, h) * 0.02));
+  const r = Math.max(14, Math.round(w * 0.03));
   const totalW = w + bezel * 2;
   const totalH = h + bezel * 2;
 
   return (
-    <div style={{ width: totalW, height: totalH, position: "relative" }}>
+    <div style={{ width: totalW, height: totalH, position: "relative", flexShrink: 0 }}>
       <div style={{
-        position: "absolute", inset: 0,
-        borderRadius: radius,
-        background: "linear-gradient(145deg, #1a1a2e, #0f0f1a)",
-        boxShadow: "0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        position: "absolute", inset: 0, borderRadius: r,
+        background: "linear-gradient(160deg, #222 0%, #111 100%)",
+        boxShadow: "0 20px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
       }}>
         {/* Camera */}
-        <div style={{ position: "absolute", left: "50%", top: 6, transform: "translateX(-50%)", width: 6, height: 6, borderRadius: "50%", background: "#222" }} />
+        <div style={{
+          position: "absolute", left: "50%", top: Math.round(bezel * 0.35),
+          transform: "translateX(-50%)", width: 4, height: 4,
+          borderRadius: "50%", background: "#333",
+        }} />
         <div style={{
           position: "absolute", left: bezel, top: bezel,
-          width: w, height: h,
-          borderRadius: radius - 6,
+          width: w, height: h, borderRadius: r - 4,
           overflow: "hidden", background: "#fff",
-        }}>
-          {children}
-        </div>
+        }}>{children}</div>
       </div>
     </div>
   );
 }
 
+/* ── Frame: Watch ───────────────────────────────────────────────── */
+
 function WatchFrame({ children, w, h }: { children: React.ReactNode; w: number; h: number }) {
-  const bezel = 8;
-  const radius = 28;
-  const bandW = w * 0.55;
-  const totalW = w + bezel * 2 + 8;
-  const totalH = h + bezel * 2 + 40;
+  const bezel = Math.max(6, Math.round(w * 0.03));
+  const r = Math.round(w * 0.28);
+  const bodyW = w + bezel * 2;
+  const bodyH = h + bezel * 2;
+  const bandW = Math.round(w * 0.5);
+  const bandH = 14;
+  const totalW = bodyW + 8;
+  const totalH = bodyH + bandH * 2;
 
   return (
-    <div style={{ width: totalW, height: totalH, position: "relative" }}>
-      {/* Band top */}
+    <div style={{ width: totalW, height: totalH, position: "relative", flexShrink: 0 }}>
+      {/* Top band */}
       <div style={{
         position: "absolute", left: "50%", top: 0,
-        transform: "translateX(-50%)",
-        width: bandW, height: 18,
-        background: "linear-gradient(180deg, #444, #333)",
-        borderRadius: "6px 6px 0 0",
+        transform: "translateX(-50%)", width: bandW, height: bandH,
+        background: "#555", borderRadius: "5px 5px 0 0",
       }} />
-      {/* Band bottom */}
+      {/* Bottom band */}
       <div style={{
         position: "absolute", left: "50%", bottom: 0,
-        transform: "translateX(-50%)",
-        width: bandW, height: 18,
-        background: "linear-gradient(0deg, #444, #333)",
-        borderRadius: "0 0 6px 6px",
+        transform: "translateX(-50%)", width: bandW, height: bandH,
+        background: "#555", borderRadius: "0 0 5px 5px",
       }} />
       {/* Body */}
       <div style={{
-        position: "absolute", left: 4, top: 18,
-        width: w + bezel * 2, height: h + bezel * 2,
-        borderRadius: radius,
-        background: "linear-gradient(145deg, #2a2a3e, #1a1a28)",
-        boxShadow: "0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)",
-        border: "1px solid rgba(255,255,255,0.1)",
+        position: "absolute", left: 4, top: bandH,
+        width: bodyW, height: bodyH, borderRadius: r,
+        background: "linear-gradient(160deg, #333 0%, #1a1a1a 100%)",
+        boxShadow: "0 15px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)",
       }}>
         {/* Crown */}
-        <div style={{ position: "absolute", right: -5, top: "30%", width: 5, height: 14, borderRadius: 3, background: "#555" }} />
-        {/* Side button */}
-        <div style={{ position: "absolute", right: -5, top: "50%", width: 5, height: 10, borderRadius: 3, background: "#444" }} />
+        <div style={{ position: "absolute", right: -4, top: "32%", width: 4, height: 10, borderRadius: 2, background: "#666" }} />
+        {/* Button */}
+        <div style={{ position: "absolute", right: -4, top: "52%", width: 4, height: 7, borderRadius: 2, background: "#555" }} />
         <div style={{
           position: "absolute", left: bezel, top: bezel,
-          width: w, height: h,
-          borderRadius: radius - 6,
+          width: w, height: h, borderRadius: r - 4,
           overflow: "hidden", background: "#000",
-        }}>
-          {children}
-        </div>
+        }}>{children}</div>
       </div>
     </div>
   );
 }
 
+/* ── Frame: Laptop ──────────────────────────────────────────────── */
+
 function LaptopFrame({ children, w, h }: { children: React.ReactNode; w: number; h: number }) {
-  const bezel = 10;
-  const screenRadius = 10;
+  const bezel = Math.max(6, Math.round(Math.min(w, h) * 0.012));
+  const screenR = 8;
   const lidW = w + bezel * 2;
-  const lidH = h + bezel * 2 + 6;
-  const baseW = lidW + 40;
-  const baseH = 28;
-  const totalW = baseW;
+  const lidH = h + bezel * 2 + 4;
+  const baseH = Math.max(16, Math.round(lidH * 0.06));
+  const baseExtra = Math.max(20, Math.round(lidW * 0.03));
+  const totalW = lidW + baseExtra;
   const totalH = lidH + baseH;
 
   return (
-    <div style={{ width: totalW, height: totalH, position: "relative" }}>
-      {/* Screen lid */}
+    <div style={{ width: totalW, height: totalH, position: "relative", flexShrink: 0 }}>
+      {/* Lid */}
       <div style={{
         width: lidW, height: lidH,
-        borderRadius: "12px 12px 0 0",
-        background: "linear-gradient(145deg, #1a1a2e, #0f0f1a)",
-        boxShadow: "0 -5px 30px rgba(0,0,0,0.4)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        borderBottom: "none",
+        borderRadius: "10px 10px 0 0",
+        background: "linear-gradient(160deg, #2a2a2a 0%, #1a1a1a 100%)",
+        boxShadow: "0 -4px 20px rgba(0,0,0,0.3)",
         position: "relative",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "none",
       }}>
         {/* Camera */}
-        <div style={{ position: "absolute", left: "50%", top: 4, transform: "translateX(-50%)", width: 5, height: 5, borderRadius: "50%", background: "#222" }} />
+        <div style={{
+          position: "absolute", left: "50%", top: 3,
+          transform: "translateX(-50%)", width: 4, height: 4,
+          borderRadius: "50%", background: "#2a2a2a",
+          border: "1px solid #333",
+        }} />
+        {/* Screen */}
         <div style={{
           position: "absolute", left: bezel, top: bezel,
-          width: w, height: h,
-          borderRadius: screenRadius,
+          width: w, height: h, borderRadius: screenR,
           overflow: "hidden", background: "#fff",
-        }}>
-          {children}
-        </div>
-        {/* Brand text */}
-        <div style={{ position: "absolute", bottom: 2, left: "50%", transform: "translateX(-50%)", fontSize: 7, color: "#555", letterSpacing: 2, fontWeight: 500 }}>DEVKIT</div>
+        }}>{children}</div>
+        {/* Brand */}
+        <div style={{
+          position: "absolute", bottom: 1, left: "50%",
+          transform: "translateX(-50%)",
+          fontSize: 6, color: "#555", letterSpacing: 2, fontWeight: 600,
+        }}>DEVKIT</div>
       </div>
       {/* Hinge */}
       <div style={{
-        width: lidW, height: 3,
+        width: lidW, height: 2,
         background: "linear-gradient(90deg, #333, #555, #333)",
       }} />
       {/* Base */}
       <div style={{
-        width: baseW, height: baseH,
-        marginLeft: -(baseW - lidW) / 2,
-        borderRadius: "0 0 12px 12px",
-        background: "linear-gradient(180deg, #2a2a3e, #1f1f30)",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-        border: "1px solid rgba(255,255,255,0.06)",
-        borderTop: "1px solid rgba(255,255,255,0.1)",
+        width: totalW, height: baseH,
+        borderRadius: "0 0 10px 10px",
+        background: "linear-gradient(180deg, #333 0%, #252525 100%)",
+        boxShadow: "0 8px 25px rgba(0,0,0,0.5)",
+        border: "1px solid rgba(255,255,255,0.04)",
+        borderTop: "1px solid rgba(255,255,255,0.08)",
         position: "relative",
       }}>
-        {/* Trackpad cutout */}
+        {/* Trackpad */}
         <div style={{
-          position: "absolute", left: "50%", top: 4,
+          position: "absolute", left: "50%", top: 3,
           transform: "translateX(-50%)",
-          width: Math.min(lidW * 0.4, 120), height: 3,
-          borderRadius: 2, background: "rgba(255,255,255,0.06)",
+          width: Math.round(lidW * 0.35), height: 2,
+          borderRadius: 1, background: "rgba(255,255,255,0.05)",
         }} />
-        {/* Keyboard dots */}
-        <div style={{ position: "absolute", left: "15%", top: 8, right: "15%", display: "flex", gap: 3, justifyContent: "center", flexWrap: "wrap" }}>
-          {Array.from({ length: 24 }).map((_, i) => (
-            <div key={i} style={{ width: 4, height: 3, borderRadius: 1, background: "rgba(255,255,255,0.08)" }} />
-          ))}
-        </div>
       </div>
     </div>
   );
 }
 
+/* ── Frame: Desktop ─────────────────────────────────────────────── */
+
 function DesktopFrame({ children, w, h }: { children: React.ReactNode; w: number; h: number }) {
-  const bezel = 10;
+  const bezel = Math.max(6, Math.round(Math.min(w, h) * 0.01));
   const monitorW = w + bezel * 2;
-  const monitorH = h + bezel * 2 + 8;
-  const totalW = monitorW + 40;
-  const totalH = monitorH + 50;
+  const monitorH = h + bezel * 2 + 6;
+  const neckW = Math.max(14, Math.round(monitorW * 0.03));
+  const neckH = Math.max(14, Math.round(monitorH * 0.06));
+  const baseW = Math.max(40, Math.round(monitorW * 0.2));
+  const baseH = 6;
+  const totalW = monitorW + 20;
+  const totalH = monitorH + neckH + baseH + 4;
 
   return (
-    <div style={{ width: totalW, height: totalH, position: "relative" }}>
+    <div style={{ width: totalW, height: totalH, position: "relative", flexShrink: 0 }}>
       {/* Monitor */}
       <div style={{
         width: monitorW, height: monitorH,
-        borderRadius: 12,
-        background: "linear-gradient(145deg, #1a1a2e, #0f0f1a)",
-        boxShadow: "0 25px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 8,
+        background: "linear-gradient(160deg, #2a2a2a 0%, #1a1a1a 100%)",
+        boxShadow: "0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06)",
         position: "relative",
       }}>
         {/* Camera */}
-        <div style={{ position: "absolute", left: "50%", top: 4, transform: "translateX(-50%)", width: 4, height: 4, borderRadius: "50%", background: "#222" }} />
         <div style={{
-          position: "absolute", left: bezel, top: bezel + 4,
-          width: w, height: h,
-          borderRadius: 6,
+          position: "absolute", left: "50%", top: 3,
+          transform: "translateX(-50%)", width: 3, height: 3,
+          borderRadius: "50%", background: "#333",
+        }} />
+        <div style={{
+          position: "absolute", left: bezel, top: bezel + 3,
+          width: w, height: h, borderRadius: 4,
           overflow: "hidden", background: "#fff",
-        }}>
-          {children}
-        </div>
-        {/* Brand */}
-        <div style={{ position: "absolute", bottom: 2, left: "50%", transform: "translateX(-50%)", fontSize: 7, color: "#555", letterSpacing: 2, fontWeight: 500 }}>DEVKIT</div>
+        }}>{children}</div>
+        <div style={{
+          position: "absolute", bottom: 1, left: "50%",
+          transform: "translateX(-50%)",
+          fontSize: 5, color: "#555", letterSpacing: 1, fontWeight: 600,
+        }}>DEVKIT</div>
       </div>
-      {/* Stand neck */}
+      {/* Neck */}
       <div style={{
-        position: "absolute", bottom: 18, left: "50%",
+        position: "absolute", bottom: baseH, left: "50%",
         transform: "translateX(-50%)",
-        width: 20, height: 22,
+        width: neckW, height: neckH,
         background: "linear-gradient(180deg, #444, #333)",
-        borderRadius: "0 0 4px 4px",
+        borderRadius: "0 0 3px 3px",
       }} />
-      {/* Stand base */}
+      {/* Base */}
       <div style={{
         position: "absolute", bottom: 0, left: "50%",
         transform: "translateX(-50%)",
-        width: 80, height: 8,
-        borderRadius: 4,
+        width: baseW, height: baseH,
+        borderRadius: 3,
         background: "linear-gradient(180deg, #555, #3a3a3a)",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
       }} />
     </div>
   );
 }
 
+/* ── Frame: Fold ────────────────────────────────────────────────── */
+
 function FoldFrame({ children, w, h }: { children: React.ReactNode; w: number; h: number }) {
-  const halfW = w / 2;
-  const bezel = 8;
-  const gap = 6;
+  const bezel = Math.max(6, Math.round(w * 0.015));
+  const gap = 4;
+  const halfW = Math.round((w - gap) / 2);
   const totalW = w + bezel * 2 + gap + 4;
   const totalH = h + bezel * 2;
 
   return (
-    <div style={{ width: totalW, height: totalH, position: "relative" }}>
+    <div style={{ width: totalW, height: totalH, position: "relative", flexShrink: 0 }}>
       <div style={{
-        display: "flex", gap: gap,
+        display: "flex", gap,
         width: totalW, height: totalH,
-        borderRadius: 16,
-        background: "linear-gradient(145deg, #1a1a2e, #0f0f1a)",
-        boxShadow: "0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)",
-        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 14,
+        background: "linear-gradient(160deg, #222 0%, #111 100%)",
+        boxShadow: "0 20px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
         padding: bezel,
       }}>
-        {/* Left panel (blank) */}
-        <div style={{ width: halfW, height: h, borderRadius: 10, overflow: "hidden", background: "#f0f0f0" }} />
+        {/* Left panel */}
+        <div style={{
+          width: halfW, height: h, borderRadius: 8,
+          overflow: "hidden", background: "#e8e8e8",
+        }} />
         {/* Hinge */}
-        <div style={{ width: gap, background: "linear-gradient(180deg, #444, #333)", borderRadius: 2 }} />
-        {/* Right panel (live) */}
-        <div style={{ width: halfW, height: h, borderRadius: 10, overflow: "hidden", background: "#fff" }}>
-          {children}
-        </div>
+        <div style={{ width: gap, background: "#444", borderRadius: 1 }} />
+        {/* Right panel */}
+        <div style={{
+          width: halfW, height: h, borderRadius: 8,
+          overflow: "hidden", background: "#fff",
+        }}>{children}</div>
       </div>
     </div>
   );
 }
 
-/* ── Main Component ──────────────────────────────────────────────── */
+/* ── Main Component ─────────────────────────────────────────────── */
 
 export default function DeviceSimulator({ tool }: { tool: Tool }) {
   const [url, setUrl] = useState("https://devkit.dakshraman.in");
-  const [activeDevice, setActiveDevice] = useState<Device>(DEVICES[0]);
+  const [active, setActive] = useState<Device>(DEVICES[0]);
   const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
   const [history, setHistory] = useState(["https://devkit.dakshraman.in"]);
   const [historyIdx, setHistoryIdx] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const navigate = (targetUrl: string) => {
-    const full = targetUrl.startsWith("http") ? targetUrl : `https://${targetUrl}`;
+  const navigate = (u: string) => {
+    const full = u.startsWith("http") ? u : `https://${u}`;
     setUrl(full);
     const next = [...history.slice(0, historyIdx + 1), full];
     setHistory(next);
     setHistoryIdx(next.length - 1);
   };
+  const back = () => { if (historyIdx > 0) { const i = historyIdx - 1; setHistoryIdx(i); setUrl(history[i]); } };
+  const fwd = () => { if (historyIdx < history.length - 1) { const i = historyIdx + 1; setHistoryIdx(i); setUrl(history[i]); } };
 
-  const goBack = () => { if (historyIdx > 0) { const i = historyIdx - 1; setHistoryIdx(i); setUrl(history[i]); } };
-  const goForward = () => { if (historyIdx < history.length - 1) { const i = historyIdx + 1; setHistoryIdx(i); setUrl(history[i]); } };
-
-  const isLandscape = orientation === "landscape";
-  const screenW = isLandscape ? activeDevice.height : activeDevice.width;
-  const screenH = isLandscape ? activeDevice.width : activeDevice.height;
+  const isLandscape = orientation === "landscape" && active.frame !== "watch" && active.frame !== "fold";
+  const vpW = isLandscape ? active.height : active.width;
+  const vpH = isLandscape ? active.width : active.height;
+  const { w: displayW, h: displayH } = scaled({ ...active, width: vpW, height: vpH });
 
   const categories = [...new Set(DEVICES.map((d) => d.category))];
 
@@ -376,16 +381,16 @@ export default function DeviceSimulator({ tool }: { tool: Tool }) {
     />
   );
 
-  const frameProps = { w: screenW, h: screenH };
+  const fp = { w: displayW, h: displayH };
 
   const renderFrame = () => {
-    switch (activeDevice.frame) {
-      case "phone":   return <PhoneFrame {...frameProps}>{iframe}</PhoneFrame>;
-      case "tablet":  return <TabletFrame {...frameProps}>{iframe}</TabletFrame>;
-      case "watch":   return <WatchFrame {...frameProps}>{iframe}</WatchFrame>;
-      case "laptop":  return <LaptopFrame {...frameProps}>{iframe}</LaptopFrame>;
-      case "desktop": return <DesktopFrame {...frameProps}>{iframe}</DesktopFrame>;
-      case "fold":    return <FoldFrame {...frameProps}>{iframe}</FoldFrame>;
+    switch (active.frame) {
+      case "phone":   return <PhoneFrame {...fp}>{iframe}</PhoneFrame>;
+      case "tablet":  return <TabletFrame {...fp}>{iframe}</TabletFrame>;
+      case "watch":   return <WatchFrame {...fp}>{iframe}</WatchFrame>;
+      case "laptop":  return <LaptopFrame {...fp}>{iframe}</LaptopFrame>;
+      case "desktop": return <DesktopFrame {...fp}>{iframe}</DesktopFrame>;
+      case "fold":    return <FoldFrame {...fp}>{iframe}</FoldFrame>;
       default:        return iframe;
     }
   };
@@ -397,10 +402,10 @@ export default function DeviceSimulator({ tool }: { tool: Tool }) {
           {/* URL bar */}
           <div className="flex items-center gap-2">
             <div className="flex gap-0.5">
-              <Button variant="ghost" size="icon" className="size-8" onClick={goBack} disabled={historyIdx === 0}>
+              <Button variant="ghost" size="icon" className="size-8" onClick={back} disabled={historyIdx === 0}>
                 <Icon icon="lucide:chevron-left" className="size-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="size-8" onClick={goForward} disabled={historyIdx >= history.length - 1}>
+              <Button variant="ghost" size="icon" className="size-8" onClick={fwd} disabled={historyIdx >= history.length - 1}>
                 <Icon icon="lucide:chevron-right" className="size-4" />
               </Button>
             </div>
@@ -417,7 +422,7 @@ export default function DeviceSimulator({ tool }: { tool: Tool }) {
             <Button onClick={() => navigate(url)} size="sm">Go</Button>
           </div>
 
-          {/* Device chips by category */}
+          {/* Device chips */}
           <div className="space-y-2">
             {categories.map((cat) => (
               <div key={cat} className="flex items-start gap-2">
@@ -426,9 +431,9 @@ export default function DeviceSimulator({ tool }: { tool: Tool }) {
                   {DEVICES.filter((d) => d.category === cat).map((d) => (
                     <button
                       key={d.name}
-                      onClick={() => setActiveDevice(d)}
+                      onClick={() => setActive(d)}
                       className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-all ${
-                        activeDevice.name === d.name
+                        active.name === d.name
                           ? "bg-primary text-primary-foreground shadow-md"
                           : "bg-muted text-muted-foreground hover:bg-muted/80"
                       }`}
@@ -441,47 +446,48 @@ export default function DeviceSimulator({ tool }: { tool: Tool }) {
             ))}
           </div>
 
-          {/* Orientation toggle */}
-          {activeDevice.frame !== "watch" && activeDevice.frame !== "fold" && (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Orientation:</span>
+          {/* Controls */}
+          <div className="flex items-center gap-3">
+            {active.frame !== "watch" && active.frame !== "fold" && (
               <div className="flex rounded-lg border border-border bg-background p-0.5">
                 {(["portrait", "landscape"] as const).map((o) => (
                   <button
                     key={o}
                     onClick={() => setOrientation(o)}
                     className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
-                      orientation === o ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                      orientation === o ? "bg-primary text-primary-foreground" : "text-muted-foreground"
                     }`}
                   >
                     {o === "portrait" ? "Portrait" : "Landscape"}
                   </button>
                 ))}
               </div>
-              <span className="text-xs tabular-nums text-muted-foreground">{screenW} × {screenH}</span>
-            </div>
-          )}
+            )}
+            <span className="text-xs tabular-nums text-muted-foreground">
+              {vpW}×{vpH} @ {Math.round(active.scale * 100)}% → {displayW}×{displayH}px
+            </span>
+          </div>
 
           {/* Frame viewport */}
           <div
-            className="mx-auto flex items-center justify-center overflow-auto rounded-3xl border border-border p-6"
+            className="mx-auto flex items-center justify-center overflow-auto rounded-3xl p-8"
             style={{
-              background: "radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a14 100%)",
-              minHeight: 400,
+              background: "radial-gradient(ellipse at 50% 40%, #1e1e32 0%, #0c0c18 100%)",
+              minHeight: Math.min(displayH + 100, 700),
             }}
           >
             {renderFrame()}
           </div>
 
-          {/* Device info */}
+          {/* Info */}
           <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-background/50 px-4 py-2 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground">{activeDevice.name}</span>
+            <span className="font-medium text-foreground">{active.name}</span>
             <span>·</span>
-            <span>{activeDevice.category}</span>
+            <span>{active.category}</span>
             <span>·</span>
-            <span>{screenW}×{screenH}px viewport</span>
+            <span>{vpW}×{vpH}px</span>
             <span>·</span>
-            <span>{activeDevice.frame} frame</span>
+            <span>{active.frame}</span>
           </div>
         </div>
       </Panel>
