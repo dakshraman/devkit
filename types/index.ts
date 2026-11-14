@@ -8,7 +8,8 @@ export type ToolCategory =
   | "text"
   | "web"
   | "visual"
-  | "developer";
+  | "developer"
+  | "document";
 
 export interface ToolCategoryMeta {
   id: ToolCategory;

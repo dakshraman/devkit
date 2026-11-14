@@ -305,7 +305,15 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <SpotlightCard
+              title="PDF & Document Suite"
+              badge="PDF Tools"
+              icon="lucide:files"
+              accent="#ef4444"
+              description="Merge multiple PDFs, split and extract page ranges, convert images to PDF, and organize or rotate pages."
+              tools={["pdf-merge", "pdf-split", "image-to-pdf", "pdf-organize"]}
+            />
             <SpotlightCard
               title="AST & WebAssembly Explorer"
               badge="Code Analysis"
@@ -315,7 +323,7 @@ export function LandingPage() {
               tools={["ast-explorer", "wasm-explorer", "json-typescript"]}
             />
             <SpotlightCard
-              title="API, WebSocket & Load Tester"
+              title="API & Network Suite"
               badge="Network"
               icon="lucide:network"
               accent="#06b6d4"
@@ -323,12 +331,12 @@ export function LandingPage() {
               tools={["api-tester", "websocket-tester", "load-tester"]}
             />
             <SpotlightCard
-              title="In-Browser Media Tools"
+              title="Image Format & Media Suite"
               badge="Visual & Media"
               icon="lucide:image"
               accent="#ec4899"
-              description="Remove image backgrounds using in-browser neural networks, compress images, and convert formats."
-              tools={["bg-remover", "image-compressor", "image-converter"]}
+              description="Resize and crop with custom dimensions, add customizable watermarks, remove backgrounds with AI, and convert formats."
+              tools={["bg-remover", "image-resizer", "image-watermark", "image-converter"]}
             />
           </div>
         </div>

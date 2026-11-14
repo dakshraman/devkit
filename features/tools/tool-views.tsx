@@ -33,6 +33,12 @@ const LoadTesterTool = dynamic(() => import("@/features/tools/views/load-tester"
 const WasmExplorerTool = dynamic(() => import("@/features/tools/views/wasm-explorer"), { loading });
 const SchemaVisualizerTool = dynamic(() => import("@/features/tools/views/schema-visualizer"), { loading });
 const WebSocketTesterTool = dynamic(() => import("@/features/tools/views/websocket-tester"), { loading });
+const PdfMergeTool = dynamic(() => import("@/features/tools/views/pdf-merge"), { loading });
+const PdfSplitTool = dynamic(() => import("@/features/tools/views/pdf-split"), { loading });
+const ImageToPdfTool = dynamic(() => import("@/features/tools/views/image-to-pdf"), { loading });
+const PdfOrganizeTool = dynamic(() => import("@/features/tools/views/pdf-organize"), { loading });
+const ImageResizerTool = dynamic(() => import("@/features/tools/views/image-resizer"), { loading });
+const ImageWatermarkTool = dynamic(() => import("@/features/tools/views/image-watermark"), { loading });
 
 const VIEW_MAP: Record<string, React.ComponentType<{ tool: Tool }>> = {
   "json-formatter": JsonFormatterTool,
@@ -59,6 +65,12 @@ const VIEW_MAP: Record<string, React.ComponentType<{ tool: Tool }>> = {
   "wasm-explorer": WasmExplorerTool,
   "schema-visualizer": SchemaVisualizerTool,
   "websocket-tester": WebSocketTesterTool,
+  "pdf-merge": PdfMergeTool,
+  "pdf-split": PdfSplitTool,
+  "image-to-pdf": ImageToPdfTool,
+  "pdf-organize": PdfOrganizeTool,
+  "image-resizer": ImageResizerTool,
+  "image-watermark": ImageWatermarkTool,
 };
 
 export function ToolView({ slug }: { slug: string }) {
