@@ -788,7 +788,7 @@ function InteractiveHeroPlayground() {
                 <Button size="sm" variant="secondary" onClick={handleJsonMinify} className="h-7 text-xs">
                   Minify
                 </Button>
-                <CopyButton text={jsonInput} />
+                <CopyButton value={jsonInput} />
                 <Link href="/tools/json-formatter">
                   <Button size="sm" variant="ghost" className="h-7 text-xs text-primary gap-1">
                     <span>Full Tool</span>
@@ -836,7 +836,7 @@ function InteractiveHeroPlayground() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
                   <span>Base64 Encoded:</span>
-                  <CopyButton text={b64Output} />
+                  <CopyButton value={b64Output} />
                 </div>
                 <textarea
                   readOnly
@@ -863,7 +863,7 @@ function InteractiveHeroPlayground() {
               <span className="text-xs text-muted-foreground font-medium">Generated UUID v4 (RFC 4122):</span>
               <div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm font-semibold tracking-wide">
                 <span>{uuid}</span>
-                <CopyButton text={uuid} />
+                <CopyButton value={uuid} />
               </div>
             </div>
 
@@ -897,7 +897,7 @@ function InteractiveHeroPlayground() {
             <div className="space-y-2 pt-2">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span className="font-semibold text-foreground">SHA-256 Digest (Client WebCrypto):</span>
-                <CopyButton text={sha256Hash} />
+                <CopyButton value={sha256Hash} />
               </div>
               <div className="break-all rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs text-primary">
                 {sha256Hash || "—"}
