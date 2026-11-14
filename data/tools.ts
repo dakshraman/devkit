@@ -247,16 +247,6 @@ export const TOOLS: Tool[] = [
     accent: "#334155",
   },
   {
-    slug: "npm-explorer",
-    name: "NPM Package Explorer",
-    description: "Explore npm packages — README, downloads, dependencies and versions.",
-    category: "network",
-    icon: "simple-icons:npm",
-    keywords: ["npm", "package", "registry", "readme", "dependencies", "downloads"],
-    popular: true,
-    accent: "#cb3837",
-  },
-  {
     slug: "html-formatter",
     name: "HTML / CSS Formatter",
     description: "Format or minify HTML and CSS entirely in your browser.",

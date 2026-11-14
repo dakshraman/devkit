@@ -28,7 +28,6 @@ const CaseTool = dynamic(() => import("@/features/tools/views/case-converter"), 
 const DiffTool = dynamic(() => import("@/features/tools/views/diff"), { loading });
 const ImageToBase64Tool = dynamic(() => import("@/features/tools/views/image-base64"), { loading });
 const GitHubTool = dynamic(() => import("@/features/tools/views/github"), { loading });
-const NpmTool = dynamic(() => import("@/features/tools/views/npm"), { loading });
 const AstExplorerTool = dynamic(() => import("@/features/tools/views/ast-explorer"), { loading });
 const LoadTesterTool = dynamic(() => import("@/features/tools/views/load-tester"), { loading });
 const WasmExplorerTool = dynamic(() => import("@/features/tools/views/wasm-explorer"), { loading });
@@ -55,7 +54,6 @@ const VIEW_MAP: Record<string, React.ComponentType<{ tool: Tool }>> = {
   "diff-checker": DiffTool,
   "image-to-base64": ImageToBase64Tool,
   "github-analyzer": GitHubTool,
-  "npm-explorer": NpmTool,
   "ast-explorer": AstExplorerTool,
   "load-tester": LoadTesterTool,
   "wasm-explorer": WasmExplorerTool,
