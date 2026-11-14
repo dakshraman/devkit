@@ -1,5 +1,29 @@
-import { DashboardPage } from "@/features/dashboard/dashboard-page";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import type { Metadata } from "next";
+import { LandingPage } from "@/features/landing/landing-page";
+import { buildMetadata, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { TOOLS } from "@/data/tools";
+
+export const metadata: Metadata = buildMetadata({
+  title: `${SITE_NAME} — All-in-One Local-First Developer Toolkit`,
+  description: SITE_DESCRIPTION,
+  path: "/",
+  keywords: [
+    "developer tools",
+    "devkit",
+    "client-side dev tools",
+    "json formatter",
+    "jwt decoder",
+    "uuid generator",
+    "base64 encoder",
+    "hash generator",
+    "ast explorer",
+    "wasm explorer",
+    "api tester",
+    "websocket tester",
+    "offline dev tools",
+    "pwa dev tools",
+  ],
+});
 
 const softwareJsonLd = {
   "@context": "https://schema.org",
@@ -10,15 +34,7 @@ const softwareJsonLd = {
   url: SITE_URL,
   description: SITE_DESCRIPTION,
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  featureList: [
-    "JSON formatter",
-    "Base64 encoder/decoder",
-    "UUID generator",
-    "Hash generator",
-    "JWT decoder",
-    "Regex playground",
-    "Markdown editor",
-  ],
+  featureList: TOOLS.slice(0, 15).map((t) => t.name),
 };
 
 export default function HomePage() {
@@ -28,7 +44,7 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
       />
-      <DashboardPage />
+      <LandingPage />
     </>
   );
 }

@@ -90,10 +90,10 @@ function SidebarNav() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                isActive={pathname === "/"}
+                isActive={pathname === "/dashboard"}
                 tooltip="Dashboard"
               >
-                <Link href="/">
+                <Link href="/dashboard">
                   <Icon icon="lucide:layout-grid" className="size-4 shrink-0" />
                   <span>Dashboard</span>
                 </Link>

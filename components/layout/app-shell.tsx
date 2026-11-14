@@ -32,7 +32,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <SidebarInset>
         <Header
           onSearchChange={(q) => {
-            if (pathname === "/") setDashQuery(q);
+            if (pathname === "/" || pathname === "/dashboard") setDashQuery(q);
           }}
           onNavigateToTool={(slug) => router.push(`/tools/${slug}`)}
         />
