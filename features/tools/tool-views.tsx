@@ -34,7 +34,6 @@ const LoadTesterTool = dynamic(() => import("@/features/tools/views/load-tester"
 const WasmExplorerTool = dynamic(() => import("@/features/tools/views/wasm-explorer"), { loading });
 const SchemaVisualizerTool = dynamic(() => import("@/features/tools/views/schema-visualizer"), { loading });
 const WebSocketTesterTool = dynamic(() => import("@/features/tools/views/websocket-tester"), { loading });
-const DeviceSimulatorTool = dynamic(() => import("@/features/tools/views/device-simulator"), { loading });
 
 const VIEW_MAP: Record<string, React.ComponentType<{ tool: Tool }>> = {
   "json-formatter": JsonFormatterTool,
@@ -62,7 +61,6 @@ const VIEW_MAP: Record<string, React.ComponentType<{ tool: Tool }>> = {
   "wasm-explorer": WasmExplorerTool,
   "schema-visualizer": SchemaVisualizerTool,
   "websocket-tester": WebSocketTesterTool,
-  "device-simulator": DeviceSimulatorTool,
 };
 
 export function ToolView({ slug }: { slug: string }) {

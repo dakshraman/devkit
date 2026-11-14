@@ -43,7 +43,6 @@
     "prismjs": "^1.30.0",
     "qrcode": "^1.5.4",
     "react": "19.2.8",
-    "react-device-bezels": "^0.1.1",
     "react-dom": "19.2.8",
     "react-hook-form": "^7.84.0",
     "react-hot-toast": "^2.6.0",

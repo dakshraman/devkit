@@ -327,8 +327,8 @@ export function LandingPage() {
               badge="Visual & Media"
               icon="lucide:image"
               accent="#ec4899"
-              description="Remove image backgrounds using in-browser neural networks, compress images, and preview sites inside responsive device frames."
-              tools={["bg-remover", "image-compressor", "device-simulator"]}
+              description="Remove image backgrounds using in-browser neural networks, compress images, and convert formats."
+              tools={["bg-remover", "image-compressor", "image-converter"]}
             />
           </div>
         </div>
