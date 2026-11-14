@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useId } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { TOOLS, CATEGORIES } from "@/data/tools";
 import { useSettings } from "@/context/settings-context";
 import { useCommandPalette } from "@/context/command-palette-context";
@@ -32,16 +32,15 @@ export function LandingPage() {
               </span>
               <div className="leading-tight">
                 <span className="block text-base font-bold tracking-tight">DevKit</span>
-                <span className="block text-[11px] text-muted-foreground font-mono">100% client-side</span>
+                <span className="block text-[11px] text-muted-foreground font-mono">client-side toolkit</span>
               </div>
             </Link>
 
             <nav className="hidden items-center gap-5 text-sm font-medium text-muted-foreground md:flex">
               <a href="#features" className="transition hover:text-foreground">Features</a>
-              <a href="#playground" className="transition hover:text-foreground">Interactive Demo</a>
-              <a href="#tools" className="transition hover:text-foreground">50+ Tools</a>
-              <a href="#privacy" className="transition hover:text-foreground">Privacy</a>
-              <a href="#comparison" className="transition hover:text-foreground">Comparison</a>
+              <a href="#playground" className="transition hover:text-foreground">Demo</a>
+              <a href="#tools" className="transition hover:text-foreground">Tools</a>
+              <a href="#privacy" className="transition hover:text-foreground">Architecture</a>
               <a href="#faq" className="transition hover:text-foreground">FAQ</a>
             </nav>
           </div>
@@ -69,7 +68,7 @@ export function LandingPage() {
 
             <Link href="/tools" className="hidden sm:inline-flex">
               <Button variant="ghost" size="sm">
-                Explore Tools
+                All Tools
               </Button>
             </Link>
 
@@ -112,28 +111,21 @@ export function LandingPage() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
                 >
-                  Interactive Demo
+                  Demo
                 </a>
                 <a
                   href="#tools"
                   onClick={() => setMobileMenuOpen(false)}
                   className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
                 >
-                  50+ Tools Directory
+                  Tools
                 </a>
                 <a
                   href="#privacy"
                   onClick={() => setMobileMenuOpen(false)}
                   className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
                 >
-                  Privacy Guarantee
-                </a>
-                <a
-                  href="#comparison"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                >
-                  Comparison
+                  Architecture
                 </a>
                 <a
                   href="#faq"
@@ -161,98 +153,78 @@ export function LandingPage() {
       </header>
 
       {/* ---------------- Hero Section ---------------- */}
-      <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-32">
-        {/* Background glow effects */}
-        <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
-          <div className="size-[540px] rounded-full bg-indigo-500/10 blur-[130px] dark:bg-indigo-500/15" />
-          <div className="size-[420px] rounded-full bg-fuchsia-500/10 blur-[140px] dark:bg-fuchsia-500/15 -translate-y-24 translate-x-32" />
-        </div>
-
+      <section className="relative overflow-hidden pt-12 pb-16 md:pt-16 md:pb-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center text-center">
-            {/* Pill */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/25 bg-indigo-500/10 px-3.5 py-1.5 text-xs font-medium text-indigo-700 dark:text-indigo-300 backdrop-blur-md mb-6">
-              <span className="flex size-2 rounded-full bg-indigo-500 animate-pulse" />
-              <span>50+ Developer Utilities • 100% Local • Zero Cloud Telemetry</span>
+            {/* Tag */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-3.5 py-1 text-xs text-muted-foreground mb-6">
+              <span>Open Source • 50+ Local Developer Tools</span>
             </div>
 
             {/* Main Title */}
-            <h1 className="max-w-4xl text-4xl font-extrabold tracking-tight sm:text-6xl md:text-7xl">
-              The Developer Toolkit That{" "}
-              <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Never Touches the Cloud
-              </span>
+            <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              Client-Side Developer Utilities
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-6 max-w-2xl text-base text-muted-foreground sm:text-xl">
-              Stop pasting sensitive JSON, JWT tokens, and private hashes into suspicious online tools. DevKit runs completely in your browser with zero latency, zero ads, and offline PWA support.
+            <p className="mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
+              Format JSON, decode JWTs, generate hashes, inspect ASTs, and test APIs directly in your browser. All processing runs locally with no backend data storage.
             </p>
 
             {/* CTA Buttons */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
               <Link href="/dashboard">
-                <Button size="lg" className="gap-2 px-7 text-base shadow-lg shadow-primary/25">
-                  <Icon icon="lucide:layout-grid" className="size-5" />
-                  <span>Launch Dashboard</span>
-                  <Icon icon="lucide:arrow-right" className="size-4" />
+                <Button size="lg" className="gap-2 px-6">
+                  <Icon icon="lucide:layout-grid" className="size-4" />
+                  <span>Open Dashboard</span>
                 </Button>
               </Link>
 
               <Link href="/tools">
-                <Button size="lg" variant="outline" className="gap-2 px-6 text-base">
-                  <Icon icon="lucide:sparkles" className="size-5 text-indigo-500" />
-                  <span>Explore 50+ Tools</span>
+                <Button size="lg" variant="outline" className="gap-2 px-6">
+                  <span>Browse All Tools</span>
                 </Button>
               </Link>
             </div>
 
-            {/* Hint */}
-            <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
-              <Icon icon="lucide:command" className="size-3.5" />
+            {/* Shortcut hint */}
+            <div className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground">
               <span>Press</span>
-              <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-foreground">
+              <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[11px] text-foreground">
                 Ctrl + K
               </kbd>
-              <span>or</span>
-              <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-foreground">
-                ⌘K
-              </kbd>
-              <span>anywhere to navigate instantly</span>
+              <span>to search and jump to any tool</span>
             </div>
           </div>
 
-          {/* Interactive Hero Playground */}
-          <div id="playground" className="mt-14 scroll-mt-24">
+          {/* Interactive Playground */}
+          <div id="playground" className="mt-12 scroll-mt-24">
             <InteractiveHeroPlayground />
           </div>
         </div>
       </section>
 
-      {/* ---------------- Key Metrics Banner ---------------- */}
-      <section className="border-y border-border/60 bg-muted/30 py-8 backdrop-blur-sm">
+      {/* ---------------- Metrics Banner ---------------- */}
+      <section className="border-y border-border/60 bg-muted/20 py-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 sm:gap-8">
-            <MetricItem value="50+" label="Developer Utilities" detail="From JSON to WASM analysis" />
-            <MetricItem value="0 Bytes" label="Data Uploaded" detail="Strictly local-first execution" />
-            <MetricItem value="0 ms" label="Network Latency" detail="Instant client-side execution" />
-            <MetricItem value="100%" label="Free & Offline" detail="Full PWA desktop installable" />
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+            <MetricItem value="50+" label="Built-in Tools" detail="Formatters, generators & testers" />
+            <MetricItem value="Local" label="Execution" detail="Processed in browser memory" />
+            <MetricItem value="Zero" label="Server Uploads" detail="No telemetry or payload logging" />
+            <MetricItem value="PWA" label="Offline Support" detail="Installable standalone application" />
           </div>
         </div>
       </section>
 
-      {/* ---------------- Value Pillars / Features ---------------- */}
-      <section id="features" className="py-20 scroll-mt-16">
+      {/* ---------------- Features ---------------- */}
+      <section id="features" className="py-16 scroll-mt-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="secondary" className="mb-3">
-              Built for Modern Developers
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              Engineered for Speed, Privacy & Precision
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Core Architecture
             </h2>
-            <p className="mt-3 text-base text-muted-foreground">
-              Everything you need in your daily workflow without the friction of ads, paywalls, or third-party servers storing your inputs.
+            <p className="mt-2 text-sm text-muted-foreground">
+              Built as a focused toolkit for daily software engineering tasks.
             </p>
           </div>
 
@@ -260,62 +232,59 @@ export function LandingPage() {
             <FeatureCard
               icon="lucide:shield-check"
               accent="#10b981"
-              title="100% Client-Side Privacy"
-              description="Your proprietary code, production JWT tokens, passwords, and JSON payloads never leave your browser. Zero backend storage or logs."
+              title="Client-Side Processing"
+              description="Payloads, tokens, and cryptographic keys remain within your local browser session. No data is sent to external servers."
             />
             <FeatureCard
               icon="lucide:zap"
               accent="#f59e0b"
-              title="Instant Zero-Latency Execution"
-              description="No server roundtrips, cold starts, or rate limits. Formats, decodes, hashes, and parses instantly using client V8 and WebAssembly."
+              title="No Network Latency"
+              description="Operations run synchronously in-memory using WebAssembly and WebCrypto without remote API round trips."
             />
             <FeatureCard
               icon="lucide:command"
               accent="#6366f1"
-              title="Keyboard-First Command Palette"
-              description="Navigate, search, and jump into any utility in milliseconds using the built-in Ctrl+K / ⌘K command bar and registered hotkeys."
+              title="Command Palette"
+              description="Quickly search, filter, and jump between utilities using the built-in Ctrl+K / ⌘K command bar."
             />
             <FeatureCard
               icon="lucide:wifi-off"
               accent="#ec4899"
-              title="Offline & PWA Ready"
-              description="Working on a flight or with spotty Wi-Fi? DevKit installs as a standalone Progressive Web App that works seamlessly fully offline."
+              title="Offline Capability"
+              description="Configured with a Service Worker and web manifest so you can install and use every tool without an internet connection."
             />
             <FeatureCard
               icon="lucide:database"
               accent="#8b5cf6"
-              title="Local-First History & Favorites"
-              description="Pin your go-to tools to your sidebar. Revisit past transformations safely stored only in your machine's browser localStorage."
+              title="Local History & Bookmarks"
+              description="Pin frequently used tools to your sidebar. Transformation history is stored strictly in your browser's localStorage."
             />
             <FeatureCard
               icon="lucide:code-2"
               accent="#06b6d4"
-              title="Deep AST & Code Analysis"
-              description="Go beyond basic string tools. Inspect Babel AST trees, explore WebAssembly binary structures, format SQL, and diff code changes."
+              title="Code & Binary Inspection"
+              description="Inspect AST structures via Babel, explore WebAssembly modules, format SQL queries, and generate diffs."
             />
           </div>
         </div>
       </section>
 
       {/* ---------------- Tool Category Showcase ---------------- */}
-      <section id="tools" className="py-20 bg-muted/20 border-t border-border/60 scroll-mt-16">
+      <section id="tools" className="py-16 bg-muted/20 border-t border-border/60 scroll-mt-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-4">
             <div>
-              <Badge variant="secondary" className="mb-3">
-                Complete Toolset
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Explore All 50+ Specialized Utilities
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+                Tool Catalog
               </h2>
-              <p className="mt-2 text-muted-foreground max-w-xl">
-                Grouped neatly into logical categories so you can quickly reach the right tool.
+              <p className="mt-1 text-sm text-muted-foreground">
+                Browse available utilities by category.
               </p>
             </div>
             <Link href="/tools">
-              <Button variant="outline" className="gap-2">
-                <span>View Full Catalog</span>
-                <Icon icon="lucide:arrow-right" className="size-4" />
+              <Button variant="outline" size="sm" className="gap-1.5">
+                <span>View All 50+ Tools</span>
+                <Icon icon="lucide:arrow-right" className="size-3.5" />
               </Button>
             </Link>
           </div>
@@ -324,44 +293,41 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ---------------- Deep Capabilities Spotlight ---------------- */}
-      <section className="py-20 border-t border-border/60">
+      {/* ---------------- Specialized Utilities ---------------- */}
+      <section className="py-16 border-t border-border/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="secondary" className="mb-3">
-              Advanced Power Tools
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              More than Just String Formatters
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Specialized Utilities
             </h2>
-            <p className="mt-3 text-base text-muted-foreground">
-              DevKit bundles sophisticated developer utilities usually requiring dedicated desktop applications or CLI binaries.
+            <p className="mt-2 text-sm text-muted-foreground">
+              In addition to standard encoders and formatters, DevKit includes tools for code analysis, network debugging, and media processing.
             </p>
           </div>
 
-          <div className="grid gap-8 lg:grid-cols-3">
+          <div className="grid gap-6 lg:grid-cols-3">
             <SpotlightCard
               title="AST & WebAssembly Explorer"
               badge="Code Analysis"
               icon="lucide:binary"
               accent="#8b5cf6"
-              description="Parse JavaScript and TypeScript into interactive Babel AST node hierarchies. Disassemble and inspect WebAssembly binary opcodes with instant visual syntax highlighting."
+              description="Parse JavaScript and TypeScript into interactive Babel AST node structures, or inspect WebAssembly binary opcodes and sections."
               tools={["ast-explorer", "wasm-explorer", "json-typescript"]}
             />
             <SpotlightCard
               title="API, WebSocket & Load Tester"
-              badge="Network Suite"
+              badge="Network"
               icon="lucide:network"
               accent="#06b6d4"
-              description="Execute HTTP requests with Postman collection and cURL import/export. Connect and stream bidirectional live WebSocket messages, and benchmark endpoints client-side."
+              description="Send HTTP requests with cURL and Postman collection support, test live WebSocket connections, and run client-side load benchmarks."
               tools={["api-tester", "websocket-tester", "load-tester"]}
             />
             <SpotlightCard
-              title="In-Browser AI & Media Lab"
+              title="In-Browser Media Tools"
               badge="Visual & Media"
-              icon="lucide:sparkles"
+              icon="lucide:image"
               accent="#ec4899"
-              description="Remove image backgrounds using in-browser neural networks with zero cloud uploads. Compress PNG/JPEG files, test device frame mockups, and convert image formats."
+              description="Remove image backgrounds using in-browser neural networks, compress images, and preview sites inside responsive device frames."
               tools={["bg-remover", "image-compressor", "device-simulator"]}
             />
           </div>
@@ -369,87 +335,62 @@ export function LandingPage() {
       </section>
 
       {/* ---------------- Privacy Architecture Section ---------------- */}
-      <section id="privacy" className="py-20 bg-muted/20 border-t border-border/60 scroll-mt-16">
+      <section id="privacy" className="py-16 bg-muted/20 border-t border-border/60 scroll-mt-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div>
-              <Badge variant="secondary" className="mb-3">
-                Zero Cloud Transmission
-              </Badge>
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Why Client-Side Privacy Matters
+              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+                Privacy & Data Architecture
               </h2>
-              <p className="mt-4 text-base text-muted-foreground leading-relaxed">
-                When you paste a production JSON with customer details or an authentication token into an unknown website, your data is often transmitted to a remote server, logged in access logs, and potentially exposed to breaches.
+              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                DevKit is designed as a client-side web application. Every tool runs directly inside your browser process without sending your inputs to external servers.
               </p>
 
               <div className="mt-6 space-y-4">
                 <PrivacyItem
                   icon="lucide:lock"
-                  title="Local Execution Only"
-                  desc="Calculations, formatting, encryption, and conversions occur entirely inside your browser tab's JavaScript runtime."
+                  title="In-Memory Computation"
+                  desc="Formatting, parsing, and cryptographic operations run locally in browser memory and are discarded when closed."
                 />
                 <PrivacyItem
-                  icon="lucide:database-zap"
-                  title="Zero Remote Database"
-                  desc="We have no user database, no sign-in requirement, and no cloud-side persistence. Nothing to leak."
+                  icon="lucide:database"
+                  title="Origin-Scoped Storage"
+                  desc="Tool history, pinned favorites, and appearance preferences are stored solely in your local browser storage."
                 />
                 <PrivacyItem
-                  icon="lucide:eye-off"
-                  title="No Tracking or Ad Scripts"
-                  desc="No third-party trackers, affiliate cookies, or fingerprinting scripts. A pure, clean developer environment."
+                  icon="lucide:shield"
+                  title="No Third-Party Analytics"
+                  desc="No tracking scripts, cookies, or remote logging services are loaded."
                 />
               </div>
             </div>
 
-            <div className="relative">
-              <GlassCard className="p-6 sm:p-8 space-y-6">
-                <div className="flex items-center justify-between border-b border-border pb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="size-3 rounded-full bg-red-500/80" />
-                    <span className="size-3 rounded-full bg-amber-500/80" />
-                    <span className="size-3 rounded-full bg-emerald-500/80" />
-                    <span className="ml-2 font-mono text-xs text-muted-foreground">data-flow.diagram</span>
-                  </div>
-                  <Badge variant="success">100% Isolated</Badge>
+            <div>
+              <GlassCard className="p-6 space-y-5 font-mono text-xs">
+                <div className="flex items-center justify-between border-b border-border pb-3">
+                  <span className="font-semibold text-muted-foreground">Execution Model</span>
+                  <Badge variant="outline" className="text-[10px]">Client-Only</Badge>
                 </div>
 
-                <div className="space-y-4 font-mono text-xs">
-                  <div className="rounded-lg border border-border bg-card p-4">
-                    <div className="flex items-center justify-between text-muted-foreground mb-1">
-                      <span>STEP 1: SENSITIVE INPUT</span>
-                      <span className="text-emerald-500 font-bold">CLIENT</span>
-                    </div>
-                    <p className="text-foreground">Your Private JWT / JSON / Certificates</p>
+                <div className="space-y-3">
+                  <div className="rounded-lg border border-border bg-card p-3">
+                    <div className="text-muted-foreground mb-1 text-[11px]">Runtime Environment</div>
+                    <div className="text-foreground font-semibold">Local Browser (V8 / JavaScript / WASM)</div>
                   </div>
 
-                  <div className="flex justify-center text-muted-foreground">
-                    <Icon icon="lucide:arrow-down" className="size-4 animate-bounce" />
+                  <div className="rounded-lg border border-border bg-card p-3">
+                    <div className="text-muted-foreground mb-1 text-[11px]">Network Transmissions</div>
+                    <div className="text-foreground font-semibold">0 outbound requests on tool execution</div>
                   </div>
 
-                  <div className="rounded-lg border border-indigo-500/40 bg-indigo-500/10 p-4">
-                    <div className="flex items-center justify-between text-indigo-700 dark:text-indigo-300 mb-1">
-                      <span>STEP 2: SANDBOX EXECUTION</span>
-                      <span className="text-indigo-600 dark:text-indigo-400 font-bold">BROWSER RUNTIME</span>
-                    </div>
-                    <p className="text-foreground">Processed in memory via WebAssembly & V8</p>
+                  <div className="rounded-lg border border-border bg-card p-3">
+                    <div className="text-muted-foreground mb-1 text-[11px]">Data Persistence</div>
+                    <div className="text-foreground font-semibold">Browser localStorage (on-device only)</div>
                   </div>
 
-                  <div className="flex justify-center text-muted-foreground">
-                    <Icon icon="lucide:arrow-down" className="size-4 animate-bounce" />
-                  </div>
-
-                  <div className="rounded-lg border border-border bg-card p-4">
-                    <div className="flex items-center justify-between text-muted-foreground mb-1">
-                      <span>STEP 3: INSTANT RESULT</span>
-                      <span className="text-emerald-500 font-bold">READY</span>
-                    </div>
-                    <p className="text-foreground">Formatted output displayed with zero network calls</p>
-                  </div>
-
-                  <div className="mt-4 rounded-md border border-red-500/30 bg-red-500/10 p-3 text-red-600 dark:text-red-400 flex items-center gap-2">
-                    <Icon icon="lucide:ban" className="size-4 shrink-0" />
-                    <span>External Cloud Servers: <strong>BLOCKED & UNUSED</strong></span>
+                  <div className="rounded-lg border border-border bg-card p-3">
+                    <div className="text-muted-foreground mb-1 text-[11px]">Authentication & Accounts</div>
+                    <div className="text-foreground font-semibold">None required (no sign-up, no tokens stored remotely)</div>
                   </div>
                 </div>
               </GlassCard>
@@ -458,96 +399,15 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ---------------- Comparison Table ---------------- */}
-      <section id="comparison" className="py-20 border-t border-border/60 scroll-mt-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <Badge variant="secondary" className="mb-3">
-              The Difference
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-              DevKit vs. Typical Online Dev Tools
-            </h2>
-            <p className="mt-3 text-base text-muted-foreground">
-              Why engineers choose DevKit over scattered, ad-infested single-purpose websites.
-            </p>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left text-sm">
-              <thead>
-                <tr className="border-b border-border bg-muted/40">
-                  <th className="p-4 font-semibold text-foreground">Capability</th>
-                  <th className="p-4 font-semibold text-indigo-600 dark:text-indigo-400">
-                    <div className="flex items-center gap-1.5">
-                      <Icon icon="lucide:zap" className="size-4" />
-                      <span>DevKit</span>
-                    </div>
-                  </th>
-                  <th className="p-4 font-semibold text-muted-foreground">Random Online Tools</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                <ComparisonRow
-                  feature="Data Privacy & Security"
-                  devkit="100% Local (Never leaves device)"
-                  others="Sent to 3rd-party servers & logs"
-                  positive
-                />
-                <ComparisonRow
-                  feature="Ads & Distractions"
-                  devkit="Zero Ads, Clean Interface"
-                  others="Heavy banner ads, popups & clickbait"
-                  positive
-                />
-                <ComparisonRow
-                  feature="Execution Latency"
-                  devkit="0 ms (Instant client-side)"
-                  others="Hundreds of ms server roundtrip"
-                  positive
-                />
-                <ComparisonRow
-                  feature="Offline Availability"
-                  devkit="Full PWA Offline Support"
-                  others="Completely broken without internet"
-                  positive
-                />
-                <ComparisonRow
-                  feature="Keyboard Shortcuts"
-                  devkit="Global Ctrl+K Command Palette"
-                  others="None (manual clicking only)"
-                  positive
-                />
-                <ComparisonRow
-                  feature="Tool Breadth"
-                  devkit="50+ Unified Utilities in 1 App"
-                  others="Scattered across 20+ separate websites"
-                  positive
-                />
-                <ComparisonRow
-                  feature="History & Favorites"
-                  devkit="Stored in local browser storage"
-                  others="Requires paid account or not supported"
-                  positive
-                />
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- FAQ Accordion ---------------- */}
-      <section id="faq" className="py-20 bg-muted/20 border-t border-border/60 scroll-mt-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <Badge variant="secondary" className="mb-3">
-              Got Questions?
-            </Badge>
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+      {/* ---------------- FAQ ---------------- */}
+      <section id="faq" className="py-16 border-t border-border/60 scroll-mt-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
               Frequently Asked Questions
             </h2>
-            <p className="mt-2 text-muted-foreground">
-              Everything you need to know about DevKit and how it operates.
+            <p className="mt-2 text-sm text-muted-foreground">
+              Common questions about DevKit and how it works.
             </p>
           </div>
 
@@ -556,99 +416,88 @@ export function LandingPage() {
       </section>
 
       {/* ---------------- Bottom Call to Action ---------------- */}
-      <section className="py-20 border-t border-border/60">
+      <section className="py-16 border-t border-border/60 bg-muted/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <GlassCard className="relative overflow-hidden p-8 sm:p-14 text-center">
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 -z-10" />
-            <div className="max-w-2xl mx-auto space-y-6">
-              <Badge variant="secondary" className="w-fit mx-auto">
-                Free • Open • Local
-              </Badge>
-              <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">
-                Supercharge Your Daily Engineering Flow
-              </h2>
-              <p className="text-muted-foreground text-base sm:text-lg">
-                No sign-up required. Pin your favorite tools, use the command palette, and keep all your developer utilities in one fast, private place.
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-                <Link href="/dashboard">
-                  <Button size="lg" className="gap-2 px-8 shadow-lg shadow-primary/25">
-                    <span>Open Dashboard</span>
-                    <Icon icon="lucide:arrow-right" className="size-4" />
-                  </Button>
-                </Link>
-                <Link href="/tools">
-                  <Button size="lg" variant="outline" className="gap-2 px-7">
-                    <span>Browse All Tools</span>
-                  </Button>
-                </Link>
-              </div>
+          <GlassCard className="p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-5">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              Start Using DevKit
+            </h2>
+            <p className="text-muted-foreground text-sm">
+              Launch the dashboard to access all tools, configure shortcuts, and pin your favorites.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Link href="/dashboard">
+                <Button size="lg" className="gap-2 px-6">
+                  <span>Open Dashboard</span>
+                  <Icon icon="lucide:arrow-right" className="size-4" />
+                </Button>
+              </Link>
+              <Link href="/tools">
+                <Button size="lg" variant="outline" className="gap-2 px-6">
+                  <span>Browse Catalog</span>
+                </Button>
+              </Link>
             </div>
           </GlassCard>
         </div>
       </section>
 
       {/* ---------------- Footer ---------------- */}
-      <footer className="border-t border-border/60 bg-muted/40 py-12 text-sm text-muted-foreground">
+      <footer className="border-t border-border/60 bg-muted/30 py-10 text-xs text-muted-foreground">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
             <div className="space-y-3 sm:col-span-2">
-              <div className="flex items-center gap-2.5">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white">
-                  <Icon icon="lucide:zap" className="size-4" />
+              <div className="flex items-center gap-2">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white">
+                  <Icon icon="lucide:zap" className="size-3.5" />
                 </span>
-                <span className="text-base font-bold tracking-tight text-foreground">DevKit</span>
+                <span className="text-sm font-bold text-foreground">DevKit</span>
               </div>
               <p className="max-w-sm text-xs leading-relaxed text-muted-foreground">
-                All-in-one developer productivity toolkit. 50+ utilities for formatting, crypto, AST analysis, and network debugging running 100% in your browser.
+                Client-side developer utilities for formatting, encoding, AST analysis, and network testing.
               </p>
-              <div className="flex items-center gap-3 pt-2 text-xs">
-                <Badge variant="outline" className="text-[10px]">PWA Ready</Badge>
-                <Badge variant="outline" className="text-[10px]">Zero Tracking</Badge>
-                <Badge variant="outline" className="text-[10px]">Open Source</Badge>
-              </div>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-3">Popular Tools</p>
-              <ul className="space-y-2 text-xs">
+              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-2.5">Common Tools</p>
+              <ul className="space-y-1.5">
                 <li><Link href="/tools/json-formatter" className="hover:text-foreground transition">JSON Formatter</Link></li>
                 <li><Link href="/tools/jwt-decoder" className="hover:text-foreground transition">JWT Decoder</Link></li>
                 <li><Link href="/tools/uuid-generator" className="hover:text-foreground transition">UUID Generator</Link></li>
-                <li><Link href="/tools/base64" className="hover:text-foreground transition">Base64 Encoder</Link></li>
+                <li><Link href="/tools/base64" className="hover:text-foreground transition">Base64 Converter</Link></li>
                 <li><Link href="/tools/hash-generator" className="hover:text-foreground transition">Hash Generator</Link></li>
                 <li><Link href="/tools/regex-playground" className="hover:text-foreground transition">Regex Playground</Link></li>
               </ul>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-3">Advanced Utilities</p>
-              <ul className="space-y-2 text-xs">
+              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-2.5">Analysis Tools</p>
+              <ul className="space-y-1.5">
                 <li><Link href="/tools/ast-explorer" className="hover:text-foreground transition">AST Explorer</Link></li>
                 <li><Link href="/tools/wasm-explorer" className="hover:text-foreground transition">WASM Explorer</Link></li>
                 <li><Link href="/tools/api-tester" className="hover:text-foreground transition">API Tester</Link></li>
                 <li><Link href="/tools/websocket-tester" className="hover:text-foreground transition">WebSocket Tester</Link></li>
-                <li><Link href="/tools/bg-remover" className="hover:text-foreground transition">AI BG Remover</Link></li>
+                <li><Link href="/tools/bg-remover" className="hover:text-foreground transition">Background Remover</Link></li>
                 <li><Link href="/tools/diff-checker" className="hover:text-foreground transition">Diff Checker</Link></li>
               </ul>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-3">Navigation</p>
-              <ul className="space-y-2 text-xs">
+              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-2.5">Navigation</p>
+              <ul className="space-y-1.5">
                 <li><Link href="/dashboard" className="hover:text-foreground transition">Dashboard</Link></li>
-                <li><Link href="/tools" className="hover:text-foreground transition">All 50+ Tools</Link></li>
-                <li><Link href="/history" className="hover:text-foreground transition">History & Favorites</Link></li>
+                <li><Link href="/tools" className="hover:text-foreground transition">All Tools</Link></li>
+                <li><Link href="/history" className="hover:text-foreground transition">History</Link></li>
                 <li><a href="#faq" className="hover:text-foreground transition">FAQ</a></li>
-                <li><a href="#privacy" className="hover:text-foreground transition">Privacy Policy</a></li>
+                <li><a href="#privacy" className="hover:text-foreground transition">Privacy</a></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 text-xs sm:flex-row">
-            <p>© {new Date().getFullYear()} DevKit. Built for privacy, speed, and developer joy.</p>
-            <div className="flex items-center gap-4">
-              <span>Press <kbd className="rounded border border-border bg-muted px-1 py-0.5 font-mono text-[10px]">Ctrl+K</kbd> anytime</span>
+          <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-border pt-5 sm:flex-row">
+            <p>© {new Date().getFullYear()} DevKit. Open source developer utilities.</p>
+            <div>
+              <span>Shortcut: <kbd className="rounded border border-border bg-muted px-1 py-0.5 font-mono text-[10px]">Ctrl+K</kbd></span>
             </div>
           </div>
         </div>
@@ -666,10 +515,10 @@ function InteractiveHeroPlayground() {
   const [jsonInput, setJsonInput] = useState(
     JSON.stringify(
       {
-        project: "DevKit",
-        privacy: { localOnly: true, serverLogs: false },
-        utilities: 50,
-        tags: ["fast", "offline", "zero-latency"]
+        name: "DevKit",
+        version: "1.0.0",
+        settings: { theme: "dark", offline: true },
+        tools: ["json", "base64", "uuid", "jwt", "hash"]
       },
       null,
       2
@@ -698,7 +547,7 @@ function InteractiveHeroPlayground() {
   };
 
   // Base64 state
-  const [b64Input, setB64Input] = useState("Hello from DevKit! 100% client-side privacy.");
+  const [b64Input, setB64Input] = useState("The quick brown fox jumps over the lazy dog.");
   const b64Output = (() => {
     try {
       return btoa(unescape(encodeURIComponent(b64Input)));
@@ -721,8 +570,8 @@ function InteractiveHeroPlayground() {
   };
 
   // Hash state
-  const [hashInput, setHashInput] = useState("DevKit rocks");
-  const [sha256Hash, setSha256Hash] = useState("a1523ddaa7a59a7ee1d8d34bcf1b5930c1be7fa831969a5a3a5f98cf4a17ceae");
+  const [hashInput, setHashInput] = useState("Hello world");
+  const [sha256Hash, setSha256Hash] = useState("64ec88ca00b268e5ba1a35678a1b5316d212f4f366b2477232534a8aeca37f3c");
 
   const updateHash = async (val: string) => {
     setHashInput(val);
@@ -747,26 +596,26 @@ function InteractiveHeroPlayground() {
   // JWT sample
   const sampleJwtHeader = JSON.stringify({ alg: "HS256", typ: "JWT" }, null, 2);
   const sampleJwtPayload = JSON.stringify(
-    { sub: "usr_9981", name: "Ada Lovelace", role: "lead_architect", exp: 1893456000 },
+    { sub: "user_12345", name: "Alex", role: "developer", exp: 1893456000 },
     null,
     2
   );
 
   return (
-    <GlassCard className="mx-auto max-w-4xl overflow-hidden border-border/80 shadow-2xl p-0">
+    <GlassCard className="mx-auto max-w-4xl overflow-hidden border-border/80 p-0 shadow-lg">
       {/* Playground Header */}
-      <div className="flex flex-wrap items-center justify-between border-b border-border bg-muted/40 px-4 py-3 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between border-b border-border bg-muted/40 px-4 py-2.5 sm:px-6">
         <div className="flex items-center gap-2">
-          <span className="size-3 rounded-full bg-red-500/80" />
-          <span className="size-3 rounded-full bg-amber-500/80" />
-          <span className="size-3 rounded-full bg-emerald-500/80" />
-          <span className="ml-2 font-mono text-xs font-semibold text-muted-foreground">
-            Live Browser Playground
+          <span className="size-2.5 rounded-full bg-muted-foreground/40" />
+          <span className="size-2.5 rounded-full bg-muted-foreground/40" />
+          <span className="size-2.5 rounded-full bg-muted-foreground/40" />
+          <span className="ml-2 font-mono text-xs text-muted-foreground">
+            Interactive Preview
           </span>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex items-center gap-1 overflow-x-auto rounded-lg bg-background p-1 border border-border">
+        <div className="flex items-center gap-1 rounded-lg bg-background p-1 border border-border">
           <PlaygroundTabBtn active={activeTab === "json"} onClick={() => setActiveTab("json")} label="JSON" icon="lucide:braces" />
           <PlaygroundTabBtn active={activeTab === "base64"} onClick={() => setActiveTab("base64")} label="Base64" icon="lucide:binary" />
           <PlaygroundTabBtn active={activeTab === "uuid"} onClick={() => setActiveTab("uuid")} label="UUID" icon="lucide:hash" />
@@ -778,9 +627,9 @@ function InteractiveHeroPlayground() {
       {/* Playground Content Area */}
       <div className="p-4 sm:p-6 bg-card/60">
         {activeTab === "json" && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-xs font-medium text-muted-foreground">Edit JSON in real-time:</span>
+              <span className="text-xs text-muted-foreground">JSON Input:</span>
               <div className="flex items-center gap-2">
                 <Button size="sm" variant="secondary" onClick={handleJsonFormat} className="h-7 text-xs">
                   Prettify
@@ -791,8 +640,8 @@ function InteractiveHeroPlayground() {
                 <CopyButton value={jsonInput} />
                 <Link href="/tools/json-formatter">
                   <Button size="sm" variant="ghost" className="h-7 text-xs text-primary gap-1">
-                    <span>Full Tool</span>
-                    <Icon icon="lucide:external-link" className="size-3" />
+                    <span>Open Tool</span>
+                    <Icon icon="lucide:arrow-right" className="size-3" />
                   </Button>
                 </Link>
               </div>
@@ -804,44 +653,39 @@ function InteractiveHeroPlayground() {
                 setJsonInput(e.target.value);
                 setJsonError("");
               }}
-              rows={8}
-              className="w-full rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground outline-none focus:border-ring focus:ring-2 focus:ring-ring/20 resize-y"
+              rows={7}
+              className="w-full rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground outline-none focus:border-ring resize-y"
               spellCheck={false}
             />
             {jsonError ? (
-              <p className="text-xs text-red-500 font-mono">Syntax Error: {jsonError}</p>
+              <p className="text-xs text-red-500 font-mono">{jsonError}</p>
             ) : (
-              <p className="text-xs text-emerald-500 font-mono flex items-center gap-1.5">
-                <Icon icon="lucide:check-circle" className="size-3.5" />
-                <span>Valid JSON structure parsed client-side</span>
-              </p>
+              <p className="text-xs text-muted-foreground font-mono">Valid JSON</p>
             )}
           </div>
         )}
 
         {activeTab === "base64" && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
-                  <span>Plain Text:</span>
-                </div>
+              <div className="space-y-1.5">
+                <span className="text-xs text-muted-foreground">Plain Text:</span>
                 <textarea
                   value={b64Input}
                   onChange={(e) => setB64Input(e.target.value)}
-                  rows={6}
+                  rows={5}
                   className="w-full rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground outline-none focus:border-ring"
                 />
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>Base64 Encoded:</span>
                   <CopyButton value={b64Output} />
                 </div>
                 <textarea
                   readOnly
                   value={b64Output}
-                  rows={6}
+                  rows={5}
                   className="w-full rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs text-foreground outline-none"
                 />
               </div>
@@ -849,8 +693,8 @@ function InteractiveHeroPlayground() {
             <div className="flex items-center justify-end">
               <Link href="/tools/base64">
                 <Button size="sm" variant="ghost" className="text-xs text-primary gap-1">
-                  <span>Open Base64 Converter Tool</span>
-                  <Icon icon="lucide:external-link" className="size-3" />
+                  <span>Open Base64 Tool</span>
+                  <Icon icon="lucide:arrow-right" className="size-3" />
                 </Button>
               </Link>
             </div>
@@ -858,10 +702,10 @@ function InteractiveHeroPlayground() {
         )}
 
         {activeTab === "uuid" && (
-          <div className="space-y-6 text-center py-4">
-            <div className="max-w-md mx-auto space-y-2">
-              <span className="text-xs text-muted-foreground font-medium">Generated UUID v4 (RFC 4122):</span>
-              <div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-3 font-mono text-sm font-semibold tracking-wide">
+          <div className="space-y-5 text-center py-3">
+            <div className="max-w-md mx-auto space-y-1.5">
+              <span className="text-xs text-muted-foreground">UUID v4 (RFC 4122):</span>
+              <div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 font-mono text-sm">
                 <span>{uuid}</span>
                 <CopyButton value={uuid} />
               </div>
@@ -870,11 +714,11 @@ function InteractiveHeroPlayground() {
             <div className="flex items-center justify-center gap-3">
               <Button size="sm" onClick={generateUuid} className="gap-2">
                 <Icon icon="lucide:refresh-cw" className="size-3.5" />
-                <span>Generate Another</span>
+                <span>Generate New</span>
               </Button>
               <Link href="/tools/uuid-generator">
                 <Button size="sm" variant="outline">
-                  Bulk Generator →
+                  Bulk Generator
                 </Button>
               </Link>
             </div>
@@ -882,24 +726,24 @@ function InteractiveHeroPlayground() {
         )}
 
         {activeTab === "hash" && (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <span className="text-xs font-medium text-muted-foreground">Input Text:</span>
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <span className="text-xs text-muted-foreground">Input Text:</span>
               <input
                 type="text"
                 value={hashInput}
                 onChange={(e) => updateHash(e.target.value)}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-xs outline-none focus:border-ring"
-                placeholder="Type anything to compute hash in real time..."
+                placeholder="Enter string..."
               />
             </div>
 
-            <div className="space-y-2 pt-2">
+            <div className="space-y-1.5 pt-1">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span className="font-semibold text-foreground">SHA-256 Digest (Client WebCrypto):</span>
+                <span>SHA-256:</span>
                 <CopyButton value={sha256Hash} />
               </div>
-              <div className="break-all rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs text-primary">
+              <div className="break-all rounded-lg border border-border bg-muted/40 p-2.5 font-mono text-xs text-foreground">
                 {sha256Hash || "—"}
               </div>
             </div>
@@ -907,8 +751,8 @@ function InteractiveHeroPlayground() {
             <div className="flex items-center justify-end">
               <Link href="/tools/hash-generator">
                 <Button size="sm" variant="ghost" className="text-xs text-primary gap-1">
-                  <span>Open Full Hash Suite (MD5, SHA-512, HMAC)</span>
-                  <Icon icon="lucide:external-link" className="size-3" />
+                  <span>Open Hash Generator</span>
+                  <Icon icon="lucide:arrow-right" className="size-3" />
                 </Button>
               </Link>
             </div>
@@ -916,31 +760,27 @@ function InteractiveHeroPlayground() {
         )}
 
         {activeTab === "jwt" && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <span className="text-xs font-medium text-violet-600 dark:text-violet-400">Header:</span>
+              <div className="space-y-1.5">
+                <span className="text-xs text-muted-foreground">Header:</span>
                 <pre className="rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground overflow-x-auto">
                   {sampleJwtHeader}
                 </pre>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-medium text-indigo-600 dark:text-indigo-400">Payload:</span>
-                  <Badge variant="success" className="text-[10px]">Valid Signature</Badge>
-                </div>
+              <div className="space-y-1.5">
+                <span className="text-xs text-muted-foreground">Payload:</span>
                 <pre className="rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground overflow-x-auto">
                   {sampleJwtPayload}
                 </pre>
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
-              <span className="text-xs text-muted-foreground">No token details sent to any server</span>
+            <div className="flex items-center justify-end pt-1">
               <Link href="/tools/jwt-decoder">
                 <Button size="sm" variant="ghost" className="text-xs text-primary gap-1">
-                  <span>Full JWT Decoder & Signer</span>
-                  <Icon icon="lucide:external-link" className="size-3" />
+                  <span>Open JWT Decoder</span>
+                  <Icon icon="lucide:arrow-right" className="size-3" />
                 </Button>
               </Link>
             </div>
@@ -991,11 +831,11 @@ function MetricItem({
 }) {
   return (
     <div className="text-center space-y-1">
-      <div className="text-2xl font-black tracking-tight sm:text-4xl bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">
+      <div className="text-xl font-bold tracking-tight sm:text-2xl text-foreground">
         {value}
       </div>
-      <div className="text-sm font-semibold text-foreground">{label}</div>
-      <div className="text-xs text-muted-foreground">{detail}</div>
+      <div className="text-xs font-semibold text-foreground">{label}</div>
+      <div className="text-[11px] text-muted-foreground">{detail}</div>
     </div>
   );
 }
@@ -1014,18 +854,18 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <GlassCard className="p-6 space-y-4 hover:border-border/90 transition duration-200">
+    <GlassCard className="p-5 space-y-3">
       <div
-        className="flex size-11 items-center justify-center rounded-xl"
+        className="flex size-9 items-center justify-center rounded-lg"
         style={{
-          backgroundColor: `color-mix(in srgb, ${accent} 15%, transparent)`,
+          backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`,
           color: accent,
         }}
       >
-        <Icon icon={icon} className="size-5" />
+        <Icon icon={icon} className="size-4.5" />
       </div>
-      <h3 className="text-lg font-semibold tracking-tight">{title}</h3>
-      <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+      <h3 className="text-base font-semibold tracking-tight">{title}</h3>
+      <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
     </GlassCard>
   );
 }
@@ -1040,19 +880,19 @@ function ToolCategoryExplorer() {
     : TOOLS.filter((t) => t.category === selectedCategory).slice(0, 12);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Category Pills */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-1.5">
         <button
           onClick={() => setSelectedCategory("all")}
           className={cn(
-            "rounded-full px-4 py-1.5 text-xs font-medium transition cursor-pointer select-none",
+            "rounded-full px-3.5 py-1 text-xs font-medium transition cursor-pointer select-none",
             selectedCategory === "all"
               ? "bg-primary text-primary-foreground shadow-sm"
               : "border border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground"
           )}
         >
-          All Highlights ({TOOLS.length})
+          All ({TOOLS.length})
         </button>
         {CATEGORIES.map((cat) => {
           const count = TOOLS.filter((t) => t.category === cat.id).length;
@@ -1061,7 +901,7 @@ function ToolCategoryExplorer() {
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               className={cn(
-                "rounded-full px-4 py-1.5 text-xs font-medium transition cursor-pointer select-none",
+                "rounded-full px-3.5 py-1 text-xs font-medium transition cursor-pointer select-none",
                 selectedCategory === cat.id
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "border border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground"
@@ -1074,24 +914,24 @@ function ToolCategoryExplorer() {
       </div>
 
       {/* Tools Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {displayedTools.map((tool) => (
           <Link
             key={tool.slug}
             href={`/tools/${tool.slug}`}
             className="group block transition"
           >
-            <GlassCard className="h-full p-4 hover:border-primary/50 transition-all duration-200 group-hover:-translate-y-1">
-              <div className="flex items-start justify-between gap-3">
-                <ToolIcon icon={tool.icon} accent={tool.accent} className="size-9" />
+            <GlassCard className="h-full p-4 hover:border-border/80 transition-all duration-150">
+              <div className="flex items-start justify-between gap-2.5">
+                <ToolIcon icon={tool.icon} accent={tool.accent} className="size-8" />
                 <Badge variant="secondary" className="text-[10px] capitalize">
                   {tool.category}
                 </Badge>
               </div>
-              <div className="mt-3 space-y-1">
-                <h4 className="text-sm font-semibold group-hover:text-primary transition-colors flex items-center gap-1">
+              <div className="mt-2.5 space-y-1">
+                <h4 className="text-xs font-semibold group-hover:text-primary transition-colors flex items-center justify-between">
                   <span>{tool.name}</span>
-                  <Icon icon="lucide:arrow-up-right" className="size-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Icon icon="lucide:arrow-right" className="size-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </h4>
                 <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                   {tool.description}
@@ -1123,26 +963,26 @@ function SpotlightCard({
   tools: string[];
 }) {
   return (
-    <GlassCard className="p-6 flex flex-col justify-between space-y-5">
-      <div className="space-y-4">
+    <GlassCard className="p-5 flex flex-col justify-between space-y-4">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div
-            className="flex size-10 items-center justify-center rounded-xl"
+            className="flex size-9 items-center justify-center rounded-lg"
             style={{
-              backgroundColor: `color-mix(in srgb, ${accent} 15%, transparent)`,
+              backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`,
               color: accent,
             }}
           >
-            <Icon icon={icon} className="size-5" />
+            <Icon icon={icon} className="size-4.5" />
           </div>
-          <Badge variant="outline">{badge}</Badge>
+          <Badge variant="outline" className="text-[10px]">{badge}</Badge>
         </div>
-        <h3 className="text-xl font-bold tracking-tight">{title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">{description}</p>
+        <h3 className="text-base font-bold tracking-tight">{title}</h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
       </div>
 
       <div className="pt-2 border-t border-border">
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {tools.map((slug) => {
             const tool = TOOLS.find((t) => t.slug === slug);
             if (!tool) return null;
@@ -1150,9 +990,8 @@ function SpotlightCard({
               <Link key={slug} href={`/tools/${slug}`}>
                 <Badge
                   variant="secondary"
-                  className="hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer py-1"
+                  className="hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer text-[10px] py-0.5"
                 >
-                  <Icon icon={tool.icon} className="size-3 mr-1" />
                   <span>{tool.name}</span>
                 </Badge>
               </Link>
@@ -1176,45 +1015,15 @@ function PrivacyItem({
   desc: string;
 }) {
   return (
-    <div className="flex items-start gap-3.5">
-      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 mt-0.5">
-        <Icon icon={icon} className="size-4" />
+    <div className="flex items-start gap-3">
+      <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted text-foreground mt-0.5">
+        <Icon icon={icon} className="size-3.5" />
       </div>
       <div>
-        <h4 className="text-sm font-semibold">{title}</h4>
+        <h4 className="text-xs font-semibold">{title}</h4>
         <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
       </div>
     </div>
-  );
-}
-
-/* ---------------- Comparison Row ---------------- */
-
-function ComparisonRow({
-  feature,
-  devkit,
-  others,
-  positive,
-}: {
-  feature: string;
-  devkit: string;
-  others: string;
-  positive: boolean;
-}) {
-  return (
-    <tr className="hover:bg-muted/20 transition-colors">
-      <td className="p-4 font-medium text-foreground">{feature}</td>
-      <td className="p-4 text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
-        <Icon icon="lucide:check-circle" className="size-4 shrink-0" />
-        <span>{devkit}</span>
-      </td>
-      <td className="p-4 text-muted-foreground">
-        <div className="flex items-center gap-1.5">
-          <Icon icon="lucide:x-circle" className="size-4 shrink-0 text-red-500/70" />
-          <span>{others}</span>
-        </div>
-      </td>
-    </tr>
   );
 }
 
@@ -1222,28 +1031,24 @@ function ComparisonRow({
 
 const FAQS = [
   {
-    q: "Does DevKit send any of my data, tokens, or code to a remote server?",
-    a: "No. DevKit is engineered as a local-first application. When you format JSON, decode JWTs, generate hashes, remove image backgrounds, or parse ASTs, all computation runs entirely within your browser's V8 engine and WebAssembly runtime. No telemetry or request bodies are transmitted to any server.",
+    q: "How does DevKit process my inputs?",
+    a: "All tools run locally within your browser tab using JavaScript, WebAssembly, and native Web APIs (such as WebCrypto). No payload data is sent to external servers or logged in remote backends.",
   },
   {
-    q: "Can I use DevKit completely offline?",
-    a: "Yes! DevKit includes a configured Service Worker and Web App Manifest. You can install it directly to your operating system (Mac, Windows, Linux, iOS, Android) as a standalone Progressive Web App (PWA) and use every tool even while on a flight or in low-connectivity environments.",
+    q: "Does DevKit work offline?",
+    a: "Yes. DevKit is configured as a Progressive Web App (PWA) with a local service worker cache. Once loaded, tools remain accessible without an active internet connection.",
   },
   {
-    q: "How does DevKit compare to separate web tools like jsonlint or base64encode?",
-    a: "Most single-purpose online utilities are riddled with intrusive advertising, tracking scripts, and slow network roundtrips. DevKit provides a cohesive, unified keyboard-friendly UI with zero ads, instantaneous response times, and an omnipresent Command Palette (Ctrl+K).",
+    q: "Where is my data stored?",
+    a: "Your favorites, recent tool usage, and UI settings are stored in your browser's localStorage. You can clear this data at any time from the History page.",
   },
   {
-    q: "Are there any usage limits, subscription tiers, or paywalls?",
-    a: "None. DevKit is 100% free and open-source. There are no rate limits, no daily caps, and no premium features locked behind paywalls.",
+    q: "Are there any usage limits or fees?",
+    a: "No. DevKit is completely free and open source with no rate limits, paid plans, or sign-up requirements.",
   },
   {
-    q: "Where are my favorites and history stored?",
-    a: "All favorites, recent tool usage, and custom settings are stored locally on your device in your browser's localStorage. You can clear your history anytime from the History tab with a single click.",
-  },
-  {
-    q: "How do I navigate quickly with keyboard shortcuts?",
-    a: "Press Ctrl+K (or ⌘K on macOS) anywhere to open the instant Command Palette. You can type tool names, categories, or keywords to jump straight into any utility without clicking through menus.",
+    q: "How do I navigate using keyboard shortcuts?",
+    a: "Press Ctrl+K (or ⌘K on macOS) from any page to open the command palette. You can search by tool name, category, or keyword.",
   },
 ];
 
@@ -1251,7 +1056,7 @@ function FaqAccordion() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       {FAQS.map((faq, idx) => {
         const isOpen = openIdx === idx;
         return (
@@ -1261,14 +1066,14 @@ function FaqAccordion() {
           >
             <button
               onClick={() => setOpenIdx(isOpen ? null : idx)}
-              className="flex w-full items-center justify-between p-5 text-left font-medium text-foreground hover:bg-muted/30 transition-colors"
+              className="flex w-full items-center justify-between p-4 text-left font-medium text-foreground hover:bg-muted/30 transition-colors"
             >
-              <span className="text-sm sm:text-base font-semibold">{faq.q}</span>
+              <span className="text-sm font-semibold">{faq.q}</span>
               <Icon
                 icon="lucide:chevron-down"
                 className={cn(
                   "size-4 shrink-0 text-muted-foreground transition-transform duration-200",
-                  isOpen && "rotate-180 text-primary"
+                  isOpen && "rotate-180 text-foreground"
                 )}
               />
             </button>
@@ -1279,7 +1084,7 @@ function FaqAccordion() {
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="px-5 pb-5 text-xs sm:text-sm text-muted-foreground leading-relaxed border-t border-border/40 pt-3"
+                  className="px-4 pb-4 text-xs text-muted-foreground leading-relaxed border-t border-border/40 pt-2.5"
                 >
                   {faq.a}
                 </motion.div>
