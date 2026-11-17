@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Icon } from "@iconify/react";
 import { TOOLS, CATEGORIES } from "@/data/tools";
 import { useSettings } from "@/context/settings-context";
@@ -9,7 +9,6 @@ import { useCommandPalette } from "@/context/command-palette-context";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ToolIcon } from "@/components/ui/tool-icon";
-import { CopyButton } from "@/components/ui/copy-button";
 import { cn } from "@/lib/utils";
 import type { ToolCategory } from "@/types";
 
@@ -19,10 +18,10 @@ export function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/20">
+    <div className="min-h-screen w-full bg-background text-foreground antialiased selection:bg-primary/20">
       {/* ---------------- Navigation Bar ---------------- */}
       <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/95 backdrop-blur-md">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex h-14 w-full items-center justify-between px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="flex items-center gap-6">
             <Link
               href="/"
@@ -42,11 +41,8 @@ export function LandingPage() {
 
             <nav
               aria-label="Main navigation"
-              className="hidden items-center gap-5 text-xs font-medium text-muted-foreground md:flex"
+              className="hidden items-center gap-6 text-xs font-medium text-muted-foreground md:flex"
             >
-              <a href="#workbench" className="transition hover:text-foreground">
-                Workbench
-              </a>
               <a href="#catalog" className="transition hover:text-foreground">
                 Catalog
               </a>
@@ -66,7 +62,7 @@ export function LandingPage() {
             <button
               type="button"
               onClick={() => openPalette()}
-              className="hidden items-center gap-2 rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs text-muted-foreground transition hover:border-border hover:bg-muted hover:text-foreground sm:flex cursor-pointer"
+              className="hidden items-center gap-2 rounded-md border border-border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground transition hover:border-border hover:bg-muted hover:text-foreground sm:flex cursor-pointer"
               aria-label="Search tools with command palette"
             >
               <Icon icon="lucide:search" className="size-3.5" aria-hidden="true" />
@@ -123,13 +119,6 @@ export function LandingPage() {
           <div className="border-b border-border bg-background px-4 py-3 md:hidden">
             <nav aria-label="Mobile navigation" className="flex flex-col gap-2 text-xs">
               <a
-                href="#workbench"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                Workbench
-              </a>
-              <a
                 href="#catalog"
                 onClick={() => setMobileMenuOpen(false)}
                 className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -174,11 +163,11 @@ export function LandingPage() {
         )}
       </header>
 
-      <main>
+      <main className="w-full">
         {/* ---------------- Hero Section ---------------- */}
-        <section className="border-b border-border/70 py-12 md:py-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center text-center">
+        <section className="border-b border-border/70 py-16 lg:py-24">
+          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
               {/* Telemetry Guarantee Badge */}
               <div className="mb-4 inline-flex items-center gap-2 rounded-md border border-border bg-muted/60 px-3 py-1 font-mono text-[11px] text-muted-foreground">
                 <span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
@@ -186,35 +175,35 @@ export function LandingPage() {
               </div>
 
               {/* Headline */}
-              <h1 className="max-w-4xl text-3xl font-semibold tracking-tight sm:text-5xl">
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
                 Developer utilities that never leave your browser
               </h1>
 
               {/* Subtitle */}
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+              <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base lg:text-lg">
                 An offline, local-first workbench with 54 formatters, AST analyzers, WebCrypto
                 generators, and document converters. Executed in-memory with zero server transmissions.
               </p>
 
               {/* Actions */}
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                 <Link href="/dashboard">
-                  <Button size="default" className="gap-2 px-5 text-xs font-medium">
-                    <Icon icon="lucide:layout-grid" className="size-3.5" aria-hidden="true" />
+                  <Button size="default" className="gap-2 px-6 h-10 text-xs font-medium">
+                    <Icon icon="lucide:layout-grid" className="size-4" aria-hidden="true" />
                     <span>Open Dashboard</span>
                   </Button>
                 </Link>
 
                 <a href="#catalog">
-                  <Button variant="outline" size="default" className="gap-2 px-5 text-xs font-medium">
-                    <Icon icon="lucide:list" className="size-3.5" aria-hidden="true" />
+                  <Button variant="outline" size="default" className="gap-2 px-6 h-10 text-xs font-medium">
+                    <Icon icon="lucide:list" className="size-4" aria-hidden="true" />
                     <span>Explore 54 Tools</span>
                   </Button>
                 </a>
               </div>
 
               {/* Shortcut helper */}
-              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <div className="mt-4 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 <span>Press</span>
                 <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-foreground">
                   Ctrl
@@ -226,17 +215,12 @@ export function LandingPage() {
                 <span>to search and jump to any tool instantly</span>
               </div>
             </div>
-
-            {/* Focal Moment: Live Workbench Terminal */}
-            <div id="workbench" className="mt-10 scroll-mt-20">
-              <LiveWorkbench />
-            </div>
           </div>
         </section>
 
         {/* ---------------- Engineering Guarantees (Metrics) ---------------- */}
         <section aria-label="Engineering guarantees" className="border-b border-border/70 bg-muted/20 py-8">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
               <MetricItem
                 value="54"
@@ -264,8 +248,8 @@ export function LandingPage() {
 
         {/* ---------------- Local-First Architecture Blueprint ---------------- */}
         <section id="architecture" className="border-b border-border/70 py-16 scroll-mt-14">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl">
+          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div className="max-w-3xl">
               <div className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <Icon icon="lucide:shield-check" className="size-3.5 text-emerald-500" aria-hidden="true" />
                 <span>Security Guarantee</span>
@@ -279,7 +263,7 @@ export function LandingPage() {
               </p>
             </div>
 
-            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <ArchitectureCard
                 icon="lucide:cpu"
                 title="In-Memory V8 Execution"
@@ -306,8 +290,8 @@ export function LandingPage() {
 
         {/* ---------------- Specialized Suites Spotlight ---------------- */}
         <section id="suites" className="border-b border-border/70 py-16 scroll-mt-14">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl">
+          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div className="max-w-3xl">
               <span className="text-xs font-medium text-muted-foreground">Deep-Dive Workbenches</span>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
                 Specialized Tool Suites
@@ -353,33 +337,35 @@ export function LandingPage() {
 
         {/* ---------------- Complete Tool Catalog Matrix ---------------- */}
         <section id="catalog" className="py-16 scroll-mt-14">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <ToolMatrix />
           </div>
         </section>
 
         {/* ---------------- Frequently Asked Questions ---------------- */}
         <section id="faq" className="border-t border-border/70 bg-muted/10 py-16 scroll-mt-14">
-          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <span className="text-xs font-medium text-muted-foreground">Direct Answers</span>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Frequently Asked Questions
-              </h2>
-              <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
-                Technical details regarding DevKit security, offline behavior, and execution boundaries.
-              </p>
-            </div>
+          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div className="max-w-3xl mx-auto">
+              <div className="text-center">
+                <span className="text-xs font-medium text-muted-foreground">Direct Answers</span>
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                  Frequently Asked Questions
+                </h2>
+                <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
+                  Technical details regarding DevKit security, offline behavior, and execution boundaries.
+                </p>
+              </div>
 
-            <div className="mt-8">
-              <FaqList />
+              <div className="mt-8">
+                <FaqList />
+              </div>
             </div>
           </div>
         </section>
 
         {/* ---------------- Bottom Call to Action ---------------- */}
         <section className="border-t border-border/70 py-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <div className="rounded-xl border border-border bg-card p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-xs">
               <h2 className="text-2xl font-semibold tracking-tight">
                 Ready to work with zero-latency utilities?
@@ -407,7 +393,7 @@ export function LandingPage() {
 
       {/* ---------------- Footer ---------------- */}
       <footer className="border-t border-border/70 bg-muted/30 py-12 text-xs text-muted-foreground">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-5">
             <div className="space-y-3 sm:col-span-2">
               <div className="flex items-center gap-2">
@@ -458,7 +444,7 @@ export function LandingPage() {
                 <li><Link href="/dashboard" className="hover:text-foreground transition">Dashboard</Link></li>
                 <li><Link href="/tools" className="hover:text-foreground transition">All 54 Tools</Link></li>
                 <li><Link href="/history" className="hover:text-foreground transition">Local History</Link></li>
-                <li><a href="#workbench" className="hover:text-foreground transition">Workbench Demo</a></li>
+                <li><a href="#catalog" className="hover:text-foreground transition">Tool Catalog</a></li>
                 <li><a href="#architecture" className="hover:text-foreground transition">Architecture</a></li>
                 <li><a href="#faq" className="hover:text-foreground transition">FAQ</a></li>
               </ul>
@@ -476,464 +462,6 @@ export function LandingPage() {
         </div>
       </footer>
     </div>
-  );
-}
-
-/* ---------------- Focal Workbench Component ---------------- */
-
-type WorkbenchTab = "json" | "jwt" | "hash" | "base64" | "uuid" | "regex";
-
-function LiveWorkbench() {
-  const [activeTab, setActiveTab] = useState<WorkbenchTab>("json");
-
-  // JSON state
-  const [jsonInput, setJsonInput] = useState(
-    JSON.stringify(
-      {
-        project: "DevKit",
-        architecture: "local-first",
-        telemetry: { egressBytes: 0, remoteLogging: false },
-        engine: { runtime: "V8 In-Memory", wasmReady: true },
-        toolsCount: 54
-      },
-      null,
-      2
-    )
-  );
-  const [jsonError, setJsonError] = useState("");
-
-  const handlePrettify = () => {
-    try {
-      const parsed = JSON.parse(jsonInput);
-      setJsonInput(JSON.stringify(parsed, null, 2));
-      setJsonError("");
-    } catch (e) {
-      setJsonError((e as Error).message);
-    }
-  };
-
-  const handleMinify = () => {
-    try {
-      const parsed = JSON.parse(jsonInput);
-      setJsonInput(JSON.stringify(parsed));
-      setJsonError("");
-    } catch (e) {
-      setJsonError((e as Error).message);
-    }
-  };
-
-  // Base64 state
-  const [b64Input, setB64Input] = useState("Local-first execution with zero cloud egress.");
-  const b64Output = useMemo(() => {
-    try {
-      return btoa(unescape(encodeURIComponent(b64Input)));
-    } catch {
-      return "";
-    }
-  }, [b64Input]);
-
-  // UUID state
-  const [uuid, setUuid] = useState("7b3f9a2e-8c4d-4b1a-9f5e-3d2c1b0a9e8d");
-  const handleGenerateUuid = () => {
-    if (typeof crypto !== "undefined" && crypto.randomUUID) {
-      setUuid(crypto.randomUUID());
-    } else {
-      setUuid("xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-        const r = (Math.random() * 16) | 0;
-        return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-      }));
-    }
-  };
-
-  // Hash state
-  const [hashInput, setHashInput] = useState("devkit-privacy-guarantee");
-  const [sha256Digest, setSha256Digest] = useState("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
-
-  useEffect(() => {
-    let isCurrent = true;
-    const compute = async () => {
-      if (!hashInput) {
-        if (isCurrent) setSha256Digest("");
-        return;
-      }
-      if (typeof crypto !== "undefined" && crypto.subtle) {
-        try {
-          const enc = new TextEncoder().encode(hashInput);
-          const buf = await crypto.subtle.digest("SHA-256", enc);
-          const hex = Array.from(new Uint8Array(buf))
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
-          if (isCurrent) setSha256Digest(hex);
-        } catch {
-          // fallback
-        }
-      }
-    };
-    compute();
-    return () => {
-      isCurrent = false;
-    };
-  }, [hashInput]);
-
-  // JWT state
-  const sampleJwtHeader = JSON.stringify({ alg: "HS256", typ: "JWT" }, null, 2);
-  const sampleJwtPayload = JSON.stringify(
-    {
-      sub: "usr_8921a4f0",
-      roles: ["engineer", "admin"],
-      scope: "read:write:local",
-      iat: 1731826800,
-      exp: 1763362800
-    },
-    null,
-    2
-  );
-
-  // Regex state
-  const [regexPattern, setRegexPattern] = useState("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b");
-  const [regexText, setRegexText] = useState("Contact security@devkit.dev or maintainers@example.org for inquiries.");
-  const regexMatches = useMemo(() => {
-    try {
-      const re = new RegExp(regexPattern, "g");
-      const found = regexText.match(re);
-      return found || [];
-    } catch {
-      return null;
-    }
-  }, [regexPattern, regexText]);
-
-  return (
-    <div className="mx-auto max-w-4xl rounded-xl border border-border bg-card shadow-xs overflow-hidden">
-      {/* Workbench Diagnostic Header */}
-      <div className="flex flex-wrap items-center justify-between border-b border-border bg-muted/40 px-4 py-2 text-xs">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
-            <span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
-            <span className="font-semibold text-foreground">Interactive Console</span>
-          </div>
-          <span className="text-border">|</span>
-          <span className="font-mono text-[10px] text-muted-foreground hidden sm:inline">
-            Runtime: <span className="text-foreground">V8 In-Memory</span>
-          </span>
-          <span className="font-mono text-[10px] text-muted-foreground hidden sm:inline">
-            Egress: <span className="text-foreground">0 B</span>
-          </span>
-        </div>
-
-        {/* Console Tab Switches */}
-        <div
-          role="tablist"
-          aria-label="Interactive tool selection"
-          className="flex items-center gap-1 rounded-md border border-border bg-background p-0.5"
-        >
-          <ConsoleTabBtn
-            active={activeTab === "json"}
-            onClick={() => setActiveTab("json")}
-            label="JSON"
-            icon="lucide:braces"
-          />
-          <ConsoleTabBtn
-            active={activeTab === "jwt"}
-            onClick={() => setActiveTab("jwt")}
-            label="JWT"
-            icon="lucide:key"
-          />
-          <ConsoleTabBtn
-            active={activeTab === "hash"}
-            onClick={() => setActiveTab("hash")}
-            label="SHA-256"
-            icon="lucide:hash"
-          />
-          <ConsoleTabBtn
-            active={activeTab === "base64"}
-            onClick={() => setActiveTab("base64")}
-            label="Base64"
-            icon="lucide:binary"
-          />
-          <ConsoleTabBtn
-            active={activeTab === "uuid"}
-            onClick={() => setActiveTab("uuid")}
-            label="UUID"
-            icon="lucide:fingerprint"
-          />
-          <ConsoleTabBtn
-            active={activeTab === "regex"}
-            onClick={() => setActiveTab("regex")}
-            label="Regex"
-            icon="lucide:regex"
-          />
-        </div>
-      </div>
-
-      {/* Workbench Working Viewport */}
-      <div className="p-4 sm:p-5">
-        {activeTab === "json" && (
-          <div className="space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-xs font-medium text-muted-foreground">JSON In-Memory Prettifier:</span>
-              <div className="flex items-center gap-2">
-                <Button size="sm" variant="secondary" onClick={handlePrettify} className="h-7 text-xs">
-                  Prettify
-                </Button>
-                <Button size="sm" variant="secondary" onClick={handleMinify} className="h-7 text-xs">
-                  Minify
-                </Button>
-                <CopyButton value={jsonInput} />
-                <Link href="/tools/json-formatter">
-                  <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
-                    <span>Full Tool</span>
-                    <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <textarea
-              aria-label="JSON payload editor"
-              value={jsonInput}
-              onChange={(e) => {
-                setJsonInput(e.target.value);
-                setJsonError("");
-              }}
-              rows={7}
-              className="w-full rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground outline-none focus:border-ring resize-y"
-              spellCheck={false}
-            />
-            <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground">
-              {jsonError ? (
-                <span className="text-red-500">{jsonError}</span>
-              ) : (
-                <span className="text-emerald-500">✓ Valid JSON • Parsed in-memory</span>
-              )}
-              <span>{jsonInput.length} characters</span>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "jwt" && (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">Decoded JWT Payload (HS256):</span>
-              <Link href="/tools/jwt-decoder">
-                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
-                  <span>Full JWT Decoder</span>
-                  <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
-                </Button>
-              </Link>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Header</span>
-                  <CopyButton value={sampleJwtHeader} />
-                </div>
-                <pre className="rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground overflow-x-auto">
-                  {sampleJwtHeader}
-                </pre>
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Claims & Payload</span>
-                  <CopyButton value={sampleJwtPayload} />
-                </div>
-                <pre className="rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground overflow-x-auto">
-                  {sampleJwtPayload}
-                </pre>
-              </div>
-            </div>
-            <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground">
-              <span className="text-emerald-500">Algorithm: HMAC SHA-256 (Decoded locally)</span>
-              <span>Expiration: 2025-11-17</span>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "hash" && (
-          <div className="space-y-3">
-            <div className="space-y-1.5">
-              <label htmlFor="hash-input" className="text-xs font-medium text-muted-foreground">
-                Plaintext Input (Processed via SubtleCrypto):
-              </label>
-              <input
-                id="hash-input"
-                type="text"
-                value={hashInput}
-                onChange={(e) => setHashInput(e.target.value)}
-                className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs outline-none focus:border-ring"
-                placeholder="Enter string to digest..."
-              />
-            </div>
-
-            <div className="space-y-1.5 pt-1">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>SHA-256 Digest (256-bit Hex):</span>
-                <CopyButton value={sha256Digest} />
-              </div>
-              <div className="break-all rounded-md border border-border bg-muted/40 p-2.5 font-mono text-xs text-foreground">
-                {sha256Digest || "—"}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-1">
-              <span className="font-mono text-[11px] text-muted-foreground">
-                Latency: <span className="text-emerald-500">&lt; 0.2ms</span> • Hardware-accelerated WebCrypto
-              </span>
-              <Link href="/tools/hash-generator">
-                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
-                  <span>MD5, SHA-512 & HMAC</span>
-                  <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "base64" && (
-          <div className="space-y-3">
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <label htmlFor="b64-src" className="text-xs font-medium text-muted-foreground">
-                  Source String:
-                </label>
-                <textarea
-                  id="b64-src"
-                  value={b64Input}
-                  onChange={(e) => setB64Input(e.target.value)}
-                  rows={4}
-                  className="w-full rounded-md border border-border bg-background p-2.5 font-mono text-xs text-foreground outline-none focus:border-ring"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <label htmlFor="b64-res">Base64 Encoded:</label>
-                  <CopyButton value={b64Output} />
-                </div>
-                <textarea
-                  id="b64-res"
-                  readOnly
-                  value={b64Output}
-                  rows={4}
-                  className="w-full rounded-md border border-border bg-muted/40 p-2.5 font-mono text-xs text-foreground outline-none"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end">
-              <Link href="/tools/base64">
-                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
-                  <span>Full Base64 & Hex Tool</span>
-                  <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "uuid" && (
-          <div className="space-y-4 py-2 text-center">
-            <div className="max-w-md mx-auto space-y-1.5 text-left">
-              <span className="text-xs font-medium text-muted-foreground">
-                Cryptographic UUID v4 (RFC 4122):
-              </span>
-              <div className="flex items-center justify-between gap-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-xs">
-                <span>{uuid}</span>
-                <CopyButton value={uuid} />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-3">
-              <Button size="sm" onClick={handleGenerateUuid} className="gap-2 h-8 text-xs">
-                <Icon icon="lucide:refresh-cw" className="size-3.5" aria-hidden="true" />
-                <span>Generate Next UUID</span>
-              </Button>
-              <Link href="/tools/uuid-generator">
-                <Button size="sm" variant="outline" className="h-8 text-xs">
-                  Bulk UUID & v7 Generator
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "regex" && (
-          <div className="space-y-3">
-            <div className="space-y-1.5">
-              <label htmlFor="regex-pat" className="text-xs font-medium text-muted-foreground">
-                Regular Expression Pattern:
-              </label>
-              <input
-                id="regex-pat"
-                type="text"
-                value={regexPattern}
-                onChange={(e) => setRegexPattern(e.target.value)}
-                className="w-full rounded-md border border-border bg-background px-3 py-1.5 font-mono text-xs outline-none focus:border-ring"
-                placeholder="Regex pattern..."
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label htmlFor="regex-src" className="text-xs font-medium text-muted-foreground">
-                Test Target String:
-              </label>
-              <textarea
-                id="regex-src"
-                value={regexText}
-                onChange={(e) => setRegexText(e.target.value)}
-                rows={3}
-                className="w-full rounded-md border border-border bg-background p-2.5 font-mono text-xs text-foreground outline-none focus:border-ring"
-              />
-            </div>
-
-            <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground">
-              {regexMatches === null ? (
-                <span className="text-red-500">Invalid regular expression syntax</span>
-              ) : (
-                <span>
-                  Matches found: <span className="text-emerald-500 font-semibold">{regexMatches.length}</span>
-                  {regexMatches.length > 0 && ` (${regexMatches.join(", ")})`}
-                </span>
-              )}
-              <Link href="/tools/regex-playground">
-                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
-                  <span>Full Regex Tester</span>
-                  <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ConsoleTabBtn({
-  active,
-  onClick,
-  label,
-  icon,
-}: {
-  active: boolean;
-  onClick: () => void;
-  label: string;
-  icon: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="tab"
-      aria-selected={active}
-      onClick={onClick}
-      className={cn(
-        "flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer select-none",
-        active
-          ? "bg-foreground text-background shadow-xs"
-          : "text-muted-foreground hover:bg-muted hover:text-foreground"
-      )}
-    >
-      <Icon icon={icon} className="size-3.5" aria-hidden="true" />
-      <span>{label}</span>
-    </button>
   );
 }
 
@@ -1067,7 +595,7 @@ function ToolMatrix() {
         </div>
 
         {/* Live Search Filter */}
-        <div className="w-full md:w-72">
+        <div className="w-full md:w-80">
           <label htmlFor="catalog-search" className="sr-only">
             Filter tools
           </label>
@@ -1124,13 +652,13 @@ function ToolMatrix() {
         })}
       </div>
 
-      {/* Grid of Tools using <article> elements as recommended in Modern Web Guidance */}
+      {/* Responsive Grid that gracefully scales to widescreen */}
       {filteredTools.length === 0 ? (
         <div className="rounded-lg border border-border p-8 text-center text-xs text-muted-foreground">
           No tools found matching &ldquo;{searchQuery}&rdquo;.
         </div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
           {filteredTools.map((tool) => (
             <Link
               key={tool.slug}
@@ -1171,7 +699,7 @@ function ToolMatrix() {
   );
 }
 
-/* ---------------- FAQ Accordion (Compliant with Modern HTML & Accessibility) ---------------- */
+/* ---------------- FAQ Accordion ---------------- */
 
 const FAQS = [
   {
