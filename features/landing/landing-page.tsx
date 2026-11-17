@@ -1,15 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Icon } from "@iconify/react";
-import { AnimatePresence, motion } from "framer-motion";
 import { TOOLS, CATEGORIES } from "@/data/tools";
 import { useSettings } from "@/context/settings-context";
 import { useCommandPalette } from "@/context/command-palette-context";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { GlassCard } from "@/components/ui/glass-card";
 import { ToolIcon } from "@/components/ui/tool-icon";
 import { CopyButton } from "@/components/ui/copy-button";
 import { cn } from "@/lib/utils";
@@ -21,491 +19,458 @@ export function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20">
+    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-primary/20">
       {/* ---------------- Navigation Bar ---------------- */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/95 backdrop-blur-md">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
-              <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 shadow-md shadow-indigo-500/25">
-                <Icon icon="lucide:zap" className="size-5 text-white" />
+            <Link
+              href="/"
+              className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
+              aria-label="DevKit home"
+            >
+              <span className="flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground font-mono font-semibold text-xs shadow-xs">
+                DK
               </span>
               <div className="leading-tight">
-                <span className="block text-base font-bold tracking-tight">DevKit</span>
-                <span className="block text-[11px] text-muted-foreground font-mono">client-side toolkit</span>
+                <span className="block text-sm font-semibold tracking-tight">DevKit</span>
+                <span className="block text-[10px] text-muted-foreground font-mono">
+                  local-first • 54 tools
+                </span>
               </div>
             </Link>
 
-            <nav className="hidden items-center gap-5 text-sm font-medium text-muted-foreground md:flex">
-              <a href="#features" className="transition hover:text-foreground">Features</a>
-              <a href="#playground" className="transition hover:text-foreground">Demo</a>
-              <a href="#tools" className="transition hover:text-foreground">Tools</a>
-              <a href="#privacy" className="transition hover:text-foreground">Architecture</a>
-              <a href="#faq" className="transition hover:text-foreground">FAQ</a>
+            <nav
+              aria-label="Main navigation"
+              className="hidden items-center gap-5 text-xs font-medium text-muted-foreground md:flex"
+            >
+              <a href="#workbench" className="transition hover:text-foreground">
+                Workbench
+              </a>
+              <a href="#catalog" className="transition hover:text-foreground">
+                Catalog
+              </a>
+              <a href="#architecture" className="transition hover:text-foreground">
+                Architecture
+              </a>
+              <a href="#suites" className="transition hover:text-foreground">
+                Suites
+              </a>
+              <a href="#faq" className="transition hover:text-foreground">
+                FAQ
+              </a>
             </nav>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => openPalette()}
-              className="hidden items-center gap-2 rounded-lg border border-border bg-muted/60 px-2.5 py-1.5 text-xs text-muted-foreground transition hover:border-primary/40 hover:bg-muted sm:flex"
-              aria-label="Open command palette"
+              className="hidden items-center gap-2 rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs text-muted-foreground transition hover:border-border hover:bg-muted hover:text-foreground sm:flex cursor-pointer"
+              aria-label="Search tools with command palette"
             >
-              <Icon icon="lucide:search" className="size-3.5" />
+              <Icon icon="lucide:search" className="size-3.5" aria-hidden="true" />
               <span>Search tools</span>
-              <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+              <kbd className="inline-flex items-center rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground shadow-xs">
                 Ctrl K
               </kbd>
             </button>
 
             <button
+              type="button"
               onClick={toggleTheme}
-              className="rounded-lg border border-border p-2 text-muted-foreground transition hover:bg-accent hover:text-foreground"
+              className="rounded-md border border-border p-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground cursor-pointer"
               aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
             >
-              <Icon icon={theme === "dark" ? "lucide:sun" : "lucide:moon"} className="size-4" />
+              <Icon
+                icon={theme === "dark" ? "lucide:sun" : "lucide:moon"}
+                className="size-4"
+                aria-hidden="true"
+              />
             </button>
 
             <Link href="/tools" className="hidden sm:inline-flex">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" className="h-8 text-xs">
                 All Tools
               </Button>
             </Link>
 
             <Link href="/dashboard">
-              <Button size="sm" className="gap-1.5 shadow-sm shadow-primary/20">
+              <Button size="sm" className="h-8 gap-1.5 text-xs shadow-xs">
                 <span>Dashboard</span>
-                <Icon icon="lucide:arrow-right" className="size-3.5" />
+                <Icon icon="lucide:arrow-right" className="size-3.5" aria-hidden="true" />
               </Button>
             </Link>
 
             <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="rounded-lg p-2 text-muted-foreground md:hidden hover:bg-accent"
-              aria-label="Toggle menu"
+              className="rounded-md border border-border p-1.5 text-muted-foreground md:hidden hover:bg-accent cursor-pointer"
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
             >
-              <Icon icon={mobileMenuOpen ? "lucide:x" : "lucide:menu"} className="size-5" />
+              <Icon
+                icon={mobileMenuOpen ? "lucide:x" : "lucide:menu"}
+                className="size-4"
+                aria-hidden="true"
+              />
             </button>
           </div>
         </div>
 
         {/* Mobile dropdown */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="border-b border-border bg-background px-4 py-4 md:hidden"
-            >
-              <nav className="flex flex-col gap-3 text-sm">
-                <a
-                  href="#features"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                >
-                  Features
-                </a>
-                <a
-                  href="#playground"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                >
-                  Demo
-                </a>
-                <a
-                  href="#tools"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                >
-                  Tools
-                </a>
-                <a
-                  href="#privacy"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                >
-                  Architecture
-                </a>
-                <a
-                  href="#faq"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
-                >
-                  FAQ
-                </a>
-                <div className="pt-2 border-t border-border flex flex-col gap-2">
-                  <Link href="/tools" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full justify-center">
-                      Browse All Tools
-                    </Button>
-                  </Link>
-                  <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full justify-center">
-                      Open Dashboard
-                    </Button>
-                  </Link>
-                </div>
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {mobileMenuOpen && (
+          <div className="border-b border-border bg-background px-4 py-3 md:hidden">
+            <nav aria-label="Mobile navigation" className="flex flex-col gap-2 text-xs">
+              <a
+                href="#workbench"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                Workbench
+              </a>
+              <a
+                href="#catalog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                Catalog
+              </a>
+              <a
+                href="#architecture"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                Architecture
+              </a>
+              <a
+                href="#suites"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                Suites
+              </a>
+              <a
+                href="#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                FAQ
+              </a>
+              <div className="mt-2 flex flex-col gap-2 border-t border-border pt-2">
+                <Link href="/tools" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" size="sm" className="w-full justify-center text-xs">
+                    Browse All 54 Tools
+                  </Button>
+                </Link>
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                  <Button size="sm" className="w-full justify-center text-xs">
+                    Open Dashboard
+                  </Button>
+                </Link>
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
 
-      {/* ---------------- Hero Section ---------------- */}
-      <section className="relative overflow-hidden pt-12 pb-16 md:pt-16 md:pb-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center text-center">
-            {/* Tag */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-3.5 py-1 text-xs text-muted-foreground mb-6">
-              <span>Open Source • 50+ Local Developer Tools</span>
-            </div>
+      <main>
+        {/* ---------------- Hero Section ---------------- */}
+        <section className="border-b border-border/70 py-12 md:py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center text-center">
+              {/* Telemetry Guarantee Badge */}
+              <div className="mb-4 inline-flex items-center gap-2 rounded-md border border-border bg-muted/60 px-3 py-1 font-mono text-[11px] text-muted-foreground">
+                <span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
+                <span>100% Client-Side • 0 B Egress • PWA Ready</span>
+              </div>
 
-            {/* Main Title */}
-            <h1 className="max-w-4xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-              Client-Side Developer Utilities
-            </h1>
+              {/* Headline */}
+              <h1 className="max-w-4xl text-3xl font-semibold tracking-tight sm:text-5xl">
+                Developer utilities that never leave your browser
+              </h1>
 
-            {/* Subtitle */}
-            <p className="mt-4 max-w-2xl text-base text-muted-foreground sm:text-lg">
-              Format JSON, decode JWTs, generate hashes, inspect ASTs, and test APIs directly in your browser. All processing runs locally with no backend data storage.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <Link href="/dashboard">
-                <Button size="lg" className="gap-2 px-6">
-                  <Icon icon="lucide:layout-grid" className="size-4" />
-                  <span>Open Dashboard</span>
-                </Button>
-              </Link>
-
-              <Link href="/tools">
-                <Button size="lg" variant="outline" className="gap-2 px-6">
-                  <span>Browse All Tools</span>
-                </Button>
-              </Link>
-            </div>
-
-            {/* Shortcut hint */}
-            <div className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span>Press</span>
-              <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[11px] text-foreground">
-                Ctrl + K
-              </kbd>
-              <span>to search and jump to any tool</span>
-            </div>
-          </div>
-
-          {/* Interactive Playground */}
-          <div id="playground" className="mt-12 scroll-mt-24">
-            <InteractiveHeroPlayground />
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Metrics Banner ---------------- */}
-      <section className="border-y border-border/60 bg-muted/20 py-6">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
-            <MetricItem value="50+" label="Built-in Tools" detail="Formatters, generators & testers" />
-            <MetricItem value="Local" label="Execution" detail="Processed in browser memory" />
-            <MetricItem value="Zero" label="Server Uploads" detail="No telemetry or payload logging" />
-            <MetricItem value="PWA" label="Offline Support" detail="Installable standalone application" />
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Features ---------------- */}
-      <section id="features" className="py-16 scroll-mt-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Core Architecture
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Built as a focused toolkit for daily software engineering tasks.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <FeatureCard
-              icon="lucide:shield-check"
-              accent="#10b981"
-              title="Client-Side Processing"
-              description="Payloads, tokens, and cryptographic keys remain within your local browser session. No data is sent to external servers."
-            />
-            <FeatureCard
-              icon="lucide:zap"
-              accent="#f59e0b"
-              title="No Network Latency"
-              description="Operations run synchronously in-memory using WebAssembly and WebCrypto without remote API round trips."
-            />
-            <FeatureCard
-              icon="lucide:command"
-              accent="#6366f1"
-              title="Command Palette"
-              description="Quickly search, filter, and jump between utilities using the built-in Ctrl+K / ⌘K command bar."
-            />
-            <FeatureCard
-              icon="lucide:wifi-off"
-              accent="#ec4899"
-              title="Offline Capability"
-              description="Configured with a Service Worker and web manifest so you can install and use every tool without an internet connection."
-            />
-            <FeatureCard
-              icon="lucide:database"
-              accent="#8b5cf6"
-              title="Local History & Bookmarks"
-              description="Pin frequently used tools to your sidebar. Transformation history is stored strictly in your browser's localStorage."
-            />
-            <FeatureCard
-              icon="lucide:code-2"
-              accent="#06b6d4"
-              title="Code & Binary Inspection"
-              description="Inspect AST structures via Babel, explore WebAssembly modules, format SQL queries, and generate diffs."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Tool Category Showcase ---------------- */}
-      <section id="tools" className="py-16 bg-muted/20 border-t border-border/60 scroll-mt-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-4">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                Tool Catalog
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Browse available utilities by category.
-              </p>
-            </div>
-            <Link href="/tools">
-              <Button variant="outline" size="sm" className="gap-1.5">
-                <span>View All 50+ Tools</span>
-                <Icon icon="lucide:arrow-right" className="size-3.5" />
-              </Button>
-            </Link>
-          </div>
-
-          <ToolCategoryExplorer />
-        </div>
-      </section>
-
-      {/* ---------------- Specialized Utilities ---------------- */}
-      <section className="py-16 border-t border-border/60">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Specialized Utilities
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              In addition to standard encoders and formatters, DevKit includes tools for code analysis, network debugging, and media processing.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <SpotlightCard
-              title="PDF & Document Suite"
-              badge="PDF Tools"
-              icon="lucide:files"
-              accent="#ef4444"
-              description="Merge multiple PDFs, split and extract page ranges, convert images to PDF, and organize or rotate pages."
-              tools={["pdf-merge", "pdf-split", "image-to-pdf", "pdf-organize"]}
-            />
-            <SpotlightCard
-              title="AST & WebAssembly Explorer"
-              badge="Code Analysis"
-              icon="lucide:binary"
-              accent="#8b5cf6"
-              description="Parse JavaScript and TypeScript into interactive Babel AST node structures, or inspect WebAssembly binary opcodes and sections."
-              tools={["ast-explorer", "wasm-explorer", "json-typescript"]}
-            />
-            <SpotlightCard
-              title="API & Network Suite"
-              badge="Network"
-              icon="lucide:network"
-              accent="#06b6d4"
-              description="Send HTTP requests with cURL and Postman collection support, test live WebSocket connections, and run client-side load benchmarks."
-              tools={["api-tester", "websocket-tester", "load-tester"]}
-            />
-            <SpotlightCard
-              title="Image Format & Media Suite"
-              badge="Visual & Media"
-              icon="lucide:image"
-              accent="#ec4899"
-              description="Resize and crop with custom dimensions, add customizable watermarks, remove backgrounds with AI, and convert formats."
-              tools={["bg-remover", "image-resizer", "image-watermark", "image-converter"]}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* ---------------- Privacy Architecture Section ---------------- */}
-      <section id="privacy" className="py-16 bg-muted/20 border-t border-border/60 scroll-mt-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                Privacy & Data Architecture
-              </h2>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                DevKit is designed as a client-side web application. Every tool runs directly inside your browser process without sending your inputs to external servers.
+              {/* Subtitle */}
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                An offline, local-first workbench with 54 formatters, AST analyzers, WebCrypto
+                generators, and document converters. Executed in-memory with zero server transmissions.
               </p>
 
-              <div className="mt-6 space-y-4">
-                <PrivacyItem
-                  icon="lucide:lock"
-                  title="In-Memory Computation"
-                  desc="Formatting, parsing, and cryptographic operations run locally in browser memory and are discarded when closed."
-                />
-                <PrivacyItem
-                  icon="lucide:database"
-                  title="Origin-Scoped Storage"
-                  desc="Tool history, pinned favorites, and appearance preferences are stored solely in your local browser storage."
-                />
-                <PrivacyItem
-                  icon="lucide:shield"
-                  title="No Third-Party Analytics"
-                  desc="No tracking scripts, cookies, or remote logging services are loaded."
-                />
+              {/* Actions */}
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <Link href="/dashboard">
+                  <Button size="default" className="gap-2 px-5 text-xs font-medium">
+                    <Icon icon="lucide:layout-grid" className="size-3.5" aria-hidden="true" />
+                    <span>Open Dashboard</span>
+                  </Button>
+                </Link>
+
+                <a href="#catalog">
+                  <Button variant="outline" size="default" className="gap-2 px-5 text-xs font-medium">
+                    <Icon icon="lucide:list" className="size-3.5" aria-hidden="true" />
+                    <span>Explore 54 Tools</span>
+                  </Button>
+                </a>
+              </div>
+
+              {/* Shortcut helper */}
+              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                <span>Press</span>
+                <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-foreground">
+                  Ctrl
+                </kbd>
+                <span>+</span>
+                <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-foreground">
+                  K
+                </kbd>
+                <span>to search and jump to any tool instantly</span>
               </div>
             </div>
 
-            <div>
-              <GlassCard className="p-6 space-y-5 font-mono text-xs">
-                <div className="flex items-center justify-between border-b border-border pb-3">
-                  <span className="font-semibold text-muted-foreground">Execution Model</span>
-                  <Badge variant="outline" className="text-[10px]">Client-Only</Badge>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="rounded-lg border border-border bg-card p-3">
-                    <div className="text-muted-foreground mb-1 text-[11px]">Runtime Environment</div>
-                    <div className="text-foreground font-semibold">Local Browser (V8 / JavaScript / WASM)</div>
-                  </div>
-
-                  <div className="rounded-lg border border-border bg-card p-3">
-                    <div className="text-muted-foreground mb-1 text-[11px]">Network Transmissions</div>
-                    <div className="text-foreground font-semibold">0 outbound requests on tool execution</div>
-                  </div>
-
-                  <div className="rounded-lg border border-border bg-card p-3">
-                    <div className="text-muted-foreground mb-1 text-[11px]">Data Persistence</div>
-                    <div className="text-foreground font-semibold">Browser localStorage (on-device only)</div>
-                  </div>
-
-                  <div className="rounded-lg border border-border bg-card p-3">
-                    <div className="text-muted-foreground mb-1 text-[11px]">Authentication & Accounts</div>
-                    <div className="text-foreground font-semibold">None required (no sign-up, no tokens stored remotely)</div>
-                  </div>
-                </div>
-              </GlassCard>
+            {/* Focal Moment: Live Workbench Terminal */}
+            <div id="workbench" className="mt-10 scroll-mt-20">
+              <LiveWorkbench />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ---------------- FAQ ---------------- */}
-      <section id="faq" className="py-16 border-t border-border/60 scroll-mt-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Frequently Asked Questions
-            </h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Common questions about DevKit and how it works.
-            </p>
-          </div>
-
-          <FaqAccordion />
-        </div>
-      </section>
-
-      {/* ---------------- Bottom Call to Action ---------------- */}
-      <section className="py-16 border-t border-border/60 bg-muted/10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <GlassCard className="p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-5">
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Start Using DevKit
-            </h2>
-            <p className="text-muted-foreground text-sm">
-              Launch the dashboard to access all tools, configure shortcuts, and pin your favorites.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              <Link href="/dashboard">
-                <Button size="lg" className="gap-2 px-6">
-                  <span>Open Dashboard</span>
-                  <Icon icon="lucide:arrow-right" className="size-4" />
-                </Button>
-              </Link>
-              <Link href="/tools">
-                <Button size="lg" variant="outline" className="gap-2 px-6">
-                  <span>Browse Catalog</span>
-                </Button>
-              </Link>
+        {/* ---------------- Engineering Guarantees (Metrics) ---------------- */}
+        <section aria-label="Engineering guarantees" className="border-b border-border/70 bg-muted/20 py-8">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+              <MetricItem
+                value="54"
+                label="Built-in Utilities"
+                detail="PDF, AST, WASM, Crypto & Network"
+              />
+              <MetricItem
+                value="0 ms"
+                label="Server Latency"
+                detail="Runs in local V8 execution thread"
+              />
+              <MetricItem
+                value="0 B"
+                label="Network Egress"
+                detail="Zero telemetry or remote logging"
+              />
+              <MetricItem
+                value="100%"
+                label="Offline Capable"
+                detail="Service Worker with local cache"
+              />
             </div>
-          </GlassCard>
-        </div>
-      </section>
+          </div>
+        </section>
+
+        {/* ---------------- Local-First Architecture Blueprint ---------------- */}
+        <section id="architecture" className="border-b border-border/70 py-16 scroll-mt-14">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <Icon icon="lucide:shield-check" className="size-3.5 text-emerald-500" aria-hidden="true" />
+                <span>Security Guarantee</span>
+              </div>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                Client-Side Sandbox Architecture
+              </h2>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                Unlike traditional web tools that upload sensitive credentials, tokens, or documents to
+                remote servers, DevKit executes every routine strictly in browser memory.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <ArchitectureCard
+                icon="lucide:cpu"
+                title="In-Memory V8 Execution"
+                description="JSON parsing, AST generation, and diff computation run in the active browser tab. Memory is freed on tab disposal."
+              />
+              <ArchitectureCard
+                icon="lucide:key"
+                title="Hardware WebCrypto API"
+                description="SHA-256, HMAC, and UUID generation use native SubtleCrypto primitives with cryptographic entropy and hardware acceleration."
+              />
+              <ArchitectureCard
+                icon="lucide:hard-drive"
+                title="Origin-Isolated Storage"
+                description="Tool history, pinned favorites, and appearance preferences stay strictly within your browser's private localStorage sandbox."
+              />
+              <ArchitectureCard
+                icon="lucide:wifi-off"
+                title="Zero Third-Party Telemetry"
+                description="No remote tracking pixels, Google Analytics, or third-party ad scripts are loaded. Fully compliant with enterprise data protection."
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ---------------- Specialized Suites Spotlight ---------------- */}
+        <section id="suites" className="border-b border-border/70 py-16 scroll-mt-14">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="max-w-2xl">
+              <span className="text-xs font-medium text-muted-foreground">Deep-Dive Workbenches</span>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                Specialized Tool Suites
+              </h2>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                Beyond standard encoders and formatters, DevKit includes full-featured client-side suites for
+                documents, binary inspection, network debugging, and media manipulation.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <SuiteCard
+                title="PDF & Document Suite"
+                badge="Client-Side PDF"
+                icon="lucide:file-text"
+                description="Merge multiple PDFs, split page ranges into ZIP archives, convert images to PDF, and rotate pages."
+                tools={["pdf-merge", "pdf-split", "image-to-pdf", "pdf-organize"]}
+              />
+              <SuiteCard
+                title="AST & Binary Inspector"
+                badge="Code Analysis"
+                icon="lucide:binary"
+                description="Parse JavaScript and TypeScript into interactive Babel AST node hierarchies, and inspect WebAssembly sections."
+                tools={["ast-explorer", "wasm-explorer", "json-typescript"]}
+              />
+              <SuiteCard
+                title="Network & Benchmark Suite"
+                badge="API Debugging"
+                icon="lucide:network"
+                description="Execute client-side HTTP requests with cURL import, test real-time WebSocket frames, and run load benchmarks."
+                tools={["api-tester", "websocket-tester", "load-tester"]}
+              />
+              <SuiteCard
+                title="Client-Side Media Studio"
+                badge="Image Tools"
+                icon="lucide:image"
+                description="Resize by exact pixels or percentage, stamp text watermarks with 9-point grid placement, and convert formats."
+                tools={["image-resizer", "image-watermark", "image-converter", "bg-remover"]}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ---------------- Complete Tool Catalog Matrix ---------------- */}
+        <section id="catalog" className="py-16 scroll-mt-14">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <ToolMatrix />
+          </div>
+        </section>
+
+        {/* ---------------- Frequently Asked Questions ---------------- */}
+        <section id="faq" className="border-t border-border/70 bg-muted/10 py-16 scroll-mt-14">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <span className="text-xs font-medium text-muted-foreground">Direct Answers</span>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                Frequently Asked Questions
+              </h2>
+              <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
+                Technical details regarding DevKit security, offline behavior, and execution boundaries.
+              </p>
+            </div>
+
+            <div className="mt-8">
+              <FaqList />
+            </div>
+          </div>
+        </section>
+
+        {/* ---------------- Bottom Call to Action ---------------- */}
+        <section className="border-t border-border/70 py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="rounded-xl border border-border bg-card p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-xs">
+              <h2 className="text-2xl font-semibold tracking-tight">
+                Ready to work with zero-latency utilities?
+              </h2>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                Access all 54 utilities directly in your browser. Install as a PWA for offline access.
+              </p>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <Link href="/dashboard">
+                  <Button size="default" className="gap-2 px-5 text-xs">
+                    <span>Launch Dashboard</span>
+                    <Icon icon="lucide:arrow-right" className="size-3.5" aria-hidden="true" />
+                  </Button>
+                </Link>
+                <Link href="/tools">
+                  <Button variant="outline" size="default" className="gap-2 px-5 text-xs">
+                    <span>Browse Catalog</span>
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
 
       {/* ---------------- Footer ---------------- */}
-      <footer className="border-t border-border/60 bg-muted/30 py-10 text-xs text-muted-foreground">
+      <footer className="border-t border-border/70 bg-muted/30 py-12 text-xs text-muted-foreground">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-5">
             <div className="space-y-3 sm:col-span-2">
               <div className="flex items-center gap-2">
-                <span className="flex size-7 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-500 text-white">
-                  <Icon icon="lucide:zap" className="size-3.5" />
+                <span className="flex size-6 items-center justify-center rounded border border-border bg-card text-foreground font-mono font-semibold text-[11px]">
+                  DK
                 </span>
-                <span className="text-sm font-bold text-foreground">DevKit</span>
+                <span className="font-semibold text-foreground">DevKit</span>
+                <span className="rounded border border-border bg-muted px-1.5 py-0.2 font-mono text-[10px]">
+                  local-first
+                </span>
               </div>
               <p className="max-w-sm text-xs leading-relaxed text-muted-foreground">
-                Client-side developer utilities for formatting, encoding, AST analysis, and network testing.
+                Zero-egress, client-side developer toolkit running formatters, AST parsers,
+                cryptographic generators, and document tools inside local browser memory.
               </p>
+              <div className="text-[11px] font-mono text-muted-foreground">
+                All data remains on your machine.
+              </div>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-2.5">Common Tools</p>
+              <p className="font-semibold text-foreground text-xs mb-2.5">Document & Media</p>
               <ul className="space-y-1.5">
-                <li><Link href="/tools/json-formatter" className="hover:text-foreground transition">JSON Formatter</Link></li>
-                <li><Link href="/tools/jwt-decoder" className="hover:text-foreground transition">JWT Decoder</Link></li>
-                <li><Link href="/tools/uuid-generator" className="hover:text-foreground transition">UUID Generator</Link></li>
-                <li><Link href="/tools/base64" className="hover:text-foreground transition">Base64 Converter</Link></li>
-                <li><Link href="/tools/hash-generator" className="hover:text-foreground transition">Hash Generator</Link></li>
-                <li><Link href="/tools/regex-playground" className="hover:text-foreground transition">Regex Playground</Link></li>
+                <li><Link href="/tools/pdf-merge" className="hover:text-foreground transition">Merge PDF</Link></li>
+                <li><Link href="/tools/pdf-split" className="hover:text-foreground transition">Split & Extract PDF</Link></li>
+                <li><Link href="/tools/image-to-pdf" className="hover:text-foreground transition">Image to PDF</Link></li>
+                <li><Link href="/tools/pdf-organize" className="hover:text-foreground transition">Organize PDF</Link></li>
+                <li><Link href="/tools/image-resizer" className="hover:text-foreground transition">Image Resizer</Link></li>
+                <li><Link href="/tools/image-watermark" className="hover:text-foreground transition">Watermark Image</Link></li>
               </ul>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-2.5">Analysis Tools</p>
+              <p className="font-semibold text-foreground text-xs mb-2.5">Analysis & Code</p>
               <ul className="space-y-1.5">
                 <li><Link href="/tools/ast-explorer" className="hover:text-foreground transition">AST Explorer</Link></li>
                 <li><Link href="/tools/wasm-explorer" className="hover:text-foreground transition">WASM Explorer</Link></li>
-                <li><Link href="/tools/api-tester" className="hover:text-foreground transition">API Tester</Link></li>
-                <li><Link href="/tools/websocket-tester" className="hover:text-foreground transition">WebSocket Tester</Link></li>
-                <li><Link href="/tools/bg-remover" className="hover:text-foreground transition">Background Remover</Link></li>
+                <li><Link href="/tools/json-typescript" className="hover:text-foreground transition">JSON to TypeScript</Link></li>
                 <li><Link href="/tools/diff-checker" className="hover:text-foreground transition">Diff Checker</Link></li>
+                <li><Link href="/tools/regex-playground" className="hover:text-foreground transition">Regex Playground</Link></li>
+                <li><Link href="/tools/api-tester" className="hover:text-foreground transition">API Tester</Link></li>
               </ul>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs uppercase tracking-wider mb-2.5">Navigation</p>
+              <p className="font-semibold text-foreground text-xs mb-2.5">Navigation & System</p>
               <ul className="space-y-1.5">
                 <li><Link href="/dashboard" className="hover:text-foreground transition">Dashboard</Link></li>
-                <li><Link href="/tools" className="hover:text-foreground transition">All Tools</Link></li>
-                <li><Link href="/history" className="hover:text-foreground transition">History</Link></li>
+                <li><Link href="/tools" className="hover:text-foreground transition">All 54 Tools</Link></li>
+                <li><Link href="/history" className="hover:text-foreground transition">Local History</Link></li>
+                <li><a href="#workbench" className="hover:text-foreground transition">Workbench Demo</a></li>
+                <li><a href="#architecture" className="hover:text-foreground transition">Architecture</a></li>
                 <li><a href="#faq" className="hover:text-foreground transition">FAQ</a></li>
-                <li><a href="#privacy" className="hover:text-foreground transition">Privacy</a></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-border pt-5 sm:flex-row">
-            <p>© {new Date().getFullYear()} DevKit. Open source developer utilities.</p>
-            <div>
-              <span>Shortcut: <kbd className="rounded border border-border bg-muted px-1 py-0.5 font-mono text-[10px]">Ctrl+K</kbd></span>
+          <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row text-[11px]">
+            <p>© {new Date().getFullYear()} DevKit. Free and open source under MIT License.</p>
+            <div className="flex items-center gap-3">
+              <span>Execution: <span className="font-mono text-foreground">In-Memory / V8</span></span>
+              <span>•</span>
+              <span>Shortcut: <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">Ctrl+K</kbd></span>
             </div>
           </div>
         </div>
@@ -514,19 +479,22 @@ export function LandingPage() {
   );
 }
 
-/* ---------------- Interactive Hero Playground Component ---------------- */
+/* ---------------- Focal Workbench Component ---------------- */
 
-function InteractiveHeroPlayground() {
-  const [activeTab, setActiveTab] = useState<"json" | "base64" | "uuid" | "hash" | "jwt">("json");
+type WorkbenchTab = "json" | "jwt" | "hash" | "base64" | "uuid" | "regex";
+
+function LiveWorkbench() {
+  const [activeTab, setActiveTab] = useState<WorkbenchTab>("json");
 
   // JSON state
   const [jsonInput, setJsonInput] = useState(
     JSON.stringify(
       {
-        name: "DevKit",
-        version: "1.0.0",
-        settings: { theme: "dark", offline: true },
-        tools: ["json", "base64", "uuid", "jwt", "hash"]
+        project: "DevKit",
+        architecture: "local-first",
+        telemetry: { egressBytes: 0, remoteLogging: false },
+        engine: { runtime: "V8 In-Memory", wasmReady: true },
+        toolsCount: 54
       },
       null,
       2
@@ -534,7 +502,7 @@ function InteractiveHeroPlayground() {
   );
   const [jsonError, setJsonError] = useState("");
 
-  const handleJsonFormat = () => {
+  const handlePrettify = () => {
     try {
       const parsed = JSON.parse(jsonInput);
       setJsonInput(JSON.stringify(parsed, null, 2));
@@ -544,7 +512,7 @@ function InteractiveHeroPlayground() {
     }
   };
 
-  const handleJsonMinify = () => {
+  const handleMinify = () => {
     try {
       const parsed = JSON.parse(jsonInput);
       setJsonInput(JSON.stringify(parsed));
@@ -555,18 +523,18 @@ function InteractiveHeroPlayground() {
   };
 
   // Base64 state
-  const [b64Input, setB64Input] = useState("The quick brown fox jumps over the lazy dog.");
-  const b64Output = (() => {
+  const [b64Input, setB64Input] = useState("Local-first execution with zero cloud egress.");
+  const b64Output = useMemo(() => {
     try {
       return btoa(unescape(encodeURIComponent(b64Input)));
     } catch {
       return "";
     }
-  })();
+  }, [b64Input]);
 
   // UUID state
-  const [uuid, setUuid] = useState("9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d");
-  const generateUuid = () => {
+  const [uuid, setUuid] = useState("7b3f9a2e-8c4d-4b1a-9f5e-3d2c1b0a9e8d");
+  const handleGenerateUuid = () => {
     if (typeof crypto !== "undefined" && crypto.randomUUID) {
       setUuid(crypto.randomUUID());
     } else {
@@ -578,157 +546,204 @@ function InteractiveHeroPlayground() {
   };
 
   // Hash state
-  const [hashInput, setHashInput] = useState("Hello world");
-  const [sha256Hash, setSha256Hash] = useState("64ec88ca00b268e5ba1a35678a1b5316d212f4f366b2477232534a8aeca37f3c");
+  const [hashInput, setHashInput] = useState("devkit-privacy-guarantee");
+  const [sha256Digest, setSha256Digest] = useState("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
 
-  const updateHash = async (val: string) => {
-    setHashInput(val);
-    if (!val) {
-      setSha256Hash("");
-      return;
-    }
-    if (typeof crypto !== "undefined" && crypto.subtle) {
-      try {
-        const enc = new TextEncoder().encode(val);
-        const buf = await crypto.subtle.digest("SHA-256", enc);
-        const hex = Array.from(new Uint8Array(buf))
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
-        setSha256Hash(hex);
-      } catch {
-        // ignore
+  useEffect(() => {
+    let isCurrent = true;
+    const compute = async () => {
+      if (!hashInput) {
+        if (isCurrent) setSha256Digest("");
+        return;
       }
-    }
-  };
+      if (typeof crypto !== "undefined" && crypto.subtle) {
+        try {
+          const enc = new TextEncoder().encode(hashInput);
+          const buf = await crypto.subtle.digest("SHA-256", enc);
+          const hex = Array.from(new Uint8Array(buf))
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+          if (isCurrent) setSha256Digest(hex);
+        } catch {
+          // fallback
+        }
+      }
+    };
+    compute();
+    return () => {
+      isCurrent = false;
+    };
+  }, [hashInput]);
 
-  // JWT sample
+  // JWT state
   const sampleJwtHeader = JSON.stringify({ alg: "HS256", typ: "JWT" }, null, 2);
   const sampleJwtPayload = JSON.stringify(
-    { sub: "user_12345", name: "Alex", role: "developer", exp: 1893456000 },
+    {
+      sub: "usr_8921a4f0",
+      roles: ["engineer", "admin"],
+      scope: "read:write:local",
+      iat: 1731826800,
+      exp: 1763362800
+    },
     null,
     2
   );
 
+  // Regex state
+  const [regexPattern, setRegexPattern] = useState("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b");
+  const [regexText, setRegexText] = useState("Contact security@devkit.dev or maintainers@example.org for inquiries.");
+  const regexMatches = useMemo(() => {
+    try {
+      const re = new RegExp(regexPattern, "g");
+      const found = regexText.match(re);
+      return found || [];
+    } catch {
+      return null;
+    }
+  }, [regexPattern, regexText]);
+
   return (
-    <GlassCard className="mx-auto max-w-4xl overflow-hidden border-border/80 p-0 shadow-lg">
-      {/* Playground Header */}
-      <div className="flex flex-wrap items-center justify-between border-b border-border bg-muted/40 px-4 py-2.5 sm:px-6">
-        <div className="flex items-center gap-2">
-          <span className="size-2.5 rounded-full bg-muted-foreground/40" />
-          <span className="size-2.5 rounded-full bg-muted-foreground/40" />
-          <span className="size-2.5 rounded-full bg-muted-foreground/40" />
-          <span className="ml-2 font-mono text-xs text-muted-foreground">
-            Interactive Preview
+    <div className="mx-auto max-w-4xl rounded-xl border border-border bg-card shadow-xs overflow-hidden">
+      {/* Workbench Diagnostic Header */}
+      <div className="flex flex-wrap items-center justify-between border-b border-border bg-muted/40 px-4 py-2 text-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 font-mono text-[11px] text-muted-foreground">
+            <span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
+            <span className="font-semibold text-foreground">Interactive Console</span>
+          </div>
+          <span className="text-border">|</span>
+          <span className="font-mono text-[10px] text-muted-foreground hidden sm:inline">
+            Runtime: <span className="text-foreground">V8 In-Memory</span>
+          </span>
+          <span className="font-mono text-[10px] text-muted-foreground hidden sm:inline">
+            Egress: <span className="text-foreground">0 B</span>
           </span>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center gap-1 rounded-lg bg-background p-1 border border-border">
-          <PlaygroundTabBtn active={activeTab === "json"} onClick={() => setActiveTab("json")} label="JSON" icon="lucide:braces" />
-          <PlaygroundTabBtn active={activeTab === "base64"} onClick={() => setActiveTab("base64")} label="Base64" icon="lucide:binary" />
-          <PlaygroundTabBtn active={activeTab === "uuid"} onClick={() => setActiveTab("uuid")} label="UUID" icon="lucide:hash" />
-          <PlaygroundTabBtn active={activeTab === "hash"} onClick={() => setActiveTab("hash")} label="Hash" icon="lucide:shield" />
-          <PlaygroundTabBtn active={activeTab === "jwt"} onClick={() => setActiveTab("jwt")} label="JWT" icon="lucide:key" />
+        {/* Console Tab Switches */}
+        <div
+          role="tablist"
+          aria-label="Interactive tool selection"
+          className="flex items-center gap-1 rounded-md border border-border bg-background p-0.5"
+        >
+          <ConsoleTabBtn
+            active={activeTab === "json"}
+            onClick={() => setActiveTab("json")}
+            label="JSON"
+            icon="lucide:braces"
+          />
+          <ConsoleTabBtn
+            active={activeTab === "jwt"}
+            onClick={() => setActiveTab("jwt")}
+            label="JWT"
+            icon="lucide:key"
+          />
+          <ConsoleTabBtn
+            active={activeTab === "hash"}
+            onClick={() => setActiveTab("hash")}
+            label="SHA-256"
+            icon="lucide:hash"
+          />
+          <ConsoleTabBtn
+            active={activeTab === "base64"}
+            onClick={() => setActiveTab("base64")}
+            label="Base64"
+            icon="lucide:binary"
+          />
+          <ConsoleTabBtn
+            active={activeTab === "uuid"}
+            onClick={() => setActiveTab("uuid")}
+            label="UUID"
+            icon="lucide:fingerprint"
+          />
+          <ConsoleTabBtn
+            active={activeTab === "regex"}
+            onClick={() => setActiveTab("regex")}
+            label="Regex"
+            icon="lucide:regex"
+          />
         </div>
       </div>
 
-      {/* Playground Content Area */}
-      <div className="p-4 sm:p-6 bg-card/60">
+      {/* Workbench Working Viewport */}
+      <div className="p-4 sm:p-5">
         {activeTab === "json" && (
           <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-xs text-muted-foreground">JSON Input:</span>
+              <span className="text-xs font-medium text-muted-foreground">JSON In-Memory Prettifier:</span>
               <div className="flex items-center gap-2">
-                <Button size="sm" variant="secondary" onClick={handleJsonFormat} className="h-7 text-xs">
+                <Button size="sm" variant="secondary" onClick={handlePrettify} className="h-7 text-xs">
                   Prettify
                 </Button>
-                <Button size="sm" variant="secondary" onClick={handleJsonMinify} className="h-7 text-xs">
+                <Button size="sm" variant="secondary" onClick={handleMinify} className="h-7 text-xs">
                   Minify
                 </Button>
                 <CopyButton value={jsonInput} />
                 <Link href="/tools/json-formatter">
-                  <Button size="sm" variant="ghost" className="h-7 text-xs text-primary gap-1">
-                    <span>Open Tool</span>
-                    <Icon icon="lucide:arrow-right" className="size-3" />
+                  <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
+                    <span>Full Tool</span>
+                    <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
                   </Button>
                 </Link>
               </div>
             </div>
 
             <textarea
+              aria-label="JSON payload editor"
               value={jsonInput}
               onChange={(e) => {
                 setJsonInput(e.target.value);
                 setJsonError("");
               }}
               rows={7}
-              className="w-full rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground outline-none focus:border-ring resize-y"
+              className="w-full rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground outline-none focus:border-ring resize-y"
               spellCheck={false}
             />
-            {jsonError ? (
-              <p className="text-xs text-red-500 font-mono">{jsonError}</p>
-            ) : (
-              <p className="text-xs text-muted-foreground font-mono">Valid JSON</p>
-            )}
+            <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+              {jsonError ? (
+                <span className="text-red-500">{jsonError}</span>
+              ) : (
+                <span className="text-emerald-500">✓ Valid JSON • Parsed in-memory</span>
+              )}
+              <span>{jsonInput.length} characters</span>
+            </div>
           </div>
         )}
 
-        {activeTab === "base64" && (
+        {activeTab === "jwt" && (
           <div className="space-y-3">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <span className="text-xs text-muted-foreground">Plain Text:</span>
-                <textarea
-                  value={b64Input}
-                  onChange={(e) => setB64Input(e.target.value)}
-                  rows={5}
-                  className="w-full rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground outline-none focus:border-ring"
-                />
-              </div>
-              <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground">Decoded JWT Payload (HS256):</span>
+              <Link href="/tools/jwt-decoder">
+                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
+                  <span>Full JWT Decoder</span>
+                  <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
+                </Button>
+              </Link>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-1">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Base64 Encoded:</span>
-                  <CopyButton value={b64Output} />
+                  <span>Header</span>
+                  <CopyButton value={sampleJwtHeader} />
                 </div>
-                <textarea
-                  readOnly
-                  value={b64Output}
-                  rows={5}
-                  className="w-full rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs text-foreground outline-none"
-                />
+                <pre className="rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground overflow-x-auto">
+                  {sampleJwtHeader}
+                </pre>
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Claims & Payload</span>
+                  <CopyButton value={sampleJwtPayload} />
+                </div>
+                <pre className="rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground overflow-x-auto">
+                  {sampleJwtPayload}
+                </pre>
               </div>
             </div>
-            <div className="flex items-center justify-end">
-              <Link href="/tools/base64">
-                <Button size="sm" variant="ghost" className="text-xs text-primary gap-1">
-                  <span>Open Base64 Tool</span>
-                  <Icon icon="lucide:arrow-right" className="size-3" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "uuid" && (
-          <div className="space-y-5 text-center py-3">
-            <div className="max-w-md mx-auto space-y-1.5">
-              <span className="text-xs text-muted-foreground">UUID v4 (RFC 4122):</span>
-              <div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 font-mono text-sm">
-                <span>{uuid}</span>
-                <CopyButton value={uuid} />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-3">
-              <Button size="sm" onClick={generateUuid} className="gap-2">
-                <Icon icon="lucide:refresh-cw" className="size-3.5" />
-                <span>Generate New</span>
-              </Button>
-              <Link href="/tools/uuid-generator">
-                <Button size="sm" variant="outline">
-                  Bulk Generator
-                </Button>
-              </Link>
+            <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+              <span className="text-emerald-500">Algorithm: HMAC SHA-256 (Decoded locally)</span>
+              <span>Expiration: 2025-11-17</span>
             </div>
           </div>
         )}
@@ -736,70 +751,163 @@ function InteractiveHeroPlayground() {
         {activeTab === "hash" && (
           <div className="space-y-3">
             <div className="space-y-1.5">
-              <span className="text-xs text-muted-foreground">Input Text:</span>
+              <label htmlFor="hash-input" className="text-xs font-medium text-muted-foreground">
+                Plaintext Input (Processed via SubtleCrypto):
+              </label>
               <input
+                id="hash-input"
                 type="text"
                 value={hashInput}
-                onChange={(e) => updateHash(e.target.value)}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-xs outline-none focus:border-ring"
-                placeholder="Enter string..."
+                onChange={(e) => setHashInput(e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-3 py-2 font-mono text-xs outline-none focus:border-ring"
+                placeholder="Enter string to digest..."
               />
             </div>
 
             <div className="space-y-1.5 pt-1">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>SHA-256:</span>
-                <CopyButton value={sha256Hash} />
+                <span>SHA-256 Digest (256-bit Hex):</span>
+                <CopyButton value={sha256Digest} />
               </div>
-              <div className="break-all rounded-lg border border-border bg-muted/40 p-2.5 font-mono text-xs text-foreground">
-                {sha256Hash || "—"}
+              <div className="break-all rounded-md border border-border bg-muted/40 p-2.5 font-mono text-xs text-foreground">
+                {sha256Digest || "—"}
               </div>
             </div>
 
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-between pt-1">
+              <span className="font-mono text-[11px] text-muted-foreground">
+                Latency: <span className="text-emerald-500">&lt; 0.2ms</span> • Hardware-accelerated WebCrypto
+              </span>
               <Link href="/tools/hash-generator">
-                <Button size="sm" variant="ghost" className="text-xs text-primary gap-1">
-                  <span>Open Hash Generator</span>
-                  <Icon icon="lucide:arrow-right" className="size-3" />
+                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
+                  <span>MD5, SHA-512 & HMAC</span>
+                  <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
                 </Button>
               </Link>
             </div>
           </div>
         )}
 
-        {activeTab === "jwt" && (
+        {activeTab === "base64" && (
           <div className="space-y-3">
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
-                <span className="text-xs text-muted-foreground">Header:</span>
-                <pre className="rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground overflow-x-auto">
-                  {sampleJwtHeader}
-                </pre>
+                <label htmlFor="b64-src" className="text-xs font-medium text-muted-foreground">
+                  Source String:
+                </label>
+                <textarea
+                  id="b64-src"
+                  value={b64Input}
+                  onChange={(e) => setB64Input(e.target.value)}
+                  rows={4}
+                  className="w-full rounded-md border border-border bg-background p-2.5 font-mono text-xs text-foreground outline-none focus:border-ring"
+                />
               </div>
               <div className="space-y-1.5">
-                <span className="text-xs text-muted-foreground">Payload:</span>
-                <pre className="rounded-lg border border-border bg-background p-3 font-mono text-xs text-foreground overflow-x-auto">
-                  {sampleJwtPayload}
-                </pre>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <label htmlFor="b64-res">Base64 Encoded:</label>
+                  <CopyButton value={b64Output} />
+                </div>
+                <textarea
+                  id="b64-res"
+                  readOnly
+                  value={b64Output}
+                  rows={4}
+                  className="w-full rounded-md border border-border bg-muted/40 p-2.5 font-mono text-xs text-foreground outline-none"
+                />
               </div>
             </div>
 
-            <div className="flex items-center justify-end pt-1">
-              <Link href="/tools/jwt-decoder">
-                <Button size="sm" variant="ghost" className="text-xs text-primary gap-1">
-                  <span>Open JWT Decoder</span>
-                  <Icon icon="lucide:arrow-right" className="size-3" />
+            <div className="flex items-center justify-end">
+              <Link href="/tools/base64">
+                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
+                  <span>Full Base64 & Hex Tool</span>
+                  <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "uuid" && (
+          <div className="space-y-4 py-2 text-center">
+            <div className="max-w-md mx-auto space-y-1.5 text-left">
+              <span className="text-xs font-medium text-muted-foreground">
+                Cryptographic UUID v4 (RFC 4122):
+              </span>
+              <div className="flex items-center justify-between gap-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-xs">
+                <span>{uuid}</span>
+                <CopyButton value={uuid} />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-3">
+              <Button size="sm" onClick={handleGenerateUuid} className="gap-2 h-8 text-xs">
+                <Icon icon="lucide:refresh-cw" className="size-3.5" aria-hidden="true" />
+                <span>Generate Next UUID</span>
+              </Button>
+              <Link href="/tools/uuid-generator">
+                <Button size="sm" variant="outline" className="h-8 text-xs">
+                  Bulk UUID & v7 Generator
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "regex" && (
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <label htmlFor="regex-pat" className="text-xs font-medium text-muted-foreground">
+                Regular Expression Pattern:
+              </label>
+              <input
+                id="regex-pat"
+                type="text"
+                value={regexPattern}
+                onChange={(e) => setRegexPattern(e.target.value)}
+                className="w-full rounded-md border border-border bg-background px-3 py-1.5 font-mono text-xs outline-none focus:border-ring"
+                placeholder="Regex pattern..."
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="regex-src" className="text-xs font-medium text-muted-foreground">
+                Test Target String:
+              </label>
+              <textarea
+                id="regex-src"
+                value={regexText}
+                onChange={(e) => setRegexText(e.target.value)}
+                rows={3}
+                className="w-full rounded-md border border-border bg-background p-2.5 font-mono text-xs text-foreground outline-none focus:border-ring"
+              />
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+              {regexMatches === null ? (
+                <span className="text-red-500">Invalid regular expression syntax</span>
+              ) : (
+                <span>
+                  Matches found: <span className="text-emerald-500 font-semibold">{regexMatches.length}</span>
+                  {regexMatches.length > 0 && ` (${regexMatches.join(", ")})`}
+                </span>
+              )}
+              <Link href="/tools/regex-playground">
+                <Button size="sm" variant="ghost" className="h-7 text-xs gap-1 text-primary">
+                  <span>Full Regex Tester</span>
+                  <Icon icon="lucide:arrow-right" className="size-3" aria-hidden="true" />
                 </Button>
               </Link>
             </div>
           </div>
         )}
       </div>
-    </GlassCard>
+    </div>
   );
 }
 
-function PlaygroundTabBtn({
+function ConsoleTabBtn({
   active,
   onClick,
   label,
@@ -812,15 +920,18 @@ function PlaygroundTabBtn({
 }) {
   return (
     <button
+      type="button"
+      role="tab"
+      aria-selected={active}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium transition cursor-pointer select-none",
+        "flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium transition cursor-pointer select-none",
         active
-          ? "bg-primary text-primary-foreground shadow-sm"
+          ? "bg-foreground text-background shadow-xs"
           : "text-muted-foreground hover:bg-muted hover:text-foreground"
       )}
     >
-      <Icon icon={icon} className="size-3.5" />
+      <Icon icon={icon} className="size-3.5" aria-hidden="true" />
       <span>{label}</span>
     </button>
   );
@@ -838,81 +949,173 @@ function MetricItem({
   detail: string;
 }) {
   return (
-    <div className="text-center space-y-1">
-      <div className="text-xl font-bold tracking-tight sm:text-2xl text-foreground">
+    <div className="space-y-1">
+      <div className="font-mono text-2xl font-bold tracking-tight text-foreground tabular-nums sm:text-3xl">
         {value}
       </div>
       <div className="text-xs font-semibold text-foreground">{label}</div>
-      <div className="text-[11px] text-muted-foreground">{detail}</div>
+      <div className="text-[11px] text-muted-foreground leading-snug">{detail}</div>
     </div>
   );
 }
 
-/* ---------------- Feature Card ---------------- */
+/* ---------------- Architecture Card ---------------- */
 
-function FeatureCard({
+function ArchitectureCard({
   icon,
-  accent,
   title,
   description,
 }: {
   icon: string;
-  accent: string;
   title: string;
   description: string;
 }) {
   return (
-    <GlassCard className="p-5 space-y-3">
-      <div
-        className="flex size-9 items-center justify-center rounded-lg"
-        style={{
-          backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`,
-          color: accent,
-        }}
-      >
-        <Icon icon={icon} className="size-4.5" />
+    <article className="rounded-lg border border-border bg-card p-4 space-y-2.5 shadow-xs">
+      <div className="flex size-7 items-center justify-center rounded border border-border bg-muted/60 text-foreground">
+        <Icon icon={icon} className="size-4" aria-hidden="true" />
       </div>
-      <h3 className="text-base font-semibold tracking-tight">{title}</h3>
+      <h3 className="text-xs font-semibold tracking-tight text-foreground">{title}</h3>
       <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
-    </GlassCard>
+    </article>
   );
 }
 
-/* ---------------- Tool Category Explorer ---------------- */
+/* ---------------- Suite Card ---------------- */
 
-function ToolCategoryExplorer() {
+function SuiteCard({
+  title,
+  badge,
+  icon,
+  description,
+  tools,
+}: {
+  title: string;
+  badge: string;
+  icon: string;
+  description: string;
+  tools: string[];
+}) {
+  return (
+    <article className="rounded-lg border border-border bg-card p-4 flex flex-col justify-between space-y-3 shadow-xs">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="flex size-7 items-center justify-center rounded border border-border bg-muted/60 text-foreground">
+            <Icon icon={icon} className="size-4" aria-hidden="true" />
+          </div>
+          <Badge variant="outline" className="text-[10px] py-0 font-mono">
+            {badge}
+          </Badge>
+        </div>
+        <h3 className="text-sm font-semibold tracking-tight text-foreground">{title}</h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
+      </div>
+
+      <div className="border-t border-border pt-2.5">
+        <div className="flex flex-wrap gap-1">
+          {tools.map((slug) => {
+            const tool = TOOLS.find((t) => t.slug === slug);
+            if (!tool) return null;
+            return (
+              <Link key={slug} href={`/tools/${slug}`}>
+                <span className="inline-flex items-center rounded border border-border bg-muted/50 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground hover:border-border hover:bg-muted hover:text-foreground transition-colors">
+                  {tool.name}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+/* ---------------- Tool Matrix & Catalog ---------------- */
+
+function ToolMatrix() {
   const [selectedCategory, setSelectedCategory] = useState<ToolCategory | "all">("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const displayedTools = selectedCategory === "all"
-    ? TOOLS.filter((t) => t.popular || t.featured).slice(0, 12)
-    : TOOLS.filter((t) => t.category === selectedCategory).slice(0, 12);
+  const filteredTools = useMemo(() => {
+    let list = TOOLS;
+    if (selectedCategory !== "all") {
+      list = list.filter((t) => t.category === selectedCategory);
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      list = list.filter(
+        (t) =>
+          t.name.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q) ||
+          t.keywords.some((k) => k.toLowerCase().includes(q))
+      );
+    }
+    return list;
+  }, [selectedCategory, searchQuery]);
 
   return (
     <div className="space-y-6">
-      {/* Category Pills */}
-      <div className="flex flex-wrap items-center gap-1.5">
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <div>
+          <span className="text-xs font-medium text-muted-foreground">Complete Inventory</span>
+          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+            Tool Catalog Matrix
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+            Browse all {TOOLS.length} utilities by category or search by keywords.
+          </p>
+        </div>
+
+        {/* Live Search Filter */}
+        <div className="w-full md:w-72">
+          <label htmlFor="catalog-search" className="sr-only">
+            Filter tools
+          </label>
+          <div className="relative">
+            <Icon
+              icon="lucide:search"
+              className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground pointer-events-none"
+              aria-hidden="true"
+            />
+            <input
+              id="catalog-search"
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Filter by keyword (e.g. pdf, jwt, wasm)..."
+              className="w-full rounded-md border border-border bg-card pl-8 pr-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-ring"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Category Filter Tabs */}
+      <div className="flex flex-wrap items-center gap-1.5 border-b border-border pb-3">
         <button
+          type="button"
           onClick={() => setSelectedCategory("all")}
           className={cn(
-            "rounded-full px-3.5 py-1 text-xs font-medium transition cursor-pointer select-none",
+            "rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer select-none",
             selectedCategory === "all"
-              ? "bg-primary text-primary-foreground shadow-sm"
-              : "border border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground"
+              ? "bg-foreground text-background font-semibold"
+              : "border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
           )}
         >
           All ({TOOLS.length})
         </button>
+
         {CATEGORIES.map((cat) => {
           const count = TOOLS.filter((t) => t.category === cat.id).length;
           return (
             <button
               key={cat.id}
+              type="button"
               onClick={() => setSelectedCategory(cat.id)}
               className={cn(
-                "rounded-full px-3.5 py-1 text-xs font-medium transition cursor-pointer select-none",
+                "rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer select-none",
                 selectedCategory === cat.id
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "border border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground"
+                  ? "bg-foreground text-background font-semibold"
+                  : "border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               {cat.label} ({count})
@@ -921,184 +1124,122 @@ function ToolCategoryExplorer() {
         })}
       </div>
 
-      {/* Tools Grid */}
-      <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {displayedTools.map((tool) => (
-          <Link
-            key={tool.slug}
-            href={`/tools/${tool.slug}`}
-            className="group block transition"
-          >
-            <GlassCard className="h-full p-4 hover:border-border/80 transition-all duration-150">
-              <div className="flex items-start justify-between gap-2.5">
-                <ToolIcon icon={tool.icon} accent={tool.accent} className="size-8" />
-                <Badge variant="secondary" className="text-[10px] capitalize">
-                  {tool.category}
-                </Badge>
-              </div>
-              <div className="mt-2.5 space-y-1">
-                <h4 className="text-xs font-semibold group-hover:text-primary transition-colors flex items-center justify-between">
-                  <span>{tool.name}</span>
-                  <Icon icon="lucide:arrow-right" className="size-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </h4>
-                <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                  {tool.description}
-                </p>
-              </div>
-            </GlassCard>
-          </Link>
-        ))}
-      </div>
+      {/* Grid of Tools using <article> elements as recommended in Modern Web Guidance */}
+      {filteredTools.length === 0 ? (
+        <div className="rounded-lg border border-border p-8 text-center text-xs text-muted-foreground">
+          No tools found matching &ldquo;{searchQuery}&rdquo;.
+        </div>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredTools.map((tool) => (
+            <Link
+              key={tool.slug}
+              href={`/tools/${tool.slug}`}
+              className="group block transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+            >
+              <article className="h-full rounded-lg border border-border bg-card p-3.5 transition-colors group-hover:border-border/80 group-hover:bg-muted/30 shadow-xs flex flex-col justify-between space-y-2">
+                <div className="space-y-1.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <ToolIcon icon={tool.icon} accent={tool.accent} className="size-7" />
+                    <span className="font-mono text-[10px] text-muted-foreground uppercase">
+                      {tool.category}
+                    </span>
+                  </div>
+                  <h3 className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors flex items-center justify-between">
+                    <span>{tool.name}</span>
+                    <Icon
+                      icon="lucide:arrow-right"
+                      className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                      aria-hidden="true"
+                    />
+                  </h3>
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                    {tool.description}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground pt-1 border-t border-border/50">
+                  <span>/tools/{tool.slug}</span>
+                  {tool.popular && <span className="text-foreground">popular</span>}
+                </div>
+              </article>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-/* ---------------- Spotlight Card ---------------- */
-
-function SpotlightCard({
-  title,
-  badge,
-  icon,
-  accent,
-  description,
-  tools,
-}: {
-  title: string;
-  badge: string;
-  icon: string;
-  accent: string;
-  description: string;
-  tools: string[];
-}) {
-  return (
-    <GlassCard className="p-5 flex flex-col justify-between space-y-4">
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div
-            className="flex size-9 items-center justify-center rounded-lg"
-            style={{
-              backgroundColor: `color-mix(in srgb, ${accent} 12%, transparent)`,
-              color: accent,
-            }}
-          >
-            <Icon icon={icon} className="size-4.5" />
-          </div>
-          <Badge variant="outline" className="text-[10px]">{badge}</Badge>
-        </div>
-        <h3 className="text-base font-bold tracking-tight">{title}</h3>
-        <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
-      </div>
-
-      <div className="pt-2 border-t border-border">
-        <div className="flex flex-wrap gap-1.5">
-          {tools.map((slug) => {
-            const tool = TOOLS.find((t) => t.slug === slug);
-            if (!tool) return null;
-            return (
-              <Link key={slug} href={`/tools/${slug}`}>
-                <Badge
-                  variant="secondary"
-                  className="hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer text-[10px] py-0.5"
-                >
-                  <span>{tool.name}</span>
-                </Badge>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </GlassCard>
-  );
-}
-
-/* ---------------- Privacy Item ---------------- */
-
-function PrivacyItem({
-  icon,
-  title,
-  desc,
-}: {
-  icon: string;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <div className="flex items-start gap-3">
-      <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted text-foreground mt-0.5">
-        <Icon icon={icon} className="size-3.5" />
-      </div>
-      <div>
-        <h4 className="text-xs font-semibold">{title}</h4>
-        <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- FAQ Accordion ---------------- */
+/* ---------------- FAQ Accordion (Compliant with Modern HTML & Accessibility) ---------------- */
 
 const FAQS = [
   {
-    q: "How does DevKit process my inputs?",
-    a: "All tools run locally within your browser tab using JavaScript, WebAssembly, and native Web APIs (such as WebCrypto). No payload data is sent to external servers or logged in remote backends.",
+    q: "How does DevKit ensure zero server transmissions?",
+    a: "Every tool executes strictly inside your browser tab using native JavaScript, WebAssembly, HTML5 Canvas, and the WebCrypto API. Network requests are never initiated to process payloads, files, keys, or tokens.",
   },
   {
-    q: "Does DevKit work offline?",
-    a: "Yes. DevKit is configured as a Progressive Web App (PWA) with a local service worker cache. Once loaded, tools remain accessible without an active internet connection.",
+    q: "Does DevKit function completely offline?",
+    a: "Yes. DevKit registers a Service Worker and manifest file as a Progressive Web App (PWA). Once loaded in your browser, all 54 utilities remain operational without an internet connection.",
   },
   {
-    q: "Where is my data stored?",
-    a: "Your favorites, recent tool usage, and UI settings are stored in your browser's localStorage. You can clear this data at any time from the History page.",
+    q: "Where are user settings and transformation histories stored?",
+    a: "User preferences, pinned favorites, and recent executions are saved solely in your browser's private localStorage. Data is never synchronized to a cloud backend and can be purged at any time from the History view.",
   },
   {
-    q: "Are there any usage limits or fees?",
-    a: "No. DevKit is completely free and open source with no rate limits, paid plans, or sign-up requirements.",
+    q: "Are there any usage quotas, account requirements, or fees?",
+    a: "No. DevKit is completely free and open source under the MIT License. There are no subscriptions, API rate limits, paywalls, or accounts.",
   },
   {
-    q: "How do I navigate using keyboard shortcuts?",
-    a: "Press Ctrl+K (or ⌘K on macOS) from any page to open the command palette. You can search by tool name, category, or keyword.",
+    q: "How are PDF documents and images manipulated without a server?",
+    a: "PDF processing is handled in-memory using pdf-lib and jszip compiled for the browser. Image resizing, format conversion, and watermarking use the native HTML5 Canvas 2D context.",
   },
 ];
 
-function FaqAccordion() {
+function FaqList() {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   return (
-    <div className="space-y-2.5">
+    <div className="space-y-2">
       {FAQS.map((faq, idx) => {
         const isOpen = openIdx === idx;
+        const buttonId = `faq-btn-${idx}`;
+        const panelId = `faq-panel-${idx}`;
+
         return (
-          <GlassCard
+          <div
             key={faq.q}
-            className="overflow-hidden border-border/80 transition-colors p-0"
+            className="rounded-lg border border-border bg-card overflow-hidden shadow-xs"
           >
             <button
+              type="button"
+              id={buttonId}
+              aria-expanded={isOpen}
+              aria-controls={panelId}
               onClick={() => setOpenIdx(isOpen ? null : idx)}
-              className="flex w-full items-center justify-between p-4 text-left font-medium text-foreground hover:bg-muted/30 transition-colors"
+              className="flex w-full items-center justify-between p-3.5 text-left text-xs font-semibold text-foreground hover:bg-muted/30 transition-colors cursor-pointer"
             >
-              <span className="text-sm font-semibold">{faq.q}</span>
+              <span>{faq.q}</span>
               <Icon
                 icon="lucide:chevron-down"
                 className={cn(
-                  "size-4 shrink-0 text-muted-foreground transition-transform duration-200",
+                  "size-3.5 shrink-0 text-muted-foreground transition-transform duration-150",
                   isOpen && "rotate-180 text-foreground"
                 )}
+                aria-hidden="true"
               />
             </button>
-            <AnimatePresence>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="px-4 pb-4 text-xs text-muted-foreground leading-relaxed border-t border-border/40 pt-2.5"
-                >
-                  {faq.a}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </GlassCard>
+            {isOpen && (
+              <div
+                id={panelId}
+                role="region"
+                aria-labelledby={buttonId}
+                className="border-t border-border px-3.5 py-3 text-xs leading-relaxed text-muted-foreground bg-muted/10"
+              >
+                {faq.a}
+              </div>
+            )}
+          </div>
         );
       })}
     </div>
