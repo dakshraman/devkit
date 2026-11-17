@@ -51,15 +51,49 @@ function ToolsIndexContent() {
       </Reveal>
 
       <Reveal delay={0.05}>
-        <div className="grid gap-4 lg:grid-cols-[1fr_220px]">
-          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search tools..." />
-          <Select value={categoryParam} onValueChange={(value) => router.push(value === "all" ? "/tools" : `/tools?category=${value}`)}>
-            <SelectTrigger><SelectValue placeholder="All categories" /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All categories</SelectItem>
-              {CATEGORIES.map((category) => <SelectItem key={category.id} value={category.id}>{category.label}</SelectItem>)}
-            </SelectContent>
-          </Select>
+        <div className="space-y-3">
+          <div className="grid gap-4 lg:grid-cols-[1fr_220px]">
+            <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search tools..." />
+            <Select value={categoryParam} onValueChange={(value) => router.push(value === "all" ? "/tools" : `/tools?category=${value}`)}>
+              <SelectTrigger><SelectValue placeholder="All categories" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All categories</SelectItem>
+                {CATEGORIES.map((category) => <SelectItem key={category.id} value={category.id}>{category.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Crawlable Category Anchor Links for Search Engine Discovery */}
+          <nav aria-label="Tool Categories" className="flex flex-wrap items-center gap-1.5 pt-1">
+            <Link
+              href="/tools"
+              className={cn(
+                "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+                categoryParam === "all"
+                  ? "bg-primary text-primary-foreground font-semibold"
+                  : "border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              All ({TOOLS.length})
+            </Link>
+            {CATEGORIES.map((cat) => {
+              const count = TOOLS.filter((t) => t.category === cat.id).length;
+              return (
+                <Link
+                  key={cat.id}
+                  href={`/tools?category=${cat.id}`}
+                  className={cn(
+                    "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+                    categoryParam === cat.id
+                      ? "bg-primary text-primary-foreground font-semibold"
+                      : "border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  {cat.label} ({count})
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </Reveal>
 
