@@ -20,10 +20,19 @@ export async function generateMetadata({
     return { title: "Tool Not Found" };
   }
   return buildMetadata({
-    title: tool.name,
-    description: tool.description,
+    title: `${tool.name} — Free Client-Side Developer Tool`,
+    description: `${tool.description} Fast, secure, and runs 100% in your browser with zero server uploads.`,
     path: `/tools/${slug}`,
-    keywords: tool.keywords,
+    keywords: [
+      ...tool.keywords,
+      "free online tool",
+      "client-side",
+      "no upload",
+      "in-browser",
+      "privacy-friendly",
+      "devkit",
+      tool.category,
+    ],
   });
 }
 
@@ -43,9 +52,12 @@ export default async function ToolPage({
     description: tool.description,
     url: `${SITE_URL}/tools/${slug}`,
     applicationCategory: "DeveloperApplication",
-    operatingSystem: "Web",
-    browserRequirements: "Requires JavaScript",
+    operatingSystem: "All (Web Browser, Chrome, Firefox, Safari, Edge)",
+    browserRequirements: "Requires JavaScript. Runs 100% client-side in browser memory.",
+    isAccessibleForFree: true,
+    softwareVersion: "2.4.0",
     keywords: tool.keywords.join(", "),
+    screenshot: `${SITE_URL}/opengraph-image`,
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   };
 
@@ -56,12 +68,18 @@ export default async function ToolPage({
       {
         "@type": "ListItem",
         position: 1,
+        name: "Home",
+        item: `${SITE_URL}/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
         name: "Tools",
         item: `${SITE_URL}/tools`,
       },
       {
         "@type": "ListItem",
-        position: 2,
+        position: 3,
         name: tool.name,
         item: `${SITE_URL}/tools/${tool.slug}`,
       },

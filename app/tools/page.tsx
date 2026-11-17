@@ -4,22 +4,34 @@ import { buildMetadata, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { TOOLS } from "@/data/tools";
 
 export const metadata: Metadata = buildMetadata({
-  title: "All Tools",
+  title: "All 54 Developer Utilities & Converters",
   description:
-    "Browse all 39 DevKit tools — formatters, generators, converters, analyzers and references. Every tool runs 100% in your browser with no account or upload.",
+    `Browse all ${TOOLS.length} DevKit developer tools — JSON formatters, JWT decoders, PDF tools, image resizers, AST explorers, and network testers. 100% in-browser execution with zero server uploads.`,
   path: "/tools",
-  keywords: ["all tools", "developer utilities", "free dev tools", "browser tools"],
+  keywords: [
+    "all tools",
+    "developer utilities",
+    "free dev tools",
+    "browser tools",
+    "client-side pdf merge",
+    "json formatter online",
+    "jwt decoder free",
+    "uuid generator",
+    "offline developer tools",
+  ],
 });
 
 const itemListJsonLd = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  name: `${SITE_NAME} tools`,
+  name: `${SITE_NAME} Developer Utilities Directory`,
+  description: `Complete catalog of ${TOOLS.length} client-side developer tools.`,
   numberOfItems: TOOLS.length,
   itemListElement: TOOLS.map((tool, index) => ({
     "@type": "ListItem",
     position: index + 1,
     name: tool.name,
+    description: tool.description,
     url: `${SITE_URL}/tools/${tool.slug}`,
   })),
 };
