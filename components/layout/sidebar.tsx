@@ -45,26 +45,26 @@ function SidebarBrand() {
   const { setOpenMobile } = useSidebar();
 
   return (
-    <div className="flex h-16 items-center justify-between px-3">
+    <div className="flex h-14 items-center justify-between px-3">
       <Link
         href="/"
-        className="flex items-center gap-2.5"
+        className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
         onClick={() => setOpenMobile(false)}
       >
-        <span className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 shadow-lg shadow-indigo-500/30">
-          <Icon icon="lucide:zap" className="size-5 text-white" />
+        <span className="flex size-7 items-center justify-center rounded-md border border-border bg-card text-foreground font-mono font-bold text-xs shadow-xs">
+          DK
         </span>
         <div className="leading-tight group-data-[collapsible=icon]:hidden">
-          <span className="block text-[15px] font-bold tracking-tight">
+          <span className="block text-sm font-semibold tracking-tight">
             DevKit
           </span>
-          <span className="block text-[11px] text-sidebar-foreground/70">
-            developer toolkit
+          <span className="block text-[10px] font-mono text-sidebar-foreground/70">
+            local-first • 54 tools
           </span>
         </div>
       </Link>
       <button
-        className="rounded-lg p-1.5 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground md:hidden"
+        className="rounded-lg p-1.5 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground md:hidden cursor-pointer"
         onClick={() => setOpenMobile(false)}
         aria-label="Close sidebar"
       >
@@ -133,7 +133,7 @@ function SidebarNav() {
         <>
           <SidebarSeparator />
           <SidebarGroup>
-            <SidebarGroupLabel className="text-[11px] font-semibold uppercase tracking-wider text-sidebar-foreground/60">
+            <SidebarGroupLabel className="text-[11px] font-medium text-sidebar-foreground/70">
               Favorites
             </SidebarGroupLabel>
             <SidebarGroupContent>
@@ -163,7 +163,7 @@ function SidebarNav() {
 
       <SidebarSeparator />
       <SidebarGroup>
-        <SidebarGroupLabel className="text-[11px] font-semibold uppercase tracking-wider text-sidebar-foreground/60">
+        <SidebarGroupLabel className="text-[11px] font-medium text-sidebar-foreground/70">
           Categories
         </SidebarGroupLabel>
         <SidebarGroupContent>

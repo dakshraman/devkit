@@ -57,27 +57,28 @@ function DashboardContent() {
     <div className="space-y-8">
       <Reveal>
         <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-          <GlassCard className="relative overflow-hidden p-8">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_color-mix(in_srgb,var(--primary)_15%,transparent),transparent_35%),linear-gradient(120deg,color-mix(in_srgb,var(--primary)_8%,transparent),transparent_40%)]" />
-            <div className="relative max-w-2xl space-y-5">
-              <Badge variant="secondary" className="w-fit">Front-end only. Local-first. No backend.</Badge>
-              <div className="space-y-3">
-                <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                  DevKit keeps your daily developer workflows in one fast place.
+          <GlassCard className="p-8">
+            <div className="max-w-2xl space-y-4">
+              <Badge variant="secondary" className="w-fit font-mono text-[10px]">
+                Client-Side • Local-First • 0 B Egress
+              </Badge>
+              <div className="space-y-2">
+                <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Daily developer utilities in one fast workspace
                 </h1>
-                <p className="max-w-xl text-base text-muted-foreground">
-                  Search tools, pin favorites, revisit recent work and launch any utility with keyboard shortcuts.
+                <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  Format JSON, decode tokens, inspect ASTs, and manipulate documents entirely in your browser with zero remote transmission.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <Button onClick={() => router.push("/tools")}>Browse all tools</Button>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Button size="sm" onClick={() => router.push("/tools")}>Browse all 54 tools</Button>
               </div>
             </div>
           </GlassCard>
 
           <StaggerGroup className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
             <StaggerItem>
-              <StatCard label="Tools" value={String(TOOLS.length)} hint="Admin-managed utilities" icon="lucide:sparkles" />
+              <StatCard label="Tools" value={String(TOOLS.length)} hint="Total available utilities" icon="lucide:sparkles" />
             </StaggerItem>
             <StaggerItem>
               <StatCard label="Favorites" value={String(favorites.length)} hint="Stored in LocalStorage" icon="lucide:heart" />
@@ -95,7 +96,7 @@ function DashboardContent() {
         </Section>
       ) : (
         <>
-          <Section title="Featured tools" description="Curated admin-managed tools at the top of the dashboard.">
+          <Section title="Featured tools" description="Essential utilities for daily development.">
             <ToolGrid tools={featured} onFavoriteToggle={toggleFavorite} isFavorite={isFavorite} />
           </Section>
 
@@ -146,7 +147,7 @@ function DashboardContent() {
             </Section>
           </div>
 
-          <Section title="Tool categories" description="Browse by admin-managed group.">
+          <Section title="Tool categories" description="Browse utilities grouped by functional domain.">
             <StaggerGroup className="grid gap-3 sm:grid-cols-2">
               {CATEGORIES.map((category) => (
                 <StaggerItem key={category.id}>

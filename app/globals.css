@@ -112,33 +112,21 @@ body {
   background: transparent;
 }
 
-/* ---------- Glassmorphism ---------- */
+/* ---------- Surfaces ---------- */
 .glass {
-  background: color-mix(in srgb, var(--card) 62%, transparent);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  background: var(--card);
+  border: 1px solid var(--border);
 }
 
 .glass-card {
-  background: linear-gradient(
-    145deg,
-    color-mix(in srgb, var(--card) 92%, transparent),
-    color-mix(in srgb, var(--card) 55%, transparent)
-  );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
-  box-shadow:
-    0 1px 2px rgb(0 0 0 / 0.04),
-    0 8px 24px -12px rgb(0 0 0 / 0.12);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .glass-card:hover {
-  border-color: color-mix(in srgb, var(--ring) 40%, var(--border));
-  box-shadow:
-    0 1px 2px rgb(0 0 0 / 0.04),
-    0 12px 32px -12px color-mix(in srgb, var(--ring) 30%, transparent);
+  border-color: color-mix(in srgb, var(--foreground) 18%, var(--border));
 }
 
 /* ---------- Keyframes ---------- */

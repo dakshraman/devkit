@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { Icon } from "@iconify/react";
-import { TOOLS, CATEGORIES } from "@/data/tools";
+import { TOOLS, CATEGORIES, QUICK_ACCESS } from "@/data/tools";
 import { useSettings } from "@/context/settings-context";
 import { useCommandPalette } from "@/context/command-palette-context";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export function LandingPage() {
               className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
               aria-label="DevKit home"
             >
-              <span className="flex size-8 items-center justify-center rounded-md border border-border bg-card text-foreground font-mono font-semibold text-xs shadow-xs">
+              <span className="flex size-7 items-center justify-center rounded-md border border-border bg-card text-foreground font-mono font-semibold text-xs shadow-xs">
                 DK
               </span>
               <div className="leading-tight">
@@ -62,7 +62,7 @@ export function LandingPage() {
             <button
               type="button"
               onClick={() => openPalette()}
-              className="hidden items-center gap-2 rounded-md border border-border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground transition hover:border-border hover:bg-muted hover:text-foreground sm:flex cursor-pointer"
+              className="hidden items-center gap-2 rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs text-muted-foreground transition hover:border-border hover:bg-muted hover:text-foreground sm:flex cursor-pointer"
               aria-label="Search tools with command palette"
             >
               <Icon icon="lucide:search" className="size-3.5" aria-hidden="true" />
@@ -164,55 +164,122 @@ export function LandingPage() {
       </header>
 
       <main className="w-full">
-        {/* ---------------- Hero Section ---------------- */}
-        <section className="border-b border-border/70 py-16 lg:py-24">
+        {/* ---------------- Hero Section (Command Center Split) ---------------- */}
+        <section className="border-b border-border/70 py-12 lg:py-20">
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-              {/* Telemetry Guarantee Badge */}
-              <div className="mb-4 inline-flex items-center gap-2 rounded-md border border-border bg-muted/60 px-3 py-1 font-mono text-[11px] text-muted-foreground">
-                <span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
-                <span>100% Client-Side • 0 B Egress • PWA Ready</span>
+            <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+              {/* Left Column: Technical Narrative & Actions */}
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] text-muted-foreground shadow-xs">
+                  <span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
+                  <span>100% In-Browser • 0 B Egress • PWA Ready</span>
+                </div>
+
+                <div className="space-y-3">
+                  <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl leading-tight">
+                    The local-first developer utilities workbench
+                  </h1>
+                  <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    54 fast, client-side tools for data formatting, AST analysis, cryptography,
+                    PDF manipulation, and network debugging. Processed entirely in browser memory
+                    with zero cloud egress.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  <Link href="/dashboard">
+                    <Button size="default" className="gap-2 px-5 h-9 text-xs font-medium shadow-xs">
+                      <Icon icon="lucide:layout-grid" className="size-3.5" aria-hidden="true" />
+                      <span>Open Dashboard</span>
+                    </Button>
+                  </Link>
+                  <a href="#catalog">
+                    <Button variant="outline" size="default" className="gap-2 px-5 h-9 text-xs font-medium">
+                      <Icon icon="lucide:list" className="size-3.5" aria-hidden="true" />
+                      <span>Browse 54 Tools</span>
+                    </Button>
+                  </a>
+                </div>
+
+                {/* Technical Guarantees Checklist */}
+                <div className="pt-2 border-t border-border/60">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <Icon icon="lucide:check" className="size-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+                      <span>Zero network payloads</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Icon icon="lucide:check" className="size-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+                      <span>Hardware WebCrypto</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Icon icon="lucide:check" className="size-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
+                      <span>Offline PWA storage</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Headline */}
-              <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-                Developer utilities that never leave your browser
-              </h1>
+              {/* Right Column: Quick-Launch Dock */}
+              <div className="rounded-xl border border-border bg-card shadow-xs overflow-hidden">
+                <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-semibold text-foreground">
+                      Quick-Launch Dock
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-mono">
+                      (top utilities)
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => openPalette()}
+                    className="flex items-center gap-1 rounded border border-border bg-background px-2 py-0.5 font-mono text-[10px] text-muted-foreground hover:bg-muted transition-colors cursor-pointer"
+                  >
+                    <span>Ctrl K to search</span>
+                  </button>
+                </div>
 
-              {/* Subtitle */}
-              <p className="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base lg:text-lg">
-                An offline, local-first workbench with 54 formatters, AST analyzers, WebCrypto
-                generators, and document converters. Executed in-memory with zero server transmissions.
-              </p>
+                <div className="divide-y divide-border/60">
+                  {QUICK_ACCESS.map((entry) => {
+                    const tool = TOOLS.find((t) => t.slug === entry.slug);
+                    if (!tool) return null;
+                    return (
+                      <Link
+                        key={entry.slug}
+                        href={`/tools/${tool.slug}`}
+                        className="group flex items-center justify-between px-4 py-3 transition-colors hover:bg-muted/40"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <ToolIcon icon={tool.icon} accent={tool.accent} className="size-7" />
+                          <div className="min-w-0">
+                            <div className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                              {tool.name}
+                            </div>
+                            <div className="text-[11px] text-muted-foreground truncate max-w-xs sm:max-w-sm">
+                              {tool.description}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <kbd className="hidden sm:inline-flex items-center rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                            {entry.hint}
+                          </kbd>
+                          <Icon
+                            icon="lucide:arrow-right"
+                            className="size-3.5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all"
+                            aria-hidden="true"
+                          />
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
 
-              {/* Actions */}
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <Link href="/dashboard">
-                  <Button size="default" className="gap-2 px-6 h-10 text-xs font-medium">
-                    <Icon icon="lucide:layout-grid" className="size-4" aria-hidden="true" />
-                    <span>Open Dashboard</span>
-                  </Button>
-                </Link>
-
-                <a href="#catalog">
-                  <Button variant="outline" size="default" className="gap-2 px-6 h-10 text-xs font-medium">
-                    <Icon icon="lucide:list" className="size-4" aria-hidden="true" />
-                    <span>Explore 54 Tools</span>
-                  </Button>
-                </a>
-              </div>
-
-              {/* Shortcut helper */}
-              <div className="mt-4 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                <span>Press</span>
-                <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-foreground">
-                  Ctrl
-                </kbd>
-                <span>+</span>
-                <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-foreground">
-                  K
-                </kbd>
-                <span>to search and jump to any tool instantly</span>
+                <div className="border-t border-border bg-muted/20 px-4 py-2.5 text-[11px] font-mono text-muted-foreground flex items-center justify-between">
+                  <span>Runtime: V8 In-Memory Sandbox</span>
+                  <span className="text-emerald-500 font-semibold">0 B Egress</span>
+                </div>
               </div>
             </div>
           </div>
@@ -252,22 +319,86 @@ export function LandingPage() {
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <Icon icon="lucide:shield-check" className="size-3.5 text-emerald-500" aria-hidden="true" />
-                <span>Security Guarantee</span>
+                <span>Security Architecture</span>
               </div>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
                 Client-Side Sandbox Architecture
               </h2>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                Unlike traditional web tools that upload sensitive credentials, tokens, or documents to
-                remote servers, DevKit executes every routine strictly in browser memory.
+                DevKit is architected from the ground up to prevent data leaks. Every routine runs
+                strictly inside your browser process without network roundtrips.
               </p>
             </div>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Architecture Comparison Blueprint */}
+            <div className="mt-8 grid gap-6 lg:grid-cols-2">
+              {/* Cloud Utilities Risk Card */}
+              <div className="rounded-xl border border-border bg-card p-5 space-y-3.5 shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="flex size-6 items-center justify-center rounded bg-red-500/10 text-red-500">
+                    <Icon icon="lucide:x" className="size-3.5" aria-hidden="true" />
+                  </span>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    Traditional Web Utilities (Cloud-Based)
+                  </h3>
+                </div>
+                <ul className="space-y-2 text-xs text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500 font-mono mt-0.5">•</span>
+                    <span>Payloads, tokens, and documents are uploaded to remote cloud backends.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500 font-mono mt-0.5">•</span>
+                    <span>Subject to server logs, retention policies, and third-party data tracking.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500 font-mono mt-0.5">•</span>
+                    <span>Network latency on every single operation; breaks completely without Wi-Fi.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-red-500 font-mono mt-0.5">•</span>
+                    <span>Frequent paywalls, upload limits, and daily conversion quotas.</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* DevKit Local Sandbox Card */}
+              <div className="rounded-xl border border-border bg-card p-5 space-y-3.5 shadow-xs border-emerald-500/30">
+                <div className="flex items-center gap-2">
+                  <span className="flex size-6 items-center justify-center rounded bg-emerald-500/10 text-emerald-500">
+                    <Icon icon="lucide:check" className="size-3.5" aria-hidden="true" />
+                  </span>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    DevKit Local Sandbox (Client-Only)
+                  </h3>
+                </div>
+                <ul className="space-y-2 text-xs text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-500 font-mono mt-0.5">•</span>
+                    <span>Execution happens in local browser memory (V8 / WebAssembly / Canvas).</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-500 font-mono mt-0.5">•</span>
+                    <span>Guaranteed 0 B network egress — zero telemetry, no tracking scripts.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-500 font-mono mt-0.5">•</span>
+                    <span>Hardware-accelerated cryptography via the native WebCrypto API.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-500 font-mono mt-0.5">•</span>
+                    <span>Installable PWA that works 100% offline with zero subscriptions or quotas.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* 4 Architectural Pillars */}
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <ArchitectureCard
                 icon="lucide:cpu"
                 title="In-Memory V8 Execution"
-                description="JSON parsing, AST generation, and diff computation run in the active browser tab. Memory is freed on tab disposal."
+                description="JSON parsing, AST generation, and diff computation run in the active browser tab. Memory is discarded on tab closure."
               />
               <ArchitectureCard
                 icon="lucide:key"
@@ -292,9 +423,9 @@ export function LandingPage() {
         <section id="suites" className="border-b border-border/70 py-16 scroll-mt-14">
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <div className="max-w-3xl">
-              <span className="text-xs font-medium text-muted-foreground">Deep-Dive Workbenches</span>
+              <span className="text-xs font-medium text-muted-foreground">Specialized Tool Suites</span>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Specialized Tool Suites
+                Purpose-Built Utility Workbenches
               </h2>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
                 Beyond standard encoders and formatters, DevKit includes full-featured client-side suites for
@@ -307,7 +438,7 @@ export function LandingPage() {
                 title="PDF & Document Suite"
                 badge="Client-Side PDF"
                 icon="lucide:file-text"
-                description="Merge multiple PDFs, split page ranges into ZIP archives, convert images to PDF, and rotate pages."
+                description="Merge multiple PDFs, split page ranges into ZIP archives, convert images to PDF, and rotate pages in browser memory."
                 tools={["pdf-merge", "pdf-split", "image-to-pdf", "pdf-organize"]}
               />
               <SuiteCard
@@ -347,7 +478,7 @@ export function LandingPage() {
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <div className="max-w-3xl mx-auto">
               <div className="text-center">
-                <span className="text-xs font-medium text-muted-foreground">Direct Answers</span>
+                <span className="text-xs font-medium text-muted-foreground">Technical Answers</span>
                 <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
                   Frequently Asked Questions
                 </h2>
@@ -375,7 +506,7 @@ export function LandingPage() {
               </p>
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <Link href="/dashboard">
-                  <Button size="default" className="gap-2 px-5 text-xs">
+                  <Button size="default" className="gap-2 px-5 text-xs shadow-xs">
                     <span>Launch Dashboard</span>
                     <Icon icon="lucide:arrow-right" className="size-3.5" aria-hidden="true" />
                   </Button>
@@ -499,7 +630,7 @@ function ArchitectureCard({
   description: string;
 }) {
   return (
-    <article className="rounded-lg border border-border bg-card p-4 space-y-2.5 shadow-xs">
+    <article className="rounded-lg border border-border bg-card p-4 space-y-2 shadow-xs">
       <div className="flex size-7 items-center justify-center rounded border border-border bg-muted/60 text-foreground">
         <Icon icon={icon} className="size-4" aria-hidden="true" />
       </div>

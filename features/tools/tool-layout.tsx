@@ -59,9 +59,8 @@ export const Shell = memo(function Shell({
 
       {/* Main Tool Header Card */}
       <Reveal y={14}>
-        <GlassCard className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_color-mix(in_srgb,var(--primary)_16%,transparent),transparent_40%)]" />
-          <div className="relative flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <GlassCard className="p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <ToolIcon icon={tool.icon} accent={tool.accent} className="size-10 rounded-2xl" />
