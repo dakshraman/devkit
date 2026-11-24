@@ -627,9 +627,6 @@ export function LandingPage() {
                   DK
                 </span>
                 <span className="font-semibold text-foreground">DevKit</span>
-                <span className="rounded border border-border bg-muted px-1.5 py-0.2 font-mono text-[10px]">
-                  local-first • v2.0
-                </span>
               </div>
               <p className="max-w-sm text-xs leading-relaxed text-muted-foreground">
                 Zero-egress, client-side developer workstation running formatters, AST parsers,
@@ -680,11 +677,6 @@ export function LandingPage() {
 
           <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row text-[11px]">
             <p>© {new Date().getFullYear()} DevKit. Free and open source under MIT License.</p>
-            <div className="flex items-center gap-3">
-              <span>Runtime: <span className="font-mono text-foreground">In-Memory / V8</span></span>
-              <span>•</span>
-              <span>Command Bar: <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">Ctrl+K</kbd></span>
-            </div>
           </div>
         </div>
       </footer>
