@@ -43,14 +43,20 @@ export function LandingPage() {
               aria-label="Main navigation"
               className="hidden items-center gap-6 text-xs font-medium text-muted-foreground md:flex"
             >
-              <a href="#catalog" className="transition hover:text-foreground">
-                Catalog
+              <a href="#studio" className="transition hover:text-foreground">
+                Studio
               </a>
-              <a href="#architecture" className="transition hover:text-foreground">
+              <a href="#standards" className="transition hover:text-foreground">
+                Standards
+              </a>
+              <a href="#bento" className="transition hover:text-foreground">
                 Architecture
               </a>
-              <a href="#suites" className="transition hover:text-foreground">
-                Suites
+              <a href="#comparison" className="transition hover:text-foreground">
+                Why DevKit
+              </a>
+              <a href="#catalog" className="transition hover:text-foreground">
+                Catalog
               </a>
               <a href="#faq" className="transition hover:text-foreground">
                 FAQ
@@ -119,25 +125,39 @@ export function LandingPage() {
           <div className="border-b border-border bg-background px-4 py-3 md:hidden">
             <nav aria-label="Mobile navigation" className="flex flex-col gap-2 text-xs">
               <a
-                href="#catalog"
+                href="#studio"
                 onClick={() => setMobileMenuOpen(false)}
                 className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
               >
-                Catalog
+                Studio
               </a>
               <a
-                href="#architecture"
+                href="#standards"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                Standards
+              </a>
+              <a
+                href="#bento"
                 onClick={() => setMobileMenuOpen(false)}
                 className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
               >
                 Architecture
               </a>
               <a
-                href="#suites"
+                href="#comparison"
                 onClick={() => setMobileMenuOpen(false)}
                 className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
               >
-                Suites
+                Why DevKit
+              </a>
+              <a
+                href="#catalog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                Catalog
               </a>
               <a
                 href="#faq"
@@ -164,366 +184,456 @@ export function LandingPage() {
       </header>
 
       <main className="w-full">
-        {/* ---------------- Hero Section (Command Center Split) ---------------- */}
-        <section className="border-b border-border/70 py-12 lg:py-20">
+        {/* ---------------- SaaS Flagship Hero Section ---------------- */}
+        <section id="studio" className="relative border-b border-border/70 pt-16 pb-20 lg:pt-24 lg:pb-28">
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-              {/* Left Column: Technical Narrative & Actions */}
-              <div className="space-y-6">
-                <div className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[11px] text-muted-foreground shadow-xs">
-                  <span className="size-2 rounded-full bg-emerald-500" aria-hidden="true" />
-                  <span>100% In-Browser • 0 B Egress • PWA Ready</span>
-                </div>
-
-                <div className="space-y-3">
-                  <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl leading-tight">
-                    The local-first developer utilities workbench
-                  </h1>
-                  <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                    54 fast, client-side tools for data formatting, AST analysis, cryptography,
-                    PDF manipulation, and network debugging. Processed entirely in browser memory
-                    with zero cloud egress.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3 pt-1">
-                  <Link href="/dashboard">
-                    <Button size="default" className="gap-2 px-5 h-9 text-xs font-medium shadow-xs">
-                      <Icon icon="lucide:layout-grid" className="size-3.5" aria-hidden="true" />
-                      <span>Open Dashboard</span>
-                    </Button>
-                  </Link>
-                  <a href="#catalog">
-                    <Button variant="outline" size="default" className="gap-2 px-5 h-9 text-xs font-medium">
-                      <Icon icon="lucide:list" className="size-3.5" aria-hidden="true" />
-                      <span>Browse 54 Tools</span>
-                    </Button>
-                  </a>
-                </div>
-
-                {/* Technical Guarantees Checklist */}
-                <div className="pt-2 border-t border-border/60">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
-                      <Icon icon="lucide:check" className="size-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
-                      <span>Zero network payloads</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Icon icon="lucide:check" className="size-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
-                      <span>Hardware WebCrypto</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Icon icon="lucide:check" className="size-3.5 text-emerald-500 shrink-0" aria-hidden="true" />
-                      <span>Offline PWA storage</span>
-                    </div>
-                  </div>
-                </div>
+            <div className="mx-auto max-w-4xl text-center space-y-6">
+              {/* Product Release Pill */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-muted/60 px-3 py-1 text-xs text-muted-foreground shadow-xs backdrop-blur-sm transition hover:border-border">
+                <span className="flex size-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+                <span className="font-mono text-[11px] font-semibold text-foreground">DevKit 2.0</span>
+                <span className="text-border">|</span>
+                <span className="text-[11px]">The Local Developer Cloud</span>
+                <Icon icon="lucide:arrow-right" className="size-3 text-muted-foreground" aria-hidden="true" />
               </div>
 
-              {/* Right Column: Quick-Launch Dock */}
-              <div className="rounded-xl border border-border bg-card shadow-xs overflow-hidden">
-                <div className="flex items-center justify-between border-b border-border bg-muted/30 px-4 py-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-semibold text-foreground">
-                      Quick-Launch Dock
-                    </span>
-                    <span className="text-[10px] text-muted-foreground font-mono">
-                      (top utilities)
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => openPalette()}
-                    className="flex items-center gap-1 rounded border border-border bg-background px-2 py-0.5 font-mono text-[10px] text-muted-foreground hover:bg-muted transition-colors cursor-pointer"
-                  >
-                    <span>Ctrl K to search</span>
-                  </button>
-                </div>
+              {/* Commanding SaaS Headline */}
+              <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-[1.1] sm:leading-[1.1]">
+                All your developer tools.
+                <span className="block text-muted-foreground">None of your data leaving.</span>
+              </h1>
 
-                <div className="divide-y divide-border/60">
-                  {QUICK_ACCESS.map((entry) => {
-                    const tool = TOOLS.find((t) => t.slug === entry.slug);
-                    if (!tool) return null;
-                    return (
-                      <Link
-                        key={entry.slug}
-                        href={`/tools/${tool.slug}`}
-                        className="group flex items-center justify-between px-4 py-3 transition-colors hover:bg-muted/40"
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <ToolIcon icon={tool.icon} accent={tool.accent} className="size-7" />
-                          <div className="min-w-0">
-                            <div className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors truncate">
-                              {tool.name}
-                            </div>
-                            <div className="text-[11px] text-muted-foreground truncate max-w-xs sm:max-w-sm">
-                              {tool.description}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <kbd className="hidden sm:inline-flex items-center rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-                            {entry.hint}
-                          </kbd>
-                          <Icon
-                            icon="lucide:arrow-right"
-                            className="size-3.5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-0.5 transition-all"
-                            aria-hidden="true"
-                          />
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
+              {/* Sub-headline */}
+              <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                54 instant, client-side engineering utilities for formatting, cryptographic hashing,
+                AST inspection, and document manipulation. Executed entirely inside your browser memory
+                with zero network egress.
+              </p>
 
-                <div className="border-t border-border bg-muted/20 px-4 py-2.5 text-[11px] font-mono text-muted-foreground flex items-center justify-between">
-                  <span>Runtime: V8 In-Memory Sandbox</span>
-                  <span className="text-emerald-500 font-semibold">0 B Egress</span>
+              {/* Dual Action CTAs */}
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <Link href="/dashboard">
+                  <Button size="default" className="h-10 gap-2 px-6 text-xs font-semibold shadow-xs">
+                    <Icon icon="lucide:layout-grid" className="size-4" aria-hidden="true" />
+                    <span>Launch Studio</span>
+                    <kbd className="hidden sm:inline-flex items-center rounded bg-primary-foreground/20 px-1.5 py-0.5 font-mono text-[10px] text-primary-foreground">
+                      ⌘K
+                    </kbd>
+                  </Button>
+                </Link>
+                <a href="#catalog">
+                  <Button variant="outline" size="default" className="h-10 gap-2 px-6 text-xs font-semibold">
+                    <Icon icon="lucide:list" className="size-4" aria-hidden="true" />
+                    <span>Explore 54 Tools</span>
+                  </Button>
+                </a>
+              </div>
+
+              {/* Technical Trust Indicators */}
+              <div className="pt-4 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-mono">
+                <div className="flex items-center gap-1.5">
+                  <Icon icon="lucide:shield-check" className="size-3.5 text-emerald-500" aria-hidden="true" />
+                  <span>0 B Network Egress</span>
                 </div>
+                <div className="flex items-center gap-1.5">
+                  <Icon icon="lucide:zap" className="size-3.5 text-amber-500" aria-hidden="true" />
+                  <span>Sub-millisecond Latency</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Icon icon="lucide:wifi-off" className="size-3.5 text-sky-500" aria-hidden="true" />
+                  <span>100% Offline PWA</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Interactive DevKit Studio Application Window */}
+            <div className="mt-12 lg:mt-16 max-w-5xl mx-auto">
+              <StudioMockupWindow />
+            </div>
+          </div>
+        </section>
+
+        {/* ---------------- Open Standards & Specifications Row ---------------- */}
+        <section id="standards" className="border-b border-border/70 bg-muted/20 py-8">
+          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground shrink-0">
+                Powered by Open Specifications
+              </span>
+              <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-muted-foreground">
+                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
+                  W3C WebCrypto API
+                </span>
+                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
+                  Babel AST v8
+                </span>
+                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
+                  WebAssembly (WASM)
+                </span>
+                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
+                  ISO 32000 PDF
+                </span>
+                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
+                  RFC 7519 JWT
+                </span>
+                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
+                  Canvas 2D Engine
+                </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ---------------- Engineering Guarantees (Metrics) ---------------- */}
-        <section aria-label="Engineering guarantees" className="border-b border-border/70 bg-muted/20 py-8">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-              <MetricItem
-                value="54"
-                label="Built-in Utilities"
-                detail="PDF, AST, WASM, Crypto & Network"
-              />
-              <MetricItem
-                value="0 ms"
-                label="Server Latency"
-                detail="Runs in local V8 execution thread"
-              />
-              <MetricItem
-                value="0 B"
-                label="Network Egress"
-                detail="Zero telemetry or remote logging"
-              />
-              <MetricItem
-                value="100%"
-                label="Offline Capable"
-                detail="Service Worker with local cache"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* ---------------- Local-First Architecture Blueprint ---------------- */}
-        <section id="architecture" className="border-b border-border/70 py-16 scroll-mt-14">
+        {/* ---------------- High-Impact Bento Architecture Showcase ---------------- */}
+        <section id="bento" className="border-b border-border/70 py-16 lg:py-24 scroll-mt-14">
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <div className="max-w-3xl">
               <div className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                <Icon icon="lucide:shield-check" className="size-3.5 text-emerald-500" aria-hidden="true" />
-                <span>Security Architecture</span>
+                <Icon icon="lucide:layers" className="size-3.5 text-emerald-500" aria-hidden="true" />
+                <span>Architecture & Ergonomics</span>
               </div>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Client-Side Sandbox Architecture
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
+                Engineered for security, velocity, and zero cloud dependency
               </h2>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                DevKit is architected from the ground up to prevent data leaks. Every routine runs
-                strictly inside your browser process without network roundtrips.
+                DevKit is fundamentally architected to eliminate the privacy risks, latency bottlenecks, and
+                paywalls of traditional online utility websites.
               </p>
             </div>
 
-            {/* Architecture Comparison Blueprint */}
-            <div className="mt-8 grid gap-6 lg:grid-cols-2">
-              {/* Cloud Utilities Risk Card */}
-              <div className="rounded-xl border border-border bg-card p-5 space-y-3.5 shadow-xs">
-                <div className="flex items-center gap-2">
-                  <span className="flex size-6 items-center justify-center rounded bg-red-500/10 text-red-500">
-                    <Icon icon="lucide:x" className="size-3.5" aria-hidden="true" />
-                  </span>
-                  <h3 className="text-sm font-semibold text-foreground">
-                    Traditional Web Utilities (Cloud-Based)
+            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Bento Card 1: Zero Egress Sandbox (Col span 2 on LG) */}
+              <div className="lg:col-span-2 rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-mono text-emerald-500">
+                      <span className="size-1.5 rounded-full bg-emerald-500" />
+                      Zero-Egress Sandbox
+                    </span>
+                    <span className="text-[11px] font-mono text-muted-foreground">Air-Gapped Compliant</span>
+                  </div>
+                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                    Zero network requests. 100% in-browser memory isolation.
                   </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed max-w-xl">
+                    Every routine—from hashing JWT secrets to merging confidential multi-page contracts—executes
+                    strictly inside your browser V8 heap. Memory is immediately released upon closing the tab.
+                  </p>
                 </div>
-                <ul className="space-y-2 text-xs text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 font-mono mt-0.5">•</span>
-                    <span>Payloads, tokens, and documents are uploaded to remote cloud backends.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 font-mono mt-0.5">•</span>
-                    <span>Subject to server logs, retention policies, and third-party data tracking.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 font-mono mt-0.5">•</span>
-                    <span>Network latency on every single operation; breaks completely without Wi-Fi.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 font-mono mt-0.5">•</span>
-                    <span>Frequent paywalls, upload limits, and daily conversion quotas.</span>
-                  </li>
-                </ul>
+
+                {/* Micro-UI: Live Sandbox Telemetry */}
+                <div className="rounded-lg border border-border bg-muted/40 p-4 font-mono text-xs space-y-2">
+                  <div className="flex items-center justify-between text-muted-foreground border-b border-border/60 pb-2">
+                    <div className="flex items-center gap-2">
+                      <Icon icon="lucide:shield" className="size-3.5 text-emerald-500" />
+                      <span className="text-[11px] text-foreground font-semibold">Browser Network Monitor</span>
+                    </div>
+                    <span className="text-[10px] text-emerald-500">POLICY: REJECT_ALL_EGRESS</span>
+                  </div>
+                  <div className="space-y-1.5 text-[11px]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">POST https://analytics.remote/v1</span>
+                      <span className="text-red-500 font-semibold">[BLOCKED: ZERO_EGRESS]</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">POST https://api.cloud-converter.com/upload</span>
+                      <span className="text-red-500 font-semibold">[BLOCKED: LOCAL_FIRST]</span>
+                    </div>
+                    <div className="flex items-center justify-between pt-1 border-t border-border/40 text-foreground font-semibold">
+                      <span>Total Network Bytes Egressed:</span>
+                      <span className="text-emerald-500 font-mono">0 Bytes (0 pkts)</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* DevKit Local Sandbox Card */}
-              <div className="rounded-xl border border-border bg-card p-5 space-y-3.5 shadow-xs border-emerald-500/30">
-                <div className="flex items-center gap-2">
-                  <span className="flex size-6 items-center justify-center rounded bg-emerald-500/10 text-emerald-500">
-                    <Icon icon="lucide:check" className="size-3.5" aria-hidden="true" />
-                  </span>
-                  <h3 className="text-sm font-semibold text-foreground">
-                    DevKit Local Sandbox (Client-Only)
+              {/* Bento Card 2: Command Palette Velocity */}
+              <div className="rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[11px] font-mono text-foreground">
+                      <Icon icon="lucide:command" className="size-3" />
+                      Command Center
+                    </span>
+                    <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                      Ctrl K
+                    </kbd>
+                  </div>
+                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                    Sub-millisecond keyboard velocity
                   </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Switch between all 54 utilities in <span className="font-mono text-foreground">0.1ms</span>.
+                    Fuzzy search tools, trigger formatting commands, and jump directly to work.
+                  </p>
                 </div>
-                <ul className="space-y-2 text-xs text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-500 font-mono mt-0.5">•</span>
-                    <span>Execution happens in local browser memory (V8 / WebAssembly / Canvas).</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-500 font-mono mt-0.5">•</span>
-                    <span>Guaranteed 0 B network egress — zero telemetry, no tracking scripts.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-500 font-mono mt-0.5">•</span>
-                    <span>Hardware-accelerated cryptography via the native WebCrypto API.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-emerald-500 font-mono mt-0.5">•</span>
-                    <span>Installable PWA that works 100% offline with zero subscriptions or quotas.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
 
-            {/* 4 Architectural Pillars */}
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <ArchitectureCard
-                icon="lucide:cpu"
-                title="In-Memory V8 Execution"
-                description="JSON parsing, AST generation, and diff computation run in the active browser tab. Memory is discarded on tab closure."
-              />
-              <ArchitectureCard
-                icon="lucide:key"
-                title="Hardware WebCrypto API"
-                description="SHA-256, HMAC, and UUID generation use native SubtleCrypto primitives with cryptographic entropy and hardware acceleration."
-              />
-              <ArchitectureCard
-                icon="lucide:hard-drive"
-                title="Origin-Isolated Storage"
-                description="Tool history, pinned favorites, and appearance preferences stay strictly within your browser's private localStorage sandbox."
-              />
-              <ArchitectureCard
-                icon="lucide:wifi-off"
-                title="Zero Third-Party Telemetry"
-                description="No remote tracking pixels, Google Analytics, or third-party ad scripts are loaded. Fully compliant with enterprise data protection."
-              />
+                {/* Micro-UI: Interactive Palette Preview */}
+                <div className="rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs space-y-1.5">
+                  <div className="flex items-center gap-2 rounded border border-border/80 bg-background px-2.5 py-1.5 text-[11px] text-foreground">
+                    <Icon icon="lucide:search" className="size-3 text-muted-foreground" />
+                    <span>&gt; jwt decode</span>
+                  </div>
+                  <div className="space-y-1 text-[11px] text-muted-foreground pl-1">
+                    <div className="flex items-center justify-between py-1 px-1.5 rounded bg-card text-foreground font-semibold">
+                      <span>JWT Inspector</span>
+                      <span className="text-[10px] text-emerald-500 font-normal">HS256 / RS256</span>
+                    </div>
+                    <div className="flex items-center justify-between py-0.5 px-1.5">
+                      <span>JSON Formatter</span>
+                      <span className="text-[10px]">Prettify & Diff</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bento Card 3: Deep AST & Bytecode Inspection */}
+              <div className="rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[11px] font-mono text-foreground">
+                      <Icon icon="lucide:binary" className="size-3" />
+                      Compilers & AST
+                    </span>
+                    <span className="text-[11px] font-mono text-muted-foreground">Babel / WASM</span>
+                  </div>
+                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                    Deep AST & bytecode disassembly
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Inspect ECMAScript and TypeScript Abstract Syntax Trees in real time. Deconstruct WebAssembly
+                    binary sections with opcode resolution.
+                  </p>
+                </div>
+
+                {/* Micro-UI: AST Node Tree Preview */}
+                <div className="rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs space-y-1">
+                  <div className="text-[11px] text-muted-foreground">
+                    <span className="text-sky-500 font-semibold">Program</span> (body: 2)
+                  </div>
+                  <div className="pl-3 text-[11px] text-muted-foreground">
+                    └─ <span className="text-amber-500 font-semibold">FunctionDeclaration</span> (name: &quot;hash&quot;)
+                  </div>
+                  <div className="pl-6 text-[10px] text-muted-foreground">
+                    ├─ <span className="text-emerald-500">Identifier</span> (id: &quot;secretKey&quot;)
+                  </div>
+                  <div className="pl-6 text-[10px] text-muted-foreground">
+                    └─ <span className="text-violet-500">BlockStatement</span> (lines: 4)
+                  </div>
+                </div>
+              </div>
+
+              {/* Bento Card 4: Document & Media Studio (Col span 2 on LG) */}
+              <div className="lg:col-span-2 rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 text-[11px] font-mono text-sky-500">
+                      <Icon icon="lucide:file-text" className="size-3" />
+                      Document Engine
+                    </span>
+                    <span className="text-[11px] font-mono text-muted-foreground">pdf-lib • jszip • Canvas</span>
+                  </div>
+                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
+                    Heavy document & media manipulation. No cloud limits.
+                  </h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed max-w-xl">
+                    Merge, split, compress, and watermark multi-megabyte PDFs and images directly in browser RAM.
+                    No 5 MB paywalls, no queue delays, and zero document uploads to third-party cloud servers.
+                  </p>
+                </div>
+
+                {/* Micro-UI: Local PDF Pipeline */}
+                <div className="rounded-lg border border-border bg-muted/40 p-4 font-mono text-xs space-y-2">
+                  <div className="flex items-center justify-between text-muted-foreground border-b border-border/60 pb-2">
+                    <span className="text-[11px] text-foreground font-semibold">In-Memory Batch Pipeline</span>
+                    <span className="text-[10px] text-emerald-500">COMPLETED IN 140ms</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
+                    <div className="rounded border border-border bg-card p-2 space-y-1">
+                      <div className="text-muted-foreground text-[10px]">Input Document</div>
+                      <div className="font-semibold text-foreground truncate">contract-full.pdf</div>
+                      <div className="text-muted-foreground text-[10px]">14.8 MB (24 pages)</div>
+                    </div>
+                    <div className="rounded border border-border bg-card p-2 space-y-1">
+                      <div className="text-muted-foreground text-[10px]">Transformation</div>
+                      <div className="font-semibold text-foreground">Split Pages 1-5</div>
+                      <div className="text-emerald-500 text-[10px]">In-Memory pdf-lib</div>
+                    </div>
+                    <div className="rounded border border-border bg-card p-2 space-y-1">
+                      <div className="text-muted-foreground text-[10px]">Output Bundle</div>
+                      <div className="font-semibold text-foreground truncate">extracted-bundle.zip</div>
+                      <div className="text-emerald-500 text-[10px]">0 B Uploaded</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ---------------- Specialized Suites Spotlight ---------------- */}
-        <section id="suites" className="border-b border-border/70 py-16 scroll-mt-14">
+        {/* ---------------- SaaS Comparison Matrix (DevKit vs Cloud Converters) ---------------- */}
+        <section id="comparison" className="border-b border-border/70 py-16 lg:py-24 scroll-mt-14">
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <div className="max-w-3xl">
-              <span className="text-xs font-medium text-muted-foreground">Specialized Tool Suites</span>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Purpose-Built Utility Workbenches
+              <span className="text-xs font-medium text-muted-foreground">Architectural Benchmark</span>
+              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
+                Why DevKit vs Legacy Cloud Converters
               </h2>
               <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                Beyond standard encoders and formatters, DevKit includes full-featured client-side suites for
-                documents, binary inspection, network debugging, and media manipulation.
+                How DevKit compares to traditional online formatters, cloud PDF converters, and web decoders.
               </p>
             </div>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <SuiteCard
-                title="PDF & Document Suite"
-                badge="Client-Side PDF"
-                icon="lucide:file-text"
-                description="Merge multiple PDFs, split page ranges into ZIP archives, convert images to PDF, and rotate pages in browser memory."
-                tools={["pdf-merge", "pdf-split", "image-to-pdf", "pdf-organize"]}
-              />
-              <SuiteCard
-                title="AST & Binary Inspector"
-                badge="Code Analysis"
-                icon="lucide:binary"
-                description="Parse JavaScript and TypeScript into interactive Babel AST node hierarchies, and inspect WebAssembly sections."
-                tools={["ast-explorer", "wasm-explorer", "json-typescript"]}
-              />
-              <SuiteCard
-                title="Network & Benchmark Suite"
-                badge="API Debugging"
-                icon="lucide:network"
-                description="Execute client-side HTTP requests with cURL import, test real-time WebSocket frames, and run load benchmarks."
-                tools={["api-tester", "websocket-tester", "load-tester"]}
-              />
-              <SuiteCard
-                title="Client-Side Media Studio"
-                badge="Image Tools"
-                icon="lucide:image"
-                description="Resize by exact pixels or percentage, stamp text watermarks with 9-point grid placement, and convert formats."
-                tools={["image-resizer", "image-watermark", "image-converter", "bg-remover"]}
-              />
+            <div className="mt-10 overflow-x-auto rounded-xl border border-border bg-card shadow-xs">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-border bg-muted/40 font-mono text-[11px] text-muted-foreground">
+                    <th scope="col" className="p-4 font-semibold text-foreground">
+                      Engineering Metric
+                    </th>
+                    <th scope="col" className="p-4 font-semibold text-emerald-500 bg-emerald-500/5">
+                      DevKit (Local-First Cloud)
+                    </th>
+                    <th scope="col" className="p-4 font-semibold text-muted-foreground">
+                      Traditional Web Utilities (Cloud)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border/60">
+                  <tr>
+                    <td className="p-4 font-semibold text-foreground">Network Data Egress</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
+                      0 Bytes (Never leaves device)
+                    </td>
+                    <td className="p-4 text-muted-foreground">
+                      100% of payload uploaded to remote servers
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 font-semibold text-foreground">Execution Latency</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
+                      &lt; 1ms (Native V8 / WebCrypto)
+                    </td>
+                    <td className="p-4 text-muted-foreground">
+                      500ms – 4,000ms (Network roundtrips & queues)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 font-semibold text-foreground">Air-Gapped & Offline Support</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
+                      100% Operational Offline (PWA)
+                    </td>
+                    <td className="p-4 text-muted-foreground">
+                      Completely non-functional without active Wi-Fi
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 font-semibold text-foreground">Data Retention & Logs</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
+                      Zero logs, zero third-party telemetry
+                    </td>
+                    <td className="p-4 text-muted-foreground">
+                      Stored in server access logs and cloud S3 buckets
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 font-semibold text-foreground">File Size Limits & Quotas</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
+                      Unlimited (Bound only by local device RAM)
+                    </td>
+                    <td className="p-4 text-muted-foreground">
+                      Capped at 5 MB – 15 MB unless you pay monthly
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 font-semibold text-foreground">Monetization & Tracking</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
+                      0 Ads, 0 Trackers, MIT Open Source
+                    </td>
+                    <td className="p-4 text-muted-foreground">
+                      Ad banners, cross-site trackers, paywalls
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
         {/* ---------------- Complete Tool Catalog Matrix ---------------- */}
-        <section id="catalog" className="py-16 scroll-mt-14">
+        <section id="catalog" className="py-16 lg:py-24 scroll-mt-14">
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <ToolMatrix />
           </div>
         </section>
 
         {/* ---------------- Frequently Asked Questions ---------------- */}
-        <section id="faq" className="border-t border-border/70 bg-muted/10 py-16 scroll-mt-14">
+        <section id="faq" className="border-t border-border/70 bg-muted/10 py-16 lg:py-24 scroll-mt-14">
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
             <div className="max-w-3xl mx-auto">
               <div className="text-center">
-                <span className="text-xs font-medium text-muted-foreground">Technical Answers</span>
-                <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+                <span className="text-xs font-medium text-muted-foreground font-mono uppercase tracking-wider">
+                  Technical Specifications
+                </span>
+                <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
                   Frequently Asked Questions
                 </h2>
                 <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
-                  Technical details regarding DevKit security, offline behavior, and execution boundaries.
+                  Technical guarantees regarding DevKit security, offline behavior, and execution boundaries.
                 </p>
               </div>
 
-              <div className="mt-8">
+              <div className="mt-10">
                 <FaqList />
               </div>
             </div>
           </div>
         </section>
 
-        {/* ---------------- Bottom Call to Action ---------------- */}
-        <section className="border-t border-border/70 py-16">
+        {/* ---------------- SaaS Bottom Call to Action ---------------- */}
+        <section className="border-t border-border/70 py-16 lg:py-24">
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="rounded-xl border border-border bg-card p-8 sm:p-12 text-center max-w-2xl mx-auto shadow-xs">
-              <h2 className="text-2xl font-semibold tracking-tight">
-                Ready to work with zero-latency utilities?
-              </h2>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                Access all 54 utilities directly in your browser. Install as a PWA for offline access.
-              </p>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                <Link href="/dashboard">
-                  <Button size="default" className="gap-2 px-5 text-xs shadow-xs">
-                    <span>Launch Dashboard</span>
-                    <Icon icon="lucide:arrow-right" className="size-3.5" aria-hidden="true" />
-                  </Button>
-                </Link>
-                <Link href="/tools">
-                  <Button variant="outline" size="default" className="gap-2 px-5 text-xs">
-                    <span>Browse Catalog</span>
-                  </Button>
-                </Link>
+            <div className="rounded-2xl border border-border bg-card p-8 sm:p-14 text-center max-w-4xl mx-auto shadow-xs relative overflow-hidden">
+              <div className="space-y-4 max-w-xl mx-auto">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/60 px-3 py-0.5 text-xs font-mono text-muted-foreground">
+                  <span className="size-2 rounded-full bg-emerald-500" />
+                  Instant & Free Forever
+                </span>
+                <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                  Start building with zero data egress.
+                </h2>
+                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  Never paste proprietary tokens or upload company contracts to untrusted web servers again.
+                  Launch the local studio immediately.
+                </p>
+                <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
+                  <Link href="/dashboard">
+                    <Button size="default" className="h-10 gap-2 px-6 text-xs font-semibold shadow-xs">
+                      <Icon icon="lucide:layout-grid" className="size-4" aria-hidden="true" />
+                      <span>Launch Studio</span>
+                      <Icon icon="lucide:arrow-right" className="size-3.5" aria-hidden="true" />
+                    </Button>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => openPalette()}
+                    className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-5 text-xs font-semibold text-foreground hover:bg-muted transition cursor-pointer"
+                  >
+                    <Icon icon="lucide:search" className="size-3.5 text-muted-foreground" />
+                    <span>Search Tools</span>
+                    <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                      Ctrl K
+                    </kbd>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      {/* ---------------- Footer ---------------- */}
-      <footer className="border-t border-border/70 bg-muted/30 py-12 text-xs text-muted-foreground">
+      {/* ---------------- Enterprise SaaS Footer ---------------- */}
+      <footer className="border-t border-border/70 bg-muted/20 py-14 text-xs text-muted-foreground">
         <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-5">
             <div className="space-y-3 sm:col-span-2">
@@ -533,15 +643,16 @@ export function LandingPage() {
                 </span>
                 <span className="font-semibold text-foreground">DevKit</span>
                 <span className="rounded border border-border bg-muted px-1.5 py-0.2 font-mono text-[10px]">
-                  local-first
+                  local-first • v2.0
                 </span>
               </div>
               <p className="max-w-sm text-xs leading-relaxed text-muted-foreground">
-                Zero-egress, client-side developer toolkit running formatters, AST parsers,
+                Zero-egress, client-side developer workstation running formatters, AST parsers,
                 cryptographic generators, and document tools inside local browser memory.
               </p>
-              <div className="text-[11px] font-mono text-muted-foreground">
-                All data remains on your machine.
+              <div className="text-[11px] font-mono text-muted-foreground flex items-center gap-2">
+                <span className="size-2 rounded-full bg-emerald-500" />
+                <span>All operations execute locally on your device.</span>
               </div>
             </div>
 
@@ -558,7 +669,7 @@ export function LandingPage() {
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs mb-2.5">Analysis & Code</p>
+              <p className="font-semibold text-foreground text-xs mb-2.5">Code & Analysis</p>
               <ul className="space-y-1.5">
                 <li><Link href="/tools/ast-explorer" className="hover:text-foreground transition">AST Explorer</Link></li>
                 <li><Link href="/tools/wasm-explorer" className="hover:text-foreground transition">WASM Explorer</Link></li>
@@ -576,18 +687,18 @@ export function LandingPage() {
                 <li><Link href="/tools" className="hover:text-foreground transition">All 54 Tools</Link></li>
                 <li><Link href="/history" className="hover:text-foreground transition">Local History</Link></li>
                 <li><a href="#catalog" className="hover:text-foreground transition">Tool Catalog</a></li>
-                <li><a href="#architecture" className="hover:text-foreground transition">Architecture</a></li>
+                <li><a href="#comparison" className="hover:text-foreground transition">Why DevKit</a></li>
                 <li><a href="#faq" className="hover:text-foreground transition">FAQ</a></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-8 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row text-[11px]">
+          <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row text-[11px]">
             <p>© {new Date().getFullYear()} DevKit. Free and open source under MIT License.</p>
             <div className="flex items-center gap-3">
-              <span>Execution: <span className="font-mono text-foreground">In-Memory / V8</span></span>
+              <span>Runtime: <span className="font-mono text-foreground">In-Memory / V8</span></span>
               <span>•</span>
-              <span>Shortcut: <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">Ctrl+K</kbd></span>
+              <span>Command Bar: <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px]">Ctrl+K</kbd></span>
             </div>
           </div>
         </div>
@@ -596,96 +707,355 @@ export function LandingPage() {
   );
 }
 
-/* ---------------- Metric Item ---------------- */
+/* ---------------- Interactive DevKit Studio Mockup Window ---------------- */
 
-function MetricItem({
-  value,
-  label,
-  detail,
-}: {
-  value: string;
-  label: string;
-  detail: string;
-}) {
+type StudioTab = "json" | "jwt" | "ast" | "pdf";
+
+function StudioMockupWindow() {
+  const [activeTab, setActiveTab] = useState<StudioTab>("json");
+  const [formatMode, setFormatMode] = useState<"pretty" | "compact">("pretty");
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div className="space-y-1">
-      <div className="font-mono text-2xl font-bold tracking-tight text-foreground tabular-nums sm:text-3xl">
-        {value}
+    <div className="rounded-xl border border-border bg-card shadow-lg overflow-hidden text-left font-sans">
+      {/* Studio Window Chrome Bar */}
+      <div className="flex h-11 items-center justify-between border-b border-border bg-muted/40 px-4">
+        <div className="flex items-center gap-2">
+          {/* Traffic light dots */}
+          <div className="flex items-center gap-1.5 pr-2">
+            <span className="size-2.5 rounded-full bg-red-500/80" />
+            <span className="size-2.5 rounded-full bg-amber-500/80" />
+            <span className="size-2.5 rounded-full bg-emerald-500/80" />
+          </div>
+          {/* Path pill */}
+          <div className="hidden sm:flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground shadow-2xs">
+            <Icon icon="lucide:shield-check" className="size-3 text-emerald-500" />
+            <span>devkit.internal</span>
+            <span className="text-border">/</span>
+            <span className="text-foreground font-semibold">
+              {activeTab === "json" && "payload.json"}
+              {activeTab === "jwt" && "claims.jwt"}
+              {activeTab === "ast" && "parser.ts"}
+              {activeTab === "pdf" && "document.pdf"}
+            </span>
+          </div>
+        </div>
+
+        {/* Egress status badge */}
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] text-emerald-500 font-semibold">
+            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            0 B Egress
+          </span>
+          <span className="hidden md:inline-flex text-[11px] font-mono text-muted-foreground">
+            V8 In-Memory Sandbox
+          </span>
+        </div>
       </div>
-      <div className="text-xs font-semibold text-foreground">{label}</div>
-      <div className="text-[11px] text-muted-foreground leading-snug">{detail}</div>
+
+      {/* Studio Navigation & Tab Strip */}
+      <div className="flex flex-wrap items-center justify-between border-b border-border bg-muted/20 px-3 py-1 gap-2">
+        <div className="flex items-center gap-1">
+          <StudioTabButton
+            active={activeTab === "json"}
+            onClick={() => setActiveTab("json")}
+            icon="lucide:braces"
+            label="payload.json"
+            tag="Format"
+          />
+          <StudioTabButton
+            active={activeTab === "jwt"}
+            onClick={() => setActiveTab("jwt")}
+            icon="lucide:key"
+            label="claims.jwt"
+            tag="Verify"
+          />
+          <StudioTabButton
+            active={activeTab === "ast"}
+            onClick={() => setActiveTab("ast")}
+            icon="lucide:binary"
+            label="parser.ts"
+            tag="AST"
+          />
+          <StudioTabButton
+            active={activeTab === "pdf"}
+            onClick={() => setActiveTab("pdf")}
+            icon="lucide:file-text"
+            label="contract.pdf"
+            tag="PDF"
+          />
+        </div>
+
+        {/* Action buttons inside studio */}
+        <div className="flex items-center gap-1.5 text-xs">
+          {activeTab === "json" && (
+            <>
+              <button
+                type="button"
+                onClick={() => setFormatMode("pretty")}
+                className={cn(
+                  "rounded px-2 py-0.5 text-[11px] font-mono transition cursor-pointer",
+                  formatMode === "pretty"
+                    ? "bg-foreground text-background font-semibold"
+                    : "text-muted-foreground hover:bg-muted"
+                )}
+              >
+                Prettify
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormatMode("compact")}
+                className={cn(
+                  "rounded px-2 py-0.5 text-[11px] font-mono transition cursor-pointer",
+                  formatMode === "compact"
+                    ? "bg-foreground text-background font-semibold"
+                    : "text-muted-foreground hover:bg-muted"
+                )}
+              >
+                Minify
+              </button>
+            </>
+          )}
+
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="flex items-center gap-1 rounded border border-border bg-background px-2 py-0.5 text-[11px] font-mono text-muted-foreground hover:text-foreground hover:bg-muted transition cursor-pointer"
+          >
+            <Icon icon={copied ? "lucide:check" : "lucide:copy"} className="size-3" />
+            <span>{copied ? "Copied" : "Copy"}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Editor Viewport with Line Numbers and Code */}
+      <div className="p-4 sm:p-5 font-mono text-xs leading-relaxed bg-background/50 overflow-x-auto min-h-[220px]">
+        {activeTab === "json" && (
+          <div className="space-y-1">
+            {formatMode === "pretty" ? (
+              <>
+                <div className="flex gap-4">
+                  <span className="select-none text-muted-foreground/50 w-6 text-right">1</span>
+                  <span><span className="text-muted-foreground">&#123;</span></span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="select-none text-muted-foreground/50 w-6 text-right">2</span>
+                  <span className="pl-4">
+                    <span className="text-sky-500">&quot;status&quot;</span>
+                    <span className="text-muted-foreground">: </span>
+                    <span className="text-emerald-500">&quot;success&quot;</span>
+                    <span className="text-muted-foreground">,</span>
+                  </span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="select-none text-muted-foreground/50 w-6 text-right">3</span>
+                  <span className="pl-4">
+                    <span className="text-sky-500">&quot;networkEgressBytes&quot;</span>
+                    <span className="text-muted-foreground">: </span>
+                    <span className="text-amber-500">0</span>
+                    <span className="text-muted-foreground">,</span>
+                  </span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="select-none text-muted-foreground/50 w-6 text-right">4</span>
+                  <span className="pl-4">
+                    <span className="text-sky-500">&quot;executionLatencyMs&quot;</span>
+                    <span className="text-muted-foreground">: </span>
+                    <span className="text-amber-500">0.14</span>
+                    <span className="text-muted-foreground">,</span>
+                  </span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="select-none text-muted-foreground/50 w-6 text-right">5</span>
+                  <span className="pl-4">
+                    <span className="text-sky-500">&quot;runtime&quot;</span>
+                    <span className="text-muted-foreground">: </span>
+                    <span className="text-emerald-500">&quot;v8-in-memory-sandbox&quot;</span>
+                    <span className="text-muted-foreground">,</span>
+                  </span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="select-none text-muted-foreground/50 w-6 text-right">6</span>
+                  <span className="pl-4">
+                    <span className="text-sky-500">&quot;compliance&quot;</span>
+                    <span className="text-muted-foreground">: </span>
+                    <span className="text-muted-foreground">[</span>
+                    <span className="text-emerald-500">&quot;air-gapped&quot;</span>
+                    <span className="text-muted-foreground">, </span>
+                    <span className="text-emerald-500">&quot;zero-tracking&quot;</span>
+                    <span className="text-muted-foreground">]</span>
+                  </span>
+                </div>
+                <div className="flex gap-4">
+                  <span className="select-none text-muted-foreground/50 w-6 text-right">7</span>
+                  <span><span className="text-muted-foreground">&#125;</span></span>
+                </div>
+              </>
+            ) : (
+              <div className="flex gap-4">
+                <span className="select-none text-muted-foreground/50 w-6 text-right">1</span>
+                <span className="text-muted-foreground break-all">
+                  &#123;&quot;status&quot;:&quot;success&quot;,&quot;networkEgressBytes&quot;:0,&quot;executionLatencyMs&quot;:0.14,&quot;runtime&quot;:&quot;v8-in-memory-sandbox&quot;,&quot;compliance&quot;:[&quot;air-gapped&quot;,&quot;zero-tracking&quot;]&#125;
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "jwt" && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 pb-1 border-b border-border/50 text-[11px]">
+              <span className="text-emerald-500 font-semibold flex items-center gap-1">
+                <Icon icon="lucide:check-circle" className="size-3" />
+                Valid WebCrypto HS256 Signature
+              </span>
+              <span className="text-muted-foreground">• Algorithm: HMAC SHA-256</span>
+            </div>
+            <div className="space-y-1">
+              <div className="flex gap-4">
+                <span className="select-none text-muted-foreground/50 w-6 text-right">1</span>
+                <span>
+                  <span className="text-red-400 font-semibold">&#47;&#47; Header: </span>
+                  <span className="text-muted-foreground">&#123;&quot;alg&quot;: &quot;HS256&quot;, &quot;typ&quot;: &quot;JWT&quot;&#125;</span>
+                </span>
+              </div>
+              <div className="flex gap-4">
+                <span className="select-none text-muted-foreground/50 w-6 text-right">2</span>
+                <span>
+                  <span className="text-sky-400 font-semibold">&#47;&#47; Payload Claims:</span>
+                </span>
+              </div>
+              <div className="flex gap-4">
+                <span className="select-none text-muted-foreground/50 w-6 text-right">3</span>
+                <span className="pl-4">
+                  <span className="text-sky-500">&quot;sub&quot;</span>: <span className="text-emerald-500">&quot;usr_dev_0x9948&quot;</span>,
+                </span>
+              </div>
+              <div className="flex gap-4">
+                <span className="select-none text-muted-foreground/50 w-6 text-right">4</span>
+                <span className="pl-4">
+                  <span className="text-sky-500">&quot;scope&quot;</span>: <span className="text-emerald-500">&quot;write:local-sandbox&quot;</span>,
+                </span>
+              </div>
+              <div className="flex gap-4">
+                <span className="select-none text-muted-foreground/50 w-6 text-right">5</span>
+                <span className="pl-4">
+                  <span className="text-sky-500">&quot;exp&quot;</span>: <span className="text-amber-500">1735689600</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "ast" && (
+          <div className="space-y-1 text-[11px]">
+            <div className="flex items-center gap-2 pb-1 border-b border-border/50">
+              <span className="text-sky-500 font-semibold">Babel AST (EcmaScript 2026 Engine)</span>
+              <span className="text-muted-foreground">• In-Tab Parse Time: 0.18ms</span>
+            </div>
+            <div className="text-muted-foreground pt-1">
+              <span className="text-foreground font-semibold">Program</span> (start: 0, end: 42)
+            </div>
+            <div className="pl-4 text-muted-foreground">
+              └─ <span className="text-amber-500 font-semibold">VariableDeclaration</span> (kind: &quot;const&quot;)
+            </div>
+            <div className="pl-8 text-muted-foreground">
+              ├─ <span className="text-emerald-500">Identifier</span> (name: &quot;offlineStorage&quot;)
+            </div>
+            <div className="pl-8 text-muted-foreground">
+              └─ <span className="text-sky-500">ObjectExpression</span> (properties: 3)
+            </div>
+          </div>
+        )}
+
+        {activeTab === "pdf" && (
+          <div className="space-y-2 text-[11px]">
+            <div className="flex items-center justify-between pb-1 border-b border-border/50">
+              <span className="text-foreground font-semibold flex items-center gap-1.5">
+                <Icon icon="lucide:file-check" className="size-3.5 text-emerald-500" />
+                <span>Client-Side pdf-lib Document Assembly</span>
+              </span>
+              <span className="text-emerald-500 font-semibold">0 B Transferred</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-muted-foreground">
+              <div className="rounded border border-border/60 bg-muted/20 p-2">
+                <div className="text-[10px]">Total Pages</div>
+                <div className="font-semibold text-foreground text-xs">18 Pages</div>
+              </div>
+              <div className="rounded border border-border/60 bg-muted/20 p-2">
+                <div className="text-[10px]">Local Memory Heap</div>
+                <div className="font-semibold text-foreground text-xs">3.4 MB</div>
+              </div>
+              <div className="rounded border border-border/60 bg-muted/20 p-2">
+                <div className="text-[10px]">Processing Speed</div>
+                <div className="font-semibold text-emerald-500 text-xs">84 ms</div>
+              </div>
+              <div className="rounded border border-border/60 bg-muted/20 p-2">
+                <div className="text-[10px]">Privacy State</div>
+                <div className="font-semibold text-emerald-500 text-xs">Air-Gapped</div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Studio Status Telemetry Bar */}
+      <div className="flex flex-wrap items-center justify-between border-t border-border bg-muted/30 px-4 py-2 font-mono text-[11px] text-muted-foreground">
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1">
+            <span className="size-1.5 rounded-full bg-emerald-500" />
+            <span className="text-foreground font-semibold">Ln 14, Col 2</span>
+          </span>
+          <span>•</span>
+          <span>UTF-8</span>
+          <span>•</span>
+          <span>LF</span>
+          <span>•</span>
+          <span>JSON Schema Draft-7</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-foreground font-semibold">⚡ 0.14ms execution</span>
+          <span>•</span>
+          <span className="text-emerald-500 font-semibold">100% Client-Side</span>
+        </div>
+      </div>
     </div>
   );
 }
 
-/* ---------------- Architecture Card ---------------- */
-
-function ArchitectureCard({
+function StudioTabButton({
+  active,
+  onClick,
   icon,
-  title,
-  description,
+  label,
+  tag,
 }: {
+  active: boolean;
+  onClick: () => void;
   icon: string;
-  title: string;
-  description: string;
+  label: string;
+  tag: string;
 }) {
   return (
-    <article className="rounded-lg border border-border bg-card p-4 space-y-2 shadow-xs">
-      <div className="flex size-7 items-center justify-center rounded border border-border bg-muted/60 text-foreground">
-        <Icon icon={icon} className="size-4" aria-hidden="true" />
-      </div>
-      <h3 className="text-xs font-semibold tracking-tight text-foreground">{title}</h3>
-      <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
-    </article>
-  );
-}
-
-/* ---------------- Suite Card ---------------- */
-
-function SuiteCard({
-  title,
-  badge,
-  icon,
-  description,
-  tools,
-}: {
-  title: string;
-  badge: string;
-  icon: string;
-  description: string;
-  tools: string[];
-}) {
-  return (
-    <article className="rounded-lg border border-border bg-card p-4 flex flex-col justify-between space-y-3 shadow-xs">
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <div className="flex size-7 items-center justify-center rounded border border-border bg-muted/60 text-foreground">
-            <Icon icon={icon} className="size-4" aria-hidden="true" />
-          </div>
-          <Badge variant="outline" className="text-[10px] py-0 font-mono">
-            {badge}
-          </Badge>
-        </div>
-        <h3 className="text-sm font-semibold tracking-tight text-foreground">{title}</h3>
-        <p className="text-xs text-muted-foreground leading-relaxed">{description}</p>
-      </div>
-
-      <div className="border-t border-border pt-2.5">
-        <div className="flex flex-wrap gap-1">
-          {tools.map((slug) => {
-            const tool = TOOLS.find((t) => t.slug === slug);
-            if (!tool) return null;
-            return (
-              <Link key={slug} href={`/tools/${slug}`}>
-                <span className="inline-flex items-center rounded border border-border bg-muted/50 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground hover:border-border hover:bg-muted hover:text-foreground transition-colors">
-                  {tool.name}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </article>
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-mono transition cursor-pointer select-none",
+        active
+          ? "border border-border bg-background text-foreground font-semibold shadow-xs"
+          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+      )}
+    >
+      <Icon icon={icon} className="size-3" />
+      <span>{label}</span>
+      <span className="text-[10px] text-muted-foreground font-normal">({tag})</span>
+    </button>
   );
 }
 
@@ -716,8 +1086,10 @@ function ToolMatrix() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>
-          <span className="text-xs font-medium text-muted-foreground">Complete Inventory</span>
-          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+          <span className="text-xs font-medium text-muted-foreground font-mono uppercase tracking-wider">
+            Complete Inventory
+          </span>
+          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
             Tool Catalog Matrix
           </h2>
           <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
