@@ -54,14 +54,9 @@ function SidebarBrand() {
         <span className="flex size-7 items-center justify-center rounded-md border border-border bg-card text-foreground font-mono font-bold text-xs shadow-xs">
           DK
         </span>
-        <div className="leading-tight group-data-[collapsible=icon]:hidden">
-          <span className="block text-sm font-semibold tracking-tight">
-            DevKit
-          </span>
-          <span className="block text-[10px] font-mono text-sidebar-foreground/70">
-            local-first • 54 tools
-          </span>
-        </div>
+        <span className="text-sm font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
+          DevKit
+        </span>
       </Link>
       <button
         className="rounded-lg p-1.5 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground md:hidden cursor-pointer"

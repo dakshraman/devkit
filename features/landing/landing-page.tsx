@@ -31,21 +31,13 @@ export function LandingPage() {
               <span className="flex size-7 items-center justify-center rounded-md border border-border bg-card text-foreground font-mono font-semibold text-xs shadow-xs">
                 DK
               </span>
-              <div className="leading-tight">
-                <span className="block text-sm font-semibold tracking-tight">DevKit</span>
-                <span className="block text-[10px] text-muted-foreground font-mono">
-                  local-first • 54 tools
-                </span>
-              </div>
+              <span className="text-sm font-semibold tracking-tight">DevKit</span>
             </Link>
 
             <nav
               aria-label="Main navigation"
               className="hidden items-center gap-6 text-xs font-medium text-muted-foreground md:flex"
             >
-              <a href="#studio" className="transition hover:text-foreground">
-                Studio
-              </a>
               <a href="#standards" className="transition hover:text-foreground">
                 Standards
               </a>
@@ -124,13 +116,6 @@ export function LandingPage() {
         {mobileMenuOpen && (
           <div className="border-b border-border bg-background px-4 py-3 md:hidden">
             <nav aria-label="Mobile navigation" className="flex flex-col gap-2 text-xs">
-              <a
-                href="#studio"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
-              >
-                Studio
-              </a>
               <a
                 href="#standards"
                 onClick={() => setMobileMenuOpen(false)}
