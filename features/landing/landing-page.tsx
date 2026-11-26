@@ -1,3 +1,7 @@
+/* Hallmark · shape: Stat-Led · genre: modern-minimal · theme: Console (deal 1/3, seed devkit-local-first-developer-utilities-3bd7·77db8869·2026-11-26·r0) · job: try · draw: 3a2c4d
+ * hero: Corridor · nav: masthead · footer: statement · imagery: none · signature: live developer workbench · console: graphite
+ * axes: dark/grotesk-sans/chromatic-amber · posture: restrained · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 · weakest: S, elevated instrument panels with single surface seams */
 "use client";
 
 import Link from "next/link";
@@ -7,7 +11,6 @@ import { TOOLS, CATEGORIES, QUICK_ACCESS } from "@/data/tools";
 import { useSettings } from "@/context/settings-context";
 import { useCommandPalette } from "@/context/command-palette-context";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ToolIcon } from "@/components/ui/tool-icon";
 import { cn } from "@/lib/utils";
 import type { ToolCategory } from "@/types";
@@ -19,16 +22,16 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen w-full bg-background text-foreground antialiased selection:bg-primary/20">
-      {/* ---------------- Navigation Bar ---------------- */}
+      {/* ---------------- Navigation Bar (Masthead) ---------------- */}
       <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/95 backdrop-blur-md">
-        <div className="flex h-14 w-full items-center justify-between px-4 sm:px-8 lg:px-12 xl:px-16">
+        <div className="flex h-14 w-full items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
+              className="flex items-center gap-2.5 transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
               aria-label="DevKit home"
             >
-              <span className="flex size-7 items-center justify-center rounded-md border border-border bg-card text-foreground font-mono font-semibold text-xs shadow-xs">
+              <span className="flex size-7 items-center justify-center rounded-md border border-border bg-card text-foreground font-semibold text-xs shadow-xs">
                 DK
               </span>
               <span className="text-sm font-semibold tracking-tight">DevKit</span>
@@ -38,19 +41,19 @@ export function LandingPage() {
               aria-label="Main navigation"
               className="hidden items-center gap-6 text-xs font-medium text-muted-foreground md:flex"
             >
-              <a href="#standards" className="transition hover:text-foreground">
+              <a href="#standards" className="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1">
                 Standards
               </a>
-              <a href="#bento" className="transition hover:text-foreground">
+              <a href="#architecture" className="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1">
                 Architecture
               </a>
-              <a href="#comparison" className="transition hover:text-foreground">
-                Why DevKit
+              <a href="#comparison" className="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1">
+                Comparison
               </a>
-              <a href="#catalog" className="transition hover:text-foreground">
+              <a href="#catalog" className="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1">
                 Catalog
               </a>
-              <a href="#faq" className="transition hover:text-foreground">
+              <a href="#faq" className="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded px-1">
                 FAQ
               </a>
             </nav>
@@ -60,7 +63,7 @@ export function LandingPage() {
             <button
               type="button"
               onClick={() => openPalette()}
-              className="hidden items-center gap-2 rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs text-muted-foreground transition hover:border-border hover:bg-muted hover:text-foreground sm:flex cursor-pointer"
+              className="hidden items-center gap-2 rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-border hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:flex cursor-pointer active:bg-muted/90 disabled:opacity-50 disabled:pointer-events-none"
               aria-label="Search tools with command palette"
             >
               <Icon icon="lucide:search" className="size-3.5" aria-hidden="true" />
@@ -73,7 +76,7 @@ export function LandingPage() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="rounded-md border border-border p-1.5 text-muted-foreground transition hover:bg-accent hover:text-foreground cursor-pointer"
+              className="rounded-md border border-border p-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer active:bg-accent/80 disabled:opacity-50 disabled:pointer-events-none"
               aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
             >
               <Icon
@@ -84,13 +87,13 @@ export function LandingPage() {
             </button>
 
             <Link href="/tools" className="hidden sm:inline-flex">
-              <Button variant="ghost" size="sm" className="h-8 text-xs">
+              <Button variant="ghost" size="sm" className="h-8 text-xs active:bg-accent/80 disabled:opacity-50 disabled:pointer-events-none">
                 All Tools
               </Button>
             </Link>
 
             <Link href="/dashboard">
-              <Button size="sm" className="h-8 gap-1.5 text-xs shadow-xs">
+              <Button size="sm" className="h-8 gap-1.5 text-xs shadow-xs active:opacity-90 disabled:opacity-50 disabled:pointer-events-none">
                 <span>Dashboard</span>
                 <Icon icon="lucide:arrow-right" className="size-3.5" aria-hidden="true" />
               </Button>
@@ -99,7 +102,7 @@ export function LandingPage() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="rounded-md border border-border p-1.5 text-muted-foreground md:hidden hover:bg-accent cursor-pointer"
+              className="rounded-md border border-border p-1.5 text-muted-foreground md:hidden hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring cursor-pointer"
               aria-label="Toggle navigation menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -124,7 +127,7 @@ export function LandingPage() {
                 Standards
               </a>
               <a
-                href="#bento"
+                href="#architecture"
                 onClick={() => setMobileMenuOpen(false)}
                 className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
               >
@@ -135,7 +138,7 @@ export function LandingPage() {
                 onClick={() => setMobileMenuOpen(false)}
                 className="rounded-md px-2 py-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
               >
-                Why DevKit
+                Comparison
               </a>
               <a
                 href="#catalog"
@@ -154,7 +157,7 @@ export function LandingPage() {
               <div className="mt-2 flex flex-col gap-2 border-t border-border pt-2">
                 <Link href="/tools" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" size="sm" className="w-full justify-center text-xs">
-                    Browse All 54 Tools
+                    Browse 54 Tools
                   </Button>
                 </Link>
                 <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
@@ -169,285 +172,230 @@ export function LandingPage() {
       </header>
 
       <main className="w-full">
-        {/* ---------------- SaaS Flagship Hero Section ---------------- */}
-        <section id="studio" className="relative border-b border-border/70 pt-16 pb-20 lg:pt-24 lg:pb-28">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="mx-auto max-w-4xl text-center space-y-6">
-              {/* Product Release Pill */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-muted/60 px-3 py-1 text-xs text-muted-foreground shadow-xs backdrop-blur-sm transition hover:border-border">
-                <span className="flex size-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
-                <span className="font-mono text-[11px] font-semibold text-foreground">DevKit 2.0</span>
-                <span className="text-border">|</span>
-                <span className="text-[11px]">The Local Developer Cloud</span>
-                <Icon icon="lucide:arrow-right" className="size-3 text-muted-foreground" aria-hidden="true" />
-              </div>
-
-              {/* Commanding SaaS Headline */}
-              <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-[1.1] sm:leading-[1.1]">
-                All your developer tools.
-                <span className="block text-muted-foreground">None of your data leaving.</span>
+        {/* ---------------- Hero Section (Corridor / Instrument-Led) ---------------- */}
+        <section className="border-b border-border/70 pt-16 pb-20 lg:pt-20 lg:pb-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl space-y-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-foreground text-balance leading-tight">
+                Developer utilities with zero data egress
               </h1>
 
-              {/* Sub-headline */}
-              <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-                54 instant, client-side engineering utilities for formatting, cryptographic hashing,
-                AST inspection, and document manipulation. Executed entirely inside your browser memory
-                with zero network egress.
+              <p className="max-w-xl text-base text-muted-foreground leading-relaxed">
+                Fifty-four fast client utilities executed in browser memory with zero network egress.
               </p>
 
-              {/* Dual Action CTAs */}
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link href="/dashboard">
-                  <Button size="default" className="h-10 gap-2 px-6 text-xs font-semibold shadow-xs">
-                    <Icon icon="lucide:layout-grid" className="size-4" aria-hidden="true" />
-                    <span>Launch Studio</span>
-                    <kbd className="hidden sm:inline-flex items-center rounded bg-primary-foreground/20 px-1.5 py-0.5 font-mono text-[10px] text-primary-foreground">
-                      ⌘K
-                    </kbd>
+                  <Button size="default" className="h-10 gap-2 px-6 text-xs font-semibold shadow-xs active:opacity-90 disabled:opacity-50 disabled:pointer-events-none">
+                    <Icon icon="lucide:terminal" className="size-4" aria-hidden="true" />
+                    <span>Launch Workbench</span>
                   </Button>
                 </Link>
                 <a href="#catalog">
-                  <Button variant="outline" size="default" className="h-10 gap-2 px-6 text-xs font-semibold">
+                  <Button variant="outline" size="default" className="h-10 gap-2 px-6 text-xs font-semibold active:bg-muted/80 disabled:opacity-50 disabled:pointer-events-none">
                     <Icon icon="lucide:list" className="size-4" aria-hidden="true" />
-                    <span>Explore 54 Tools</span>
+                    <span>Search 54 Tools</span>
                   </Button>
                 </a>
               </div>
 
-              {/* Technical Trust Indicators */}
-              <div className="pt-4 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-mono">
-                <div className="flex items-center gap-1.5">
-                  <Icon icon="lucide:shield-check" className="size-3.5 text-emerald-500" aria-hidden="true" />
-                  <span>0 B Network Egress</span>
+              {/* Measured Instrument Telemetry Readings */}
+              <div className="pt-4 grid grid-cols-3 gap-6 border-t border-border/60 max-w-lg">
+                <div className="space-y-1">
+                  <div className="font-mono text-xl sm:text-2xl font-normal text-foreground tabular-nums">
+                    0 B
+                  </div>
+                  <div className="text-xs text-muted-foreground">network egress</div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <Icon icon="lucide:zap" className="size-3.5 text-amber-500" aria-hidden="true" />
-                  <span>Sub-millisecond Latency</span>
+                <div className="space-y-1">
+                  <div className="font-mono text-xl sm:text-2xl font-normal text-foreground tabular-nums">
+                    &lt; 1 ms
+                  </div>
+                  <div className="text-xs text-muted-foreground">execution latency</div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <Icon icon="lucide:wifi-off" className="size-3.5 text-sky-500" aria-hidden="true" />
-                  <span>100% Offline PWA</span>
+                <div className="space-y-1">
+                  <div className="font-mono text-xl sm:text-2xl font-normal text-foreground tabular-nums">
+                    100%
+                  </div>
+                  <div className="text-xs text-muted-foreground">offline operational</div>
                 </div>
               </div>
             </div>
 
-            {/* Interactive DevKit Studio Application Window */}
-            <div className="mt-12 lg:mt-16 max-w-5xl mx-auto">
-              <StudioMockupWindow />
-            </div>
-          </div>
-        </section>
-
-        {/* ---------------- Open Standards & Specifications Row ---------------- */}
-        <section id="standards" className="border-b border-border/70 bg-muted/20 py-8">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground shrink-0">
-                Powered by Open Specifications
-              </span>
-              <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-muted-foreground">
-                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
-                  W3C WebCrypto API
-                </span>
-                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
-                  Babel AST v8
-                </span>
-                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
-                  WebAssembly (WASM)
-                </span>
-                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
-                  ISO 32000 PDF
-                </span>
-                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
-                  RFC 7519 JWT
-                </span>
-                <span className="rounded-md border border-border bg-card px-2.5 py-1 text-foreground">
-                  Canvas 2D Engine
-                </span>
-              </div>
+            {/* Signature Workbench Instrument (Clean hairline panel cut from surface) */}
+            <div className="mt-12 lg:mt-16">
+              <WorkbenchInstrument />
             </div>
           </div>
         </section>
 
-        {/* ---------------- High-Impact Bento Architecture Showcase ---------------- */}
-        <section id="bento" className="border-b border-border/70 py-16 lg:py-24 scroll-mt-14">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                <Icon icon="lucide:layers" className="size-3.5 text-emerald-500" aria-hidden="true" />
-                <span>Architecture & Ergonomics</span>
+        {/* ---------------- Open Specifications Ledger ---------------- */}
+        <section id="standards" className="border-b border-border/70 bg-muted/10 py-6 scroll-mt-14">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
+              <div className="border border-border bg-card px-3 py-2 rounded-md">
+                <div className="text-muted-foreground text-[11px]">cryptography</div>
+                <div className="font-medium text-foreground">W3C WebCrypto API</div>
               </div>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-                Engineered for security, velocity, and zero cloud dependency
+              <div className="border border-border bg-card px-3 py-2 rounded-md">
+                <div className="text-muted-foreground text-[11px]">ast parser</div>
+                <div className="font-medium text-foreground">Babel AST v8</div>
+              </div>
+              <div className="border border-border bg-card px-3 py-2 rounded-md">
+                <div className="text-muted-foreground text-[11px]">bytecode</div>
+                <div className="font-medium text-foreground">WebAssembly Engine</div>
+              </div>
+              <div className="border border-border bg-card px-3 py-2 rounded-md">
+                <div className="text-muted-foreground text-[11px]">documents</div>
+                <div className="font-medium text-foreground">ISO 32000 PDF</div>
+              </div>
+              <div className="border border-border bg-card px-3 py-2 rounded-md">
+                <div className="text-muted-foreground text-[11px]">security</div>
+                <div className="font-medium text-foreground">RFC 7519 JWT Spec</div>
+              </div>
+              <div className="border border-border bg-card px-3 py-2 rounded-md">
+                <div className="text-muted-foreground text-[11px]">graphics</div>
+                <div className="font-medium text-foreground">Canvas 2D Pipeline</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ---------------- Architectural Pillars (Single Containment Surface) ---------------- */}
+        <section id="architecture" className="border-b border-border/70 py-16 lg:py-24 scroll-mt-14">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl space-y-2">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-foreground">
+                Engineered for complete memory isolation
               </h2>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                DevKit is fundamentally architected to eliminate the privacy risks, latency bottlenecks, and
-                paywalls of traditional online utility websites.
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
+                Eliminating remote network latency and third-party data tracking by processing all payloads inside local browser memory.
               </p>
             </div>
 
-            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Bento Card 1: Zero Egress Sandbox (Col span 2 on LG) */}
-              <div className="lg:col-span-2 rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between space-y-6">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-mono text-emerald-500">
-                      <span className="size-1.5 rounded-full bg-emerald-500" />
-                      Zero-Egress Sandbox
-                    </span>
-                    <span className="text-[11px] font-mono text-muted-foreground">Air-Gapped Compliant</span>
-                  </div>
-                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
-                    Zero network requests. 100% in-browser memory isolation.
+            <div className="mt-10 grid gap-4 md:grid-cols-2">
+              {/* Pillar 1: Zero Egress Sandbox */}
+              <div className="border border-border bg-card p-6 rounded-lg flex flex-col justify-between space-y-5">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                    <Icon icon="lucide:shield-check" className="size-4 text-emerald-500" aria-hidden="true" />
+                    <span>Zero network requests during execution</span>
                   </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed max-w-xl">
-                    Every routine—from hashing JWT secrets to merging confidential multi-page contracts—executes
-                    strictly inside your browser V8 heap. Memory is immediately released upon closing the tab.
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Tokens, private keys, and enterprise contracts execute strictly inside your local browser thread. Memory is released immediately upon closing the tab.
                   </p>
                 </div>
 
-                {/* Micro-UI: Live Sandbox Telemetry */}
-                <div className="rounded-lg border border-border bg-muted/40 p-4 font-mono text-xs space-y-2">
-                  <div className="flex items-center justify-between text-muted-foreground border-b border-border/60 pb-2">
-                    <div className="flex items-center gap-2">
-                      <Icon icon="lucide:shield" className="size-3.5 text-emerald-500" />
-                      <span className="text-[11px] text-foreground font-semibold">Browser Network Monitor</span>
-                    </div>
-                    <span className="text-[10px] text-emerald-500">POLICY: REJECT_ALL_EGRESS</span>
+                <div className="border border-border bg-muted/40 p-3 rounded text-xs space-y-1.5">
+                  <div className="flex items-center justify-between text-muted-foreground text-[11px] pb-1 border-b border-border/60">
+                    <span>network inspector</span>
+                    <span className="text-emerald-500">policy: reject all egress</span>
                   </div>
-                  <div className="space-y-1.5 text-[11px]">
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">POST https://analytics.remote/v1</span>
-                      <span className="text-red-500 font-semibold">[BLOCKED: ZERO_EGRESS]</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">POST https://api.cloud-converter.com/upload</span>
-                      <span className="text-red-500 font-semibold">[BLOCKED: LOCAL_FIRST]</span>
-                    </div>
-                    <div className="flex items-center justify-between pt-1 border-t border-border/40 text-foreground font-semibold">
-                      <span>Total Network Bytes Egressed:</span>
-                      <span className="text-emerald-500 font-mono">0 Bytes (0 pkts)</span>
-                    </div>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-muted-foreground">POST /telemetry</span>
+                    <span className="text-red-400">blocked: zero egress</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-muted-foreground">POST /cloud-convert</span>
+                    <span className="text-red-400">blocked: local only</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/40 text-foreground">
+                    <span>total egress:</span>
+                    <span className="text-emerald-500 font-mono tabular-nums">0 B</span>
                   </div>
                 </div>
               </div>
 
-              {/* Bento Card 2: Command Palette Velocity */}
-              <div className="rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between space-y-6">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[11px] font-mono text-foreground">
-                      <Icon icon="lucide:command" className="size-3" />
-                      Command Center
-                    </span>
-                    <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-                      Ctrl K
-                    </kbd>
-                  </div>
-                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
-                    Sub-millisecond keyboard velocity
+              {/* Pillar 2: Sub-millisecond Keyboard Velocity */}
+              <div className="border border-border bg-card p-6 rounded-lg flex flex-col justify-between space-y-5">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                    <Icon icon="lucide:command" className="size-4" aria-hidden="true" />
+                    <span>Sub-millisecond keyboard velocity</span>
                   </h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Switch between all 54 utilities in <span className="font-mono text-foreground">0.1ms</span>.
-                    Fuzzy search tools, trigger formatting commands, and jump directly to work.
+                    Switch between all 54 utilities in less than one millisecond. Fuzzy search tools, execute quick transformations, and copy outputs without touching your mouse.
                   </p>
                 </div>
 
-                {/* Micro-UI: Interactive Palette Preview */}
-                <div className="rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs space-y-1.5">
-                  <div className="flex items-center gap-2 rounded border border-border/80 bg-background px-2.5 py-1.5 text-[11px] text-foreground">
-                    <Icon icon="lucide:search" className="size-3 text-muted-foreground" />
+                <div className="border border-border bg-muted/40 p-3 rounded text-xs space-y-2">
+                  <div className="flex items-center gap-2 border border-border bg-background px-2.5 py-1.5 rounded text-[11px] font-mono">
+                    <Icon icon="lucide:search" className="size-3 text-muted-foreground" aria-hidden="true" />
                     <span>&gt; jwt decode</span>
                   </div>
-                  <div className="space-y-1 text-[11px] text-muted-foreground pl-1">
-                    <div className="flex items-center justify-between py-1 px-1.5 rounded bg-card text-foreground font-semibold">
+                  <div className="text-[11px] text-muted-foreground space-y-1">
+                    <div className="flex justify-between py-0.5 text-foreground font-medium">
                       <span>JWT Inspector</span>
-                      <span className="text-[10px] text-emerald-500 font-normal">HS256 / RS256</span>
+                      <span className="text-[10px] text-emerald-500">HS256 verified</span>
                     </div>
-                    <div className="flex items-center justify-between py-0.5 px-1.5">
+                    <div className="flex justify-between py-0.5">
                       <span>JSON Formatter</span>
-                      <span className="text-[10px]">Prettify & Diff</span>
+                      <span className="text-[10px]">Prettify</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Bento Card 3: Deep AST & Bytecode Inspection */}
-              <div className="rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between space-y-6">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted px-2.5 py-0.5 text-[11px] font-mono text-foreground">
-                      <Icon icon="lucide:binary" className="size-3" />
-                      Compilers & AST
-                    </span>
-                    <span className="text-[11px] font-mono text-muted-foreground">Babel / WASM</span>
-                  </div>
-                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
-                    Deep AST & bytecode disassembly
+              {/* Pillar 3: AST and Bytecode */}
+              <div className="border border-border bg-card p-6 rounded-lg flex flex-col justify-between space-y-5">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                    <Icon icon="lucide:binary" className="size-4" aria-hidden="true" />
+                    <span>Deep AST and bytecode disassembly</span>
                   </h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Inspect ECMAScript and TypeScript Abstract Syntax Trees in real time. Deconstruct WebAssembly
-                    binary sections with opcode resolution.
+                    Inspect ECMAScript and TypeScript Abstract Syntax Trees in real time. Deconstruct WebAssembly binary sections with opcode resolution.
                   </p>
                 </div>
 
-                {/* Micro-UI: AST Node Tree Preview */}
-                <div className="rounded-lg border border-border bg-muted/40 p-3 font-mono text-xs space-y-1">
+                <div className="border border-border bg-muted/40 p-3 rounded font-mono text-xs space-y-1">
                   <div className="text-[11px] text-muted-foreground">
-                    <span className="text-sky-500 font-semibold">Program</span> (body: 2)
+                    <span className="text-sky-400 font-medium">Program</span> (body: 2)
                   </div>
                   <div className="pl-3 text-[11px] text-muted-foreground">
-                    └─ <span className="text-amber-500 font-semibold">FunctionDeclaration</span> (name: &quot;hash&quot;)
+                    └─ <span className="text-amber-400 font-medium">FunctionDeclaration</span> (name: &quot;hash&quot;)
                   </div>
                   <div className="pl-6 text-[10px] text-muted-foreground">
-                    ├─ <span className="text-emerald-500">Identifier</span> (id: &quot;secretKey&quot;)
+                    ├─ <span className="text-emerald-400">Identifier</span> (id: &quot;secretKey&quot;)
                   </div>
                   <div className="pl-6 text-[10px] text-muted-foreground">
-                    └─ <span className="text-violet-500">BlockStatement</span> (lines: 4)
+                    └─ <span className="text-violet-400">BlockStatement</span> (lines: 4)
                   </div>
                 </div>
               </div>
 
-              {/* Bento Card 4: Document & Media Studio (Col span 2 on LG) */}
-              <div className="lg:col-span-2 rounded-xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between space-y-6">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 text-[11px] font-mono text-sky-500">
-                      <Icon icon="lucide:file-text" className="size-3" />
-                      Document Engine
-                    </span>
-                    <span className="text-[11px] font-mono text-muted-foreground">pdf-lib • jszip • Canvas</span>
-                  </div>
-                  <h3 className="text-lg font-semibold tracking-tight text-foreground">
-                    Heavy document & media manipulation. No cloud limits.
+              {/* Pillar 4: In-Memory Document Pipeline */}
+              <div className="border border-border bg-card p-6 rounded-lg flex flex-col justify-between space-y-5">
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-foreground flex items-center gap-2">
+                    <Icon icon="lucide:file-text" className="size-4 text-sky-400" aria-hidden="true" />
+                    <span>Heavy document and media manipulation</span>
                   </h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed max-w-xl">
-                    Merge, split, compress, and watermark multi-megabyte PDFs and images directly in browser RAM.
-                    No 5 MB paywalls, no queue delays, and zero document uploads to third-party cloud servers.
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Merge, split, and watermark multi-page PDFs and images directly in browser RAM. Zero upload limits, zero queue delays, and no server roundtrips.
                   </p>
                 </div>
 
-                {/* Micro-UI: Local PDF Pipeline */}
-                <div className="rounded-lg border border-border bg-muted/40 p-4 font-mono text-xs space-y-2">
-                  <div className="flex items-center justify-between text-muted-foreground border-b border-border/60 pb-2">
-                    <span className="text-[11px] text-foreground font-semibold">In-Memory Batch Pipeline</span>
-                    <span className="text-[10px] text-emerald-500">COMPLETED IN 140ms</span>
+                <div className="border border-border bg-muted/40 p-3 rounded text-xs space-y-2">
+                  <div className="flex items-center justify-between text-muted-foreground text-[11px] pb-1 border-b border-border/60">
+                    <span>in-memory batch pipeline</span>
+                    <span className="text-emerald-500">completed in 140ms</span>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-[11px]">
-                    <div className="rounded border border-border bg-card p-2 space-y-1">
-                      <div className="text-muted-foreground text-[10px]">Input Document</div>
-                      <div className="font-semibold text-foreground truncate">contract-full.pdf</div>
-                      <div className="text-muted-foreground text-[10px]">14.8 MB (24 pages)</div>
+                  <div className="grid grid-cols-3 gap-2 text-[11px]">
+                    <div>
+                      <div className="text-muted-foreground text-[10px]">input</div>
+                      <div className="text-foreground truncate">contract.pdf</div>
+                      <div className="text-muted-foreground text-[10px] font-mono tabular-nums">14.8 MB</div>
                     </div>
-                    <div className="rounded border border-border bg-card p-2 space-y-1">
-                      <div className="text-muted-foreground text-[10px]">Transformation</div>
-                      <div className="font-semibold text-foreground">Split Pages 1-5</div>
-                      <div className="text-emerald-500 text-[10px]">In-Memory pdf-lib</div>
+                    <div>
+                      <div className="text-muted-foreground text-[10px]">action</div>
+                      <div className="text-foreground">split pages</div>
+                      <div className="text-emerald-500 text-[10px]">pdf-lib</div>
                     </div>
-                    <div className="rounded border border-border bg-card p-2 space-y-1">
-                      <div className="text-muted-foreground text-[10px]">Output Bundle</div>
-                      <div className="font-semibold text-foreground truncate">extracted-bundle.zip</div>
-                      <div className="text-emerald-500 text-[10px]">0 B Uploaded</div>
+                    <div>
+                      <div className="text-muted-foreground text-[10px]">egress</div>
+                      <div className="text-emerald-500 font-mono tabular-nums">0 B</div>
+                      <div className="text-muted-foreground text-[10px]">local ram</div>
                     </div>
                   </div>
                 </div>
@@ -456,87 +404,86 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* ---------------- SaaS Comparison Matrix (DevKit vs Cloud Converters) ---------------- */}
+        {/* ---------------- SaaS Comparison Matrix ---------------- */}
         <section id="comparison" className="border-b border-border/70 py-16 lg:py-24 scroll-mt-14">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="max-w-3xl">
-              <span className="text-xs font-medium text-muted-foreground">Architectural Benchmark</span>
-              <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-                Why DevKit vs Legacy Cloud Converters
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-3xl space-y-2">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-foreground">
+                Why DevKit versus traditional cloud utilities
               </h2>
-              <p className="mt-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                How DevKit compares to traditional online formatters, cloud PDF converters, and web decoders.
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-xl">
+                Comparing local-first execution against remote cloud converters and online formatters.
               </p>
             </div>
 
-            <div className="mt-10 overflow-x-auto rounded-xl border border-border bg-card shadow-xs">
+            <div className="mt-10 overflow-x-auto border border-border bg-card rounded-lg shadow-xs">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="border-b border-border bg-muted/40 font-mono text-[11px] text-muted-foreground">
-                    <th scope="col" className="p-4 font-semibold text-foreground">
-                      Engineering Metric
+                  <tr className="border-b border-border bg-muted/40 text-[11px] text-muted-foreground">
+                    <th scope="col" className="p-4 font-medium text-foreground">
+                      Engineering metric
                     </th>
-                    <th scope="col" className="p-4 font-semibold text-emerald-500 bg-emerald-500/5">
-                      DevKit (Local-First Cloud)
+                    <th scope="col" className="p-4 font-medium text-emerald-500 bg-emerald-500/5">
+                      DevKit (local-first workbench)
                     </th>
-                    <th scope="col" className="p-4 font-semibold text-muted-foreground">
-                      Traditional Web Utilities (Cloud)
+                    <th scope="col" className="p-4 font-medium text-muted-foreground">
+                      Traditional cloud converters
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
                   <tr>
-                    <td className="p-4 font-semibold text-foreground">Network Data Egress</td>
-                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
-                      0 Bytes (Never leaves device)
+                    <td className="p-4 font-medium text-foreground">Network data egress</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5">
+                      0 bytes (processed on device)
                     </td>
                     <td className="p-4 text-muted-foreground">
-                      100% of payload uploaded to remote servers
+                      Entire payload uploaded to remote servers
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold text-foreground">Execution Latency</td>
-                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
-                      &lt; 1ms (Native V8 / WebCrypto)
+                    <td className="p-4 font-medium text-foreground">Processing latency</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5">
+                      &lt; 1 ms (in-memory v8 runtime)
                     </td>
                     <td className="p-4 text-muted-foreground">
-                      500ms – 4,000ms (Network roundtrips & queues)
+                      500 ms to 4000 ms network roundtrips
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold text-foreground">Air-Gapped & Offline Support</td>
-                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
-                      100% Operational Offline (PWA)
+                    <td className="p-4 font-medium text-foreground">Offline availability</td>
+                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5">
+                      100% operational offline (pwa cache)
                     </td>
                     <td className="p-4 text-muted-foreground">
-                      Completely non-functional without active Wi-Fi
+                      Completely non-functional without active connection
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold text-foreground">Data Retention & Logs</td>
-                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
+                    <td className="p-4 font-medium text-foreground">Data retention and logs</td>
+                    <td className="p-4 text-emerald-500 bg-emerald-500/5">
                       Zero logs, zero third-party telemetry
                     </td>
                     <td className="p-4 text-muted-foreground">
-                      Stored in server access logs and cloud S3 buckets
+                      Stored in server access logs and cloud buckets
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold text-foreground">File Size Limits & Quotas</td>
-                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
-                      Unlimited (Bound only by local device RAM)
+                    <td className="p-4 font-medium text-foreground">File size ceiling</td>
+                    <td className="p-4 text-emerald-500 bg-emerald-500/5">
+                      Unlimited (bound only by local device ram)
                     </td>
                     <td className="p-4 text-muted-foreground">
-                      Capped at 5 MB – 15 MB unless you pay monthly
+                      Capped at 5 MB to 15 MB without paid subscriptions
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-4 font-semibold text-foreground">Monetization & Tracking</td>
-                    <td className="p-4 font-mono text-emerald-500 bg-emerald-500/5 font-semibold">
-                      0 Ads, 0 Trackers, MIT Open Source
+                    <td className="p-4 font-medium text-foreground">Monetization and tracking</td>
+                    <td className="p-4 text-emerald-500 bg-emerald-500/5">
+                      Zero ads, zero trackers, mit open source
                     </td>
                     <td className="p-4 text-muted-foreground">
-                      Ad banners, cross-site trackers, paywalls
+                      Ad banners, tracking cookies, subscription paywalls
                     </td>
                   </tr>
                 </tbody>
@@ -547,23 +494,20 @@ export function LandingPage() {
 
         {/* ---------------- Complete Tool Catalog Matrix ---------------- */}
         <section id="catalog" className="py-16 lg:py-24 scroll-mt-14">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ToolMatrix />
           </div>
         </section>
 
         {/* ---------------- Frequently Asked Questions ---------------- */}
         <section id="faq" className="border-t border-border/70 bg-muted/10 py-16 lg:py-24 scroll-mt-14">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
-              <div className="text-center">
-                <span className="text-xs font-medium text-muted-foreground font-mono uppercase tracking-wider">
-                  Technical Specifications
-                </span>
-                <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-                  Frequently Asked Questions
+              <div className="text-center space-y-2">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-foreground">
+                  Frequently asked questions
                 </h2>
-                <p className="mt-2 text-xs text-muted-foreground sm:text-sm">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Technical guarantees regarding DevKit security, offline behavior, and execution boundaries.
                 </p>
               </div>
@@ -575,36 +519,31 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* ---------------- SaaS Bottom Call to Action ---------------- */}
+        {/* ---------------- Closing Statement CTA ---------------- */}
         <section className="border-t border-border/70 py-16 lg:py-24">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
-            <div className="rounded-2xl border border-border bg-card p-8 sm:p-14 text-center max-w-4xl mx-auto shadow-xs relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="border border-border bg-card p-8 sm:p-14 text-center max-w-4xl mx-auto rounded-xl shadow-xs">
               <div className="space-y-4 max-w-xl mx-auto">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-muted/60 px-3 py-0.5 text-xs font-mono text-muted-foreground">
-                  <span className="size-2 rounded-full bg-emerald-500" />
-                  Instant & Free Forever
-                </span>
-                <h2 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                  Start building with zero data egress.
+                <h2 className="text-3xl sm:text-4xl font-medium tracking-tight text-foreground">
+                  Start working without data leaks
                 </h2>
-                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
-                  Never paste proprietary tokens or upload company contracts to untrusted web servers again.
-                  Launch the local studio immediately.
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  Open the local workbench to format, inspect, and manipulate documents locally in browser memory.
                 </p>
                 <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
                   <Link href="/dashboard">
-                    <Button size="default" className="h-10 gap-2 px-6 text-xs font-semibold shadow-xs">
-                      <Icon icon="lucide:layout-grid" className="size-4" aria-hidden="true" />
-                      <span>Launch Studio</span>
+                    <Button size="default" className="h-10 gap-2 px-6 text-xs font-semibold shadow-xs active:opacity-90 disabled:opacity-50 disabled:pointer-events-none">
+                      <Icon icon="lucide:terminal" className="size-4" aria-hidden="true" />
+                      <span>Launch Workbench</span>
                       <Icon icon="lucide:arrow-right" className="size-3.5" aria-hidden="true" />
                     </Button>
                   </Link>
                   <button
                     type="button"
                     onClick={() => openPalette()}
-                    className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-5 text-xs font-semibold text-foreground hover:bg-muted transition cursor-pointer"
+                    className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-5 text-xs font-semibold text-foreground hover:bg-muted transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:bg-muted/90 disabled:opacity-50 disabled:pointer-events-none"
                   >
-                    <Icon icon="lucide:search" className="size-3.5 text-muted-foreground" />
+                    <Icon icon="lucide:search" className="size-3.5 text-muted-foreground" aria-hidden="true" />
                     <span>Search Tools</span>
                     <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
                       Ctrl K
@@ -617,13 +556,13 @@ export function LandingPage() {
         </section>
       </main>
 
-      {/* ---------------- Enterprise SaaS Footer ---------------- */}
+      {/* ---------------- Statement Footer ---------------- */}
       <footer className="border-t border-border/70 bg-muted/20 py-14 text-xs text-muted-foreground">
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-5">
             <div className="space-y-3 sm:col-span-2">
               <div className="flex items-center gap-2">
-                <span className="flex size-6 items-center justify-center rounded border border-border bg-card text-foreground font-mono font-semibold text-[11px]">
+                <span className="flex size-6 items-center justify-center rounded border border-border bg-card text-foreground font-semibold text-[11px]">
                   DK
                 </span>
                 <span className="font-semibold text-foreground">DevKit</span>
@@ -632,45 +571,45 @@ export function LandingPage() {
                 Zero-egress, client-side developer workstation running formatters, AST parsers,
                 cryptographic generators, and document tools inside local browser memory.
               </p>
-              <div className="text-[11px] font-mono text-muted-foreground flex items-center gap-2">
-                <span className="size-2 rounded-full bg-emerald-500" />
+              <div className="text-[11px] text-muted-foreground flex items-center gap-2">
+                <span className="size-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
                 <span>All operations execute locally on your device.</span>
               </div>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs mb-2.5">Document & Media</p>
+              <p className="font-medium text-foreground text-xs mb-2.5">Document and media</p>
               <ul className="space-y-1.5">
-                <li><Link href="/tools/pdf-merge" className="hover:text-foreground transition">Merge PDF</Link></li>
-                <li><Link href="/tools/pdf-split" className="hover:text-foreground transition">Split & Extract PDF</Link></li>
-                <li><Link href="/tools/image-to-pdf" className="hover:text-foreground transition">Image to PDF</Link></li>
-                <li><Link href="/tools/pdf-organize" className="hover:text-foreground transition">Organize PDF</Link></li>
-                <li><Link href="/tools/image-resizer" className="hover:text-foreground transition">Image Resizer</Link></li>
-                <li><Link href="/tools/image-watermark" className="hover:text-foreground transition">Watermark Image</Link></li>
+                <li><Link href="/tools/pdf-merge" className="hover:text-foreground transition-colors">Merge PDF</Link></li>
+                <li><Link href="/tools/pdf-split" className="hover:text-foreground transition-colors">Split and Extract PDF</Link></li>
+                <li><Link href="/tools/image-to-pdf" className="hover:text-foreground transition-colors">Image to PDF</Link></li>
+                <li><Link href="/tools/pdf-organize" className="hover:text-foreground transition-colors">Organize PDF</Link></li>
+                <li><Link href="/tools/image-resizer" className="hover:text-foreground transition-colors">Image Resizer</Link></li>
+                <li><Link href="/tools/image-watermark" className="hover:text-foreground transition-colors">Watermark Image</Link></li>
               </ul>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs mb-2.5">Code & Analysis</p>
+              <p className="font-medium text-foreground text-xs mb-2.5">Code and analysis</p>
               <ul className="space-y-1.5">
-                <li><Link href="/tools/ast-explorer" className="hover:text-foreground transition">AST Explorer</Link></li>
-                <li><Link href="/tools/wasm-explorer" className="hover:text-foreground transition">WASM Explorer</Link></li>
-                <li><Link href="/tools/json-typescript" className="hover:text-foreground transition">JSON to TypeScript</Link></li>
-                <li><Link href="/tools/diff-checker" className="hover:text-foreground transition">Diff Checker</Link></li>
-                <li><Link href="/tools/regex-playground" className="hover:text-foreground transition">Regex Playground</Link></li>
-                <li><Link href="/tools/api-tester" className="hover:text-foreground transition">API Tester</Link></li>
+                <li><Link href="/tools/ast-explorer" className="hover:text-foreground transition-colors">AST Explorer</Link></li>
+                <li><Link href="/tools/wasm-explorer" className="hover:text-foreground transition-colors">WASM Explorer</Link></li>
+                <li><Link href="/tools/json-typescript" className="hover:text-foreground transition-colors">JSON to TypeScript</Link></li>
+                <li><Link href="/tools/diff-checker" className="hover:text-foreground transition-colors">Diff Checker</Link></li>
+                <li><Link href="/tools/regex-playground" className="hover:text-foreground transition-colors">Regex Playground</Link></li>
+                <li><Link href="/tools/api-tester" className="hover:text-foreground transition-colors">API Tester</Link></li>
               </ul>
             </div>
 
             <div>
-              <p className="font-semibold text-foreground text-xs mb-2.5">Navigation & System</p>
+              <p className="font-medium text-foreground text-xs mb-2.5">Navigation and system</p>
               <ul className="space-y-1.5">
-                <li><Link href="/dashboard" className="hover:text-foreground transition">Dashboard</Link></li>
-                <li><Link href="/tools" className="hover:text-foreground transition">All 54 Tools</Link></li>
-                <li><Link href="/history" className="hover:text-foreground transition">Local History</Link></li>
-                <li><a href="#catalog" className="hover:text-foreground transition">Tool Catalog</a></li>
-                <li><a href="#comparison" className="hover:text-foreground transition">Why DevKit</a></li>
-                <li><a href="#faq" className="hover:text-foreground transition">FAQ</a></li>
+                <li><Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link></li>
+                <li><Link href="/tools" className="hover:text-foreground transition-colors">All 54 Tools</Link></li>
+                <li><Link href="/history" className="hover:text-foreground transition-colors">Local History</Link></li>
+                <li><a href="#catalog" className="hover:text-foreground transition-colors">Tool Catalog</a></li>
+                <li><a href="#comparison" className="hover:text-foreground transition-colors">Comparison</a></li>
+                <li><a href="#faq" className="hover:text-foreground transition-colors">FAQ</a></li>
               </ul>
             </div>
           </div>
@@ -684,12 +623,12 @@ export function LandingPage() {
   );
 }
 
-/* ---------------- Interactive DevKit Studio Mockup Window ---------------- */
+/* ---------------- Signature Live Workbench Instrument ---------------- */
 
-type StudioTab = "json" | "jwt" | "ast" | "pdf";
+type UtilityTab = "json" | "jwt" | "ast" | "pdf";
 
-function StudioMockupWindow() {
-  const [activeTab, setActiveTab] = useState<StudioTab>("json");
+function WorkbenchInstrument() {
+  const [activeTab, setActiveTab] = useState<UtilityTab>("json");
   const [formatMode, setFormatMode] = useState<"pretty" | "compact">("pretty");
   const [copied, setCopied] = useState(false);
 
@@ -699,86 +638,47 @@ function StudioMockupWindow() {
   };
 
   return (
-    <div className="rounded-xl border border-border bg-card shadow-lg overflow-hidden text-left font-sans">
-      {/* Studio Window Chrome Bar */}
-      <div className="flex h-11 items-center justify-between border-b border-border bg-muted/40 px-4">
-        <div className="flex items-center gap-2">
-          {/* Traffic light dots */}
-          <div className="flex items-center gap-1.5 pr-2">
-            <span className="size-2.5 rounded-full bg-red-500/80" />
-            <span className="size-2.5 rounded-full bg-amber-500/80" />
-            <span className="size-2.5 rounded-full bg-emerald-500/80" />
-          </div>
-          {/* Path pill */}
-          <div className="hidden sm:flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground shadow-2xs">
-            <Icon icon="lucide:shield-check" className="size-3 text-emerald-500" />
-            <span>devkit.internal</span>
-            <span className="text-border">/</span>
-            <span className="text-foreground font-semibold">
-              {activeTab === "json" && "payload.json"}
-              {activeTab === "jwt" && "claims.jwt"}
-              {activeTab === "ast" && "parser.ts"}
-              {activeTab === "pdf" && "document.pdf"}
-            </span>
-          </div>
-        </div>
-
-        {/* Egress status badge */}
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] text-emerald-500 font-semibold">
-            <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            0 B Egress
-          </span>
-          <span className="hidden md:inline-flex text-[11px] font-mono text-muted-foreground">
-            V8 In-Memory Sandbox
-          </span>
-        </div>
-      </div>
-
-      {/* Studio Navigation & Tab Strip */}
-      <div className="flex flex-wrap items-center justify-between border-b border-border bg-muted/20 px-3 py-1 gap-2">
+    <div className="border border-border bg-card rounded-lg overflow-hidden text-left font-sans shadow-xs">
+      {/* Instrument Utility Navigation Bar */}
+      <div className="flex flex-wrap items-center justify-between border-b border-border bg-muted/40 px-3 py-1.5 gap-2">
         <div className="flex items-center gap-1">
-          <StudioTabButton
+          <InstrumentTabButton
             active={activeTab === "json"}
             onClick={() => setActiveTab("json")}
             icon="lucide:braces"
-            label="payload.json"
-            tag="Format"
+            label="JSON Formatter"
           />
-          <StudioTabButton
+          <InstrumentTabButton
             active={activeTab === "jwt"}
             onClick={() => setActiveTab("jwt")}
             icon="lucide:key"
-            label="claims.jwt"
-            tag="Verify"
+            label="JWT Inspector"
           />
-          <StudioTabButton
+          <InstrumentTabButton
             active={activeTab === "ast"}
             onClick={() => setActiveTab("ast")}
             icon="lucide:binary"
-            label="parser.ts"
-            tag="AST"
+            label="AST Parser"
           />
-          <StudioTabButton
+          <InstrumentTabButton
             active={activeTab === "pdf"}
             onClick={() => setActiveTab("pdf")}
             icon="lucide:file-text"
-            label="contract.pdf"
-            tag="PDF"
+            label="PDF Assembly"
           />
         </div>
 
-        {/* Action buttons inside studio */}
+        {/* Action Controls */}
         <div className="flex items-center gap-1.5 text-xs">
           {activeTab === "json" && (
-            <>
+            <div className="flex items-center border border-border rounded overflow-hidden">
               <button
                 type="button"
                 onClick={() => setFormatMode("pretty")}
                 className={cn(
-                  "rounded px-2 py-0.5 text-[11px] font-mono transition cursor-pointer",
+                  "px-2 py-0.5 text-[11px] transition cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
                   formatMode === "pretty"
-                    ? "bg-foreground text-background font-semibold"
+                    ? "bg-foreground text-background font-medium"
                     : "text-muted-foreground hover:bg-muted"
                 )}
               >
@@ -788,96 +688,83 @@ function StudioMockupWindow() {
                 type="button"
                 onClick={() => setFormatMode("compact")}
                 className={cn(
-                  "rounded px-2 py-0.5 text-[11px] font-mono transition cursor-pointer",
+                  "px-2 py-0.5 text-[11px] transition cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
                   formatMode === "compact"
-                    ? "bg-foreground text-background font-semibold"
+                    ? "bg-foreground text-background font-medium"
                     : "text-muted-foreground hover:bg-muted"
                 )}
               >
                 Minify
               </button>
-            </>
+            </div>
           )}
 
           <button
             type="button"
             onClick={handleCopy}
-            className="flex items-center gap-1 rounded border border-border bg-background px-2 py-0.5 text-[11px] font-mono text-muted-foreground hover:text-foreground hover:bg-muted transition cursor-pointer"
+            className="flex items-center gap-1 rounded border border-border bg-background px-2.5 py-0.5 text-[11px] text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:bg-muted/90 disabled:opacity-50 disabled:pointer-events-none"
           >
-            <Icon icon={copied ? "lucide:check" : "lucide:copy"} className="size-3" />
+            <Icon icon={copied ? "lucide:check" : "lucide:copy"} className="size-3" aria-hidden="true" />
             <span>{copied ? "Copied" : "Copy"}</span>
           </button>
         </div>
       </div>
 
-      {/* Editor Viewport with Line Numbers and Code */}
-      <div className="p-4 sm:p-5 font-mono text-xs leading-relaxed bg-background/50 overflow-x-auto min-h-[220px]">
+      {/* Editor Viewport with Line Numbers and Real Output */}
+      <div className="p-4 sm:p-5 font-mono text-xs leading-relaxed bg-background/50 overflow-x-auto min-h-[200px]">
         {activeTab === "json" && (
           <div className="space-y-1">
             {formatMode === "pretty" ? (
               <>
                 <div className="flex gap-4">
-                  <span className="select-none text-muted-foreground/50 w-6 text-right">1</span>
+                  <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">1</span>
                   <span><span className="text-muted-foreground">&#123;</span></span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="select-none text-muted-foreground/50 w-6 text-right">2</span>
+                  <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">2</span>
                   <span className="pl-4">
-                    <span className="text-sky-500">&quot;status&quot;</span>
+                    <span className="text-sky-400">&quot;status&quot;</span>
                     <span className="text-muted-foreground">: </span>
-                    <span className="text-emerald-500">&quot;success&quot;</span>
+                    <span className="text-emerald-400">&quot;success&quot;</span>
                     <span className="text-muted-foreground">,</span>
                   </span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="select-none text-muted-foreground/50 w-6 text-right">3</span>
+                  <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">3</span>
                   <span className="pl-4">
-                    <span className="text-sky-500">&quot;networkEgressBytes&quot;</span>
+                    <span className="text-sky-400">&quot;networkEgressBytes&quot;</span>
                     <span className="text-muted-foreground">: </span>
-                    <span className="text-amber-500">0</span>
+                    <span className="text-amber-400">0</span>
                     <span className="text-muted-foreground">,</span>
                   </span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="select-none text-muted-foreground/50 w-6 text-right">4</span>
+                  <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">4</span>
                   <span className="pl-4">
-                    <span className="text-sky-500">&quot;executionLatencyMs&quot;</span>
+                    <span className="text-sky-400">&quot;executionLatencyMs&quot;</span>
                     <span className="text-muted-foreground">: </span>
-                    <span className="text-amber-500">0.14</span>
+                    <span className="text-amber-400">0.14</span>
                     <span className="text-muted-foreground">,</span>
                   </span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="select-none text-muted-foreground/50 w-6 text-right">5</span>
+                  <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">5</span>
                   <span className="pl-4">
-                    <span className="text-sky-500">&quot;runtime&quot;</span>
+                    <span className="text-sky-400">&quot;runtime&quot;</span>
                     <span className="text-muted-foreground">: </span>
-                    <span className="text-emerald-500">&quot;v8-in-memory-sandbox&quot;</span>
-                    <span className="text-muted-foreground">,</span>
+                    <span className="text-emerald-400">&quot;v8-in-memory-sandbox&quot;</span>
                   </span>
                 </div>
                 <div className="flex gap-4">
-                  <span className="select-none text-muted-foreground/50 w-6 text-right">6</span>
-                  <span className="pl-4">
-                    <span className="text-sky-500">&quot;compliance&quot;</span>
-                    <span className="text-muted-foreground">: </span>
-                    <span className="text-muted-foreground">[</span>
-                    <span className="text-emerald-500">&quot;air-gapped&quot;</span>
-                    <span className="text-muted-foreground">, </span>
-                    <span className="text-emerald-500">&quot;zero-tracking&quot;</span>
-                    <span className="text-muted-foreground">]</span>
-                  </span>
-                </div>
-                <div className="flex gap-4">
-                  <span className="select-none text-muted-foreground/50 w-6 text-right">7</span>
+                  <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">6</span>
                   <span><span className="text-muted-foreground">&#125;</span></span>
                 </div>
               </>
             ) : (
               <div className="flex gap-4">
-                <span className="select-none text-muted-foreground/50 w-6 text-right">1</span>
+                <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">1</span>
                 <span className="text-muted-foreground break-all">
-                  &#123;&quot;status&quot;:&quot;success&quot;,&quot;networkEgressBytes&quot;:0,&quot;executionLatencyMs&quot;:0.14,&quot;runtime&quot;:&quot;v8-in-memory-sandbox&quot;,&quot;compliance&quot;:[&quot;air-gapped&quot;,&quot;zero-tracking&quot;]&#125;
+                  &#123;&quot;status&quot;:&quot;success&quot;,&quot;networkEgressBytes&quot;:0,&quot;executionLatencyMs&quot;:0.14,&quot;runtime&quot;:&quot;v8-in-memory-sandbox&quot;&#125;
                 </span>
               </div>
             )}
@@ -886,43 +773,34 @@ function StudioMockupWindow() {
 
         {activeTab === "jwt" && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 pb-1 border-b border-border/50 text-[11px]">
-              <span className="text-emerald-500 font-semibold flex items-center gap-1">
-                <Icon icon="lucide:check-circle" className="size-3" />
-                Valid WebCrypto HS256 Signature
-              </span>
-              <span className="text-muted-foreground">• Algorithm: HMAC SHA-256</span>
+            <div className="flex items-center gap-2 pb-1 border-b border-border/50 text-[11px] text-emerald-500 font-medium">
+              <Icon icon="lucide:check-circle" className="size-3" aria-hidden="true" />
+              <span>Valid WebCrypto HS256 Signature (algorithm: HMAC SHA-256)</span>
             </div>
             <div className="space-y-1">
               <div className="flex gap-4">
-                <span className="select-none text-muted-foreground/50 w-6 text-right">1</span>
+                <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">1</span>
                 <span>
-                  <span className="text-red-400 font-semibold">&#47;&#47; Header: </span>
+                  <span className="text-muted-foreground">&#47;&#47; Header: </span>
                   <span className="text-muted-foreground">&#123;&quot;alg&quot;: &quot;HS256&quot;, &quot;typ&quot;: &quot;JWT&quot;&#125;</span>
                 </span>
               </div>
               <div className="flex gap-4">
-                <span className="select-none text-muted-foreground/50 w-6 text-right">2</span>
-                <span>
-                  <span className="text-sky-400 font-semibold">&#47;&#47; Payload Claims:</span>
+                <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">2</span>
+                <span className="pl-4">
+                  <span className="text-sky-400">&quot;sub&quot;</span>: <span className="text-emerald-400">&quot;usr_dev_0x9948&quot;</span>,
                 </span>
               </div>
               <div className="flex gap-4">
-                <span className="select-none text-muted-foreground/50 w-6 text-right">3</span>
+                <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">3</span>
                 <span className="pl-4">
-                  <span className="text-sky-500">&quot;sub&quot;</span>: <span className="text-emerald-500">&quot;usr_dev_0x9948&quot;</span>,
+                  <span className="text-sky-400">&quot;scope&quot;</span>: <span className="text-emerald-400">&quot;write:local-sandbox&quot;</span>,
                 </span>
               </div>
               <div className="flex gap-4">
-                <span className="select-none text-muted-foreground/50 w-6 text-right">4</span>
+                <span className="select-none text-muted-foreground/50 w-6 text-right tabular-nums">4</span>
                 <span className="pl-4">
-                  <span className="text-sky-500">&quot;scope&quot;</span>: <span className="text-emerald-500">&quot;write:local-sandbox&quot;</span>,
-                </span>
-              </div>
-              <div className="flex gap-4">
-                <span className="select-none text-muted-foreground/50 w-6 text-right">5</span>
-                <span className="pl-4">
-                  <span className="text-sky-500">&quot;exp&quot;</span>: <span className="text-amber-500">1735689600</span>
+                  <span className="text-sky-400">&quot;exp&quot;</span>: <span className="text-amber-400">1735689600</span>
                 </span>
               </div>
             </div>
@@ -931,21 +809,20 @@ function StudioMockupWindow() {
 
         {activeTab === "ast" && (
           <div className="space-y-1 text-[11px]">
-            <div className="flex items-center gap-2 pb-1 border-b border-border/50">
-              <span className="text-sky-500 font-semibold">Babel AST (EcmaScript 2026 Engine)</span>
-              <span className="text-muted-foreground">• In-Tab Parse Time: 0.18ms</span>
+            <div className="flex items-center gap-2 pb-1 border-b border-border/50 text-sky-400">
+              <span>Babel AST Engine (in-tab parse latency: 0.18ms)</span>
             </div>
             <div className="text-muted-foreground pt-1">
-              <span className="text-foreground font-semibold">Program</span> (start: 0, end: 42)
+              <span className="text-foreground font-medium">Program</span> (start: 0, end: 42)
             </div>
             <div className="pl-4 text-muted-foreground">
-              └─ <span className="text-amber-500 font-semibold">VariableDeclaration</span> (kind: &quot;const&quot;)
+              └─ <span className="text-amber-400 font-medium">VariableDeclaration</span> (kind: &quot;const&quot;)
             </div>
             <div className="pl-8 text-muted-foreground">
-              ├─ <span className="text-emerald-500">Identifier</span> (name: &quot;offlineStorage&quot;)
+              ├─ <span className="text-emerald-400">Identifier</span> (name: &quot;offlineStorage&quot;)
             </div>
             <div className="pl-8 text-muted-foreground">
-              └─ <span className="text-sky-500">ObjectExpression</span> (properties: 3)
+              └─ <span className="text-sky-400">ObjectExpression</span> (properties: 3)
             </div>
           </div>
         )}
@@ -953,85 +830,75 @@ function StudioMockupWindow() {
         {activeTab === "pdf" && (
           <div className="space-y-2 text-[11px]">
             <div className="flex items-center justify-between pb-1 border-b border-border/50">
-              <span className="text-foreground font-semibold flex items-center gap-1.5">
-                <Icon icon="lucide:file-check" className="size-3.5 text-emerald-500" />
-                <span>Client-Side pdf-lib Document Assembly</span>
+              <span className="text-foreground font-medium flex items-center gap-1.5">
+                <Icon icon="lucide:file-check" className="size-3.5 text-emerald-500" aria-hidden="true" />
+                <span>Client-side pdf-lib document assembly</span>
               </span>
-              <span className="text-emerald-500 font-semibold">0 B Transferred</span>
+              <span className="text-emerald-500 font-medium">0 bytes transferred</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 text-muted-foreground">
-              <div className="rounded border border-border/60 bg-muted/20 p-2">
-                <div className="text-[10px]">Total Pages</div>
-                <div className="font-semibold text-foreground text-xs">18 Pages</div>
+              <div className="border border-border/60 bg-muted/20 p-2 rounded">
+                <div className="text-[10px]">total pages</div>
+                <div className="font-medium text-foreground text-xs">18 pages</div>
               </div>
-              <div className="rounded border border-border/60 bg-muted/20 p-2">
-                <div className="text-[10px]">Local Memory Heap</div>
-                <div className="font-semibold text-foreground text-xs">3.4 MB</div>
+              <div className="border border-border/60 bg-muted/20 p-2 rounded">
+                <div className="text-[10px]">memory heap</div>
+                <div className="font-medium text-foreground text-xs">3.4 MB</div>
               </div>
-              <div className="rounded border border-border/60 bg-muted/20 p-2">
-                <div className="text-[10px]">Processing Speed</div>
-                <div className="font-semibold text-emerald-500 text-xs">84 ms</div>
+              <div className="border border-border/60 bg-muted/20 p-2 rounded">
+                <div className="text-[10px]">processing speed</div>
+                <div className="font-medium text-emerald-500 text-xs">84 ms</div>
               </div>
-              <div className="rounded border border-border/60 bg-muted/20 p-2">
-                <div className="text-[10px]">Privacy State</div>
-                <div className="font-semibold text-emerald-500 text-xs">Air-Gapped</div>
+              <div className="border border-border/60 bg-muted/20 p-2 rounded">
+                <div className="text-[10px]">privacy state</div>
+                <div className="font-medium text-emerald-500 text-xs">air-gapped</div>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Studio Status Telemetry Bar */}
-      <div className="flex flex-wrap items-center justify-between border-t border-border bg-muted/30 px-4 py-2 font-mono text-[11px] text-muted-foreground">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1">
-            <span className="size-1.5 rounded-full bg-emerald-500" />
-            <span className="text-foreground font-semibold">Ln 14, Col 2</span>
-          </span>
-          <span>•</span>
+      {/* Measured Telemetry Status Bar */}
+      <div className="flex flex-wrap items-center justify-between border-t border-border bg-muted/30 px-4 py-2 text-xs text-muted-foreground">
+        <div className="flex items-center gap-4">
+          <span className="text-foreground">Ln 14, Col 2</span>
           <span>UTF-8</span>
-          <span>•</span>
           <span>LF</span>
-          <span>•</span>
           <span>JSON Schema Draft-7</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-foreground font-semibold">⚡ 0.14ms execution</span>
-          <span>•</span>
-          <span className="text-emerald-500 font-semibold">100% Client-Side</span>
+        <div className="flex items-center gap-4">
+          <span className="font-mono tabular-nums text-foreground">0.14 ms execution</span>
+          <span className="text-emerald-500 font-medium">100% client-side</span>
         </div>
       </div>
     </div>
   );
 }
 
-function StudioTabButton({
+function InstrumentTabButton({
   active,
   onClick,
   icon,
   label,
-  tag,
 }: {
   active: boolean;
   onClick: () => void;
   icon: string;
   label: string;
-  tag: string;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-mono transition cursor-pointer select-none",
+        "flex items-center gap-1.5 rounded px-2.5 py-1 text-xs transition cursor-pointer select-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
         active
-          ? "border border-border bg-background text-foreground font-semibold shadow-xs"
+          ? "border border-border bg-background text-foreground font-medium shadow-2xs"
           : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
       )}
     >
-      <Icon icon={icon} className="size-3" />
+      <Icon icon={icon} className="size-3" aria-hidden="true" />
       <span>{label}</span>
-      <span className="text-[10px] text-muted-foreground font-normal">({tag})</span>
     </button>
   );
 }
@@ -1063,14 +930,11 @@ function ToolMatrix() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
         <div>
-          <span className="text-xs font-medium text-muted-foreground font-mono uppercase tracking-wider">
-            Complete Inventory
-          </span>
-          <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl lg:text-4xl">
-            Tool Catalog Matrix
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-foreground">
+            Tool catalog inventory
           </h2>
-          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-            Browse all {TOOLS.length} utilities by category or search by keywords.
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            Fifty-four client utilities organized by category.
           </p>
         </div>
 
@@ -1091,7 +955,7 @@ function ToolMatrix() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter by keyword (e.g. pdf, jwt, wasm)..."
-              className="w-full rounded-md border border-border bg-card pl-8 pr-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-ring"
+              className="w-full rounded-md border border-border bg-card pl-8 pr-3 py-1.5 text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-ring focus-visible:ring-1 focus-visible:ring-ring"
             />
           </div>
         </div>
@@ -1103,7 +967,7 @@ function ToolMatrix() {
           type="button"
           onClick={() => setSelectedCategory("all")}
           className={cn(
-            "rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer select-none",
+            "rounded-md px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:bg-muted/90 disabled:opacity-50 disabled:pointer-events-none",
             selectedCategory === "all"
               ? "bg-foreground text-background font-semibold"
               : "border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -1120,7 +984,7 @@ function ToolMatrix() {
               type="button"
               onClick={() => setSelectedCategory(cat.id)}
               className={cn(
-                "rounded-md px-2.5 py-1 text-xs font-medium transition cursor-pointer select-none",
+                "rounded-md px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:bg-muted/90 disabled:opacity-50 disabled:pointer-events-none",
                 selectedCategory === cat.id
                   ? "bg-foreground text-background font-semibold"
                   : "border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -1132,7 +996,7 @@ function ToolMatrix() {
         })}
       </div>
 
-      {/* Responsive Grid that gracefully scales to widescreen */}
+      {/* Tool Grid */}
       {filteredTools.length === 0 ? (
         <div className="rounded-lg border border-border p-8 text-center text-xs text-muted-foreground">
           No tools found matching &ldquo;{searchQuery}&rdquo;.
@@ -1143,17 +1007,17 @@ function ToolMatrix() {
             <Link
               key={tool.slug}
               href={`/tools/${tool.slug}`}
-              className="group block transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+              className="group block transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
             >
               <article className="h-full rounded-lg border border-border bg-card p-3.5 transition-colors group-hover:border-border/80 group-hover:bg-muted/30 shadow-xs flex flex-col justify-between space-y-2">
                 <div className="space-y-1.5">
                   <div className="flex items-start justify-between gap-2">
                     <ToolIcon icon={tool.icon} accent={tool.accent} className="size-7" />
-                    <span className="font-mono text-[10px] text-muted-foreground uppercase">
+                    <span className="text-[10px] text-muted-foreground lowercase">
                       {tool.category}
                     </span>
                   </div>
-                  <h3 className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors flex items-center justify-between">
+                  <h3 className="text-xs font-medium text-foreground group-hover:text-primary transition-colors flex items-center justify-between">
                     <span>{tool.name}</span>
                     <Icon
                       icon="lucide:arrow-right"
@@ -1166,8 +1030,8 @@ function ToolMatrix() {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground pt-1 border-t border-border/50">
-                  <span>/tools/{tool.slug}</span>
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-1 border-t border-border/50">
+                  <span className="font-mono">/tools/{tool.slug}</span>
                   {tool.popular && <span className="text-foreground">popular</span>}
                 </div>
               </article>
@@ -1225,13 +1089,13 @@ function FaqList() {
               aria-expanded={isOpen}
               aria-controls={panelId}
               onClick={() => setOpenIdx(isOpen ? null : idx)}
-              className="flex w-full items-center justify-between p-3.5 text-left text-xs font-semibold text-foreground hover:bg-muted/30 transition-colors cursor-pointer"
+              className="flex w-full items-center justify-between p-3.5 text-left text-xs font-medium text-foreground hover:bg-muted/30 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:bg-muted/50 disabled:opacity-50 disabled:pointer-events-none"
             >
               <span>{faq.q}</span>
               <Icon
                 icon="lucide:chevron-down"
                 className={cn(
-                  "size-3.5 shrink-0 text-muted-foreground transition-transform duration-150",
+                  "size-3.5 shrink-0 text-muted-foreground motion-safe:transition-transform motion-reduce:transition-none duration-150",
                   isOpen && "rotate-180 text-foreground"
                 )}
                 aria-hidden="true"
